@@ -11,6 +11,6 @@ export const getDefaultLocaleServer = async () =>
  * Save the locale to local storage.
  * @param locale - The locale to save.
  */
-export const saveLocaleServer = async (locale) => {
-  cookies().set(LOCALE_STORAGE_NAME, locale);
-};
+// export const saveLocaleServer = async (locale) => {
+//   cookies().set(LOCALE_STORAGE_NAME, locale);
+// };

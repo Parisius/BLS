@@ -120,7 +120,7 @@ export const useCreateAudit = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAudits],
+    [invalidateAllAudits]
   );
   const mutation = useMutation({
     mutationFn: (args) => createAudit(args),
@@ -155,7 +155,7 @@ export const useUpdateAudit = (auditId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAudits, invalidateOneAudit],
+    [invalidateAllAudits, invalidateOneAudit]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateAudit(auditId, args),
@@ -188,7 +188,7 @@ export const useForwardAudit = (auditId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [auditId, invalidateOneAudit],
+    [auditId, invalidateOneAudit]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -225,7 +225,7 @@ export const useCompleteAudit = (auditId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [auditId, invalidateOneAudit],
+    [auditId, invalidateOneAudit]
   );
   const mutation = useMutation({
     mutationFn: (args) => completeAudit(auditId, args),

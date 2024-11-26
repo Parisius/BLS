@@ -68,10 +68,12 @@ export const login = async (args) => {
       headers: {
         "Content-Type": "application/json",
       },
-    },
+    }
   );
   if (response.ok) {
     const { data: item } = await response.json();
+    console.log(item.access_token);
+
     return item.access_token;
   }
   return null;

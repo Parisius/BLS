@@ -38,7 +38,7 @@ export function AuditsListComponent() {
             globalScore={currentGlobalScore}
             status={currentStatus}
           />
-        ),
+        )
       )}
     </div>
   );
