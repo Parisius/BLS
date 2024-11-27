@@ -1,14 +1,16 @@
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
 import {
   format,
   formatDuration as formatDurationFns,
   intervalToDuration,
 } from "date-fns";
 import dompurify from "dompurify";
-export function cn(...inputs) {
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
 /**
  * Change the timezone of a date from local to UTC
  * @param date - The date to change the timezone of
@@ -51,7 +53,7 @@ export const formatDuration = (start, end, options) =>
         },
       },
       ...options,
-    },
+    }
   );
 /**
  * Format currency amount

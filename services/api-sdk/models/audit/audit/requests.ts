@@ -141,7 +141,7 @@ export const createAudit = async (args) => {
         note: score.score,
       })),
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to create the audit");
@@ -194,7 +194,7 @@ export const updateAudit = async (auditId, args) => {
         note: score.score,
       })),
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to update the audit");
@@ -248,7 +248,7 @@ export const forwardAudit = async (auditId, args) => {
       description: args.description,
       collaborators: [args.receiverId],
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to forward the audit");
@@ -272,7 +272,7 @@ export const completeAudit = async (auditId, args) => {
         note: score.score,
       })),
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to complete the audit");
@@ -285,7 +285,7 @@ export const completeAudit = async (auditId, args) => {
  */
 export const printAudit = async (auditId) => {
   const response = await fetchService.get(
-    `/generate_pdf_fiche_suivi_audit?audit_notation_id=${auditId}`,
+    `/generate_pdf_fiche_suivi_audit?audit_notation_id=${auditId}`
   );
   if (!response.ok) {
     throw new ApiError("Failed to print the audit");
@@ -299,4 +299,125 @@ export const printAudit = async (auditId) => {
     buffer,
     filename,
   };
+};
+
+export const planAudit = async (args) => {
+  try {
+    const response = await fetchService.post(
+      "/audit_periods",
+      JSON.stringify({
+        title: args.title,
+        deadline: args.deadline,
+      }),
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: errorData.message || "Failed to complete the audit",
+      };
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred",
+    };
+  }
+};
+
+export const getPlannedAudit = async () => {
+  try {
+    const response = await fetchService.get("/audit_periods");
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: errorData.message || "Failed to get planned audit",
+      };
+    }
+
+    const data = await response.json();
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred",
+    };
+  }
+};
+
+export const deletePlannedAudit = async (id: string) => {
+  try {
+    const response = await fetchService.delete(`/audit_periods/${id}`, {
+      headers: { "Content-Type": "application/json" },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: errorData.message || "Failed to complete the audit",
+      };
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      data,
+    };
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred",
+    };
+  }
+};
+
+export const updatePlannedAudit = async (id, title, deadline) => {
+  try {
+    console.log("hi");
+
+    const response = await fetchService.put(
+      `/audit_periods/${id}?${title}&${deadline}`,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      return {
+        success: false,
+        message: errorData.message || "Failed to complete the audit",
+      };
+    }
+
+    const data = await response.json();
+    console.log(data);
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error: any) {
+    console.log(error);
+
+    return {
+      success: false,
+      message: error.message || "An unexpected error occurred",
+    };
+  }
 };

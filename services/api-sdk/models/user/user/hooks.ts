@@ -58,7 +58,7 @@ export const useLogin = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateCurrentUser],
+    [invalidateCurrentUser]
   );
   const mutation = useMutation({
     mutationFn: async (args) => {
@@ -67,6 +67,8 @@ export const useLogin = (options) => {
         password: args.password,
         redirect: false,
       });
+      console.log(response);
+
       if (!response?.ok) {
         throw new Error("Invalid credentials");
       }

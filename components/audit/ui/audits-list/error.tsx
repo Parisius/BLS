@@ -15,10 +15,7 @@ function ErrorComponent({ resetErrorBoundary }) {
       <p className="text-center text-lg italic text-secondary-foreground/75">
         Une erreur s&apos;est produite
       </p>
-      <Button
-        className="gap-2"
-        onClick={resetErrorBoundary}
-      >
+      <Button className="gap-2" onClick={resetErrorBoundary}>
         <RotateCw />
         Reessayer
       </Button>

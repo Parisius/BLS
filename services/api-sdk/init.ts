@@ -11,6 +11,8 @@ export const fetchService = new FetchService({
   baseUrl: process.env.API_URL,
   requestInterceptor: async () => {
     const token = await getToken();
+    console.log("token :", token);
+
     const locale = await getDefaultLocaleServer();
     return {
       cache: "no-store",

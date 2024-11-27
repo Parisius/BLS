@@ -10,11 +10,7 @@ export default function AuditPage() {
       <div className="flex flex-col gap-10 sm:flex-row sm:items-center sm:justify-between">
         <HomePageBreadcrumb />
         <div className="flex items-center justify-end gap-2">
-          <Button
-            asChild
-            variant="secondary"
-            className="gap-2"
-          >
+          <Button asChild variant="secondary" className="gap-2">
             <Link href={AuditRoutes.auditModulesList}>
               <Scale />
               <span className="sr-only sm:not-sr-only">
@@ -22,10 +18,7 @@ export default function AuditPage() {
               </span>
             </Link>
           </Button>
-          <Button
-            asChild
-            className="gap-2"
-          >
+          <Button asChild className="gap-2">
             <Link href={AuditRoutes.auditsList}>
               <Newspaper />
               <span className="sr-only sm:not-sr-only">
@@ -35,7 +28,9 @@ export default function AuditPage() {
           </Button>
         </div>
       </div>
-      <AuditModuleCard />
+      <div className="flex-1 flex justify-center items-center">
+        <AuditModuleCard />
+      </div>
     </div>
   );
 }
