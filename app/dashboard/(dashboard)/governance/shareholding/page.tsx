@@ -5,6 +5,7 @@ import SharesInfosCard from "@/components/governance/shareholding/ui/shares-info
 import ShareholdersModal from "@/components/governance/shareholding/modals/shareholders-modal";
 import TransferSharesDialog from "@/components/governance/shareholding/modals/transfer-shares-dialog";
 import SharesTransfersDialog from "@/components/governance/shareholding/modals/shares-transfers-dialog";
+import { FormattedMessage } from "@/components/intl/formatters";
 import {
   Tooltip,
   TooltipContent,
@@ -17,34 +18,30 @@ export default function ShareholdingPage() {
         <HomePageBreadcrumb />
         <div className="flex flex-col items-center gap-2 sm:flex-row">
           <ShareholdersModal asChild>
-            <Button
-              variant="secondary"
-              className="gap-2"
-            >
+            <Button variant="secondary" className="gap-2">
               <Users />
-              Liste des actionnaires
+              <FormattedMessage id="shareholding.shareholders_list_btn" />
             </Button>
           </ShareholdersModal>
 
           <TransferSharesDialog asChild>
             <Button className="gap-2">
               <ArrowLeftRight />
-              Transférer des actions
+              <FormattedMessage id="shareholding.transfer_shares_btn" />
             </Button>
           </TransferSharesDialog>
 
           <Tooltip>
             <SharesTransfersDialog asChild>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                >
+                <Button variant="ghost" size="icon">
                   <History />
                 </Button>
               </TooltipTrigger>
             </SharesTransfersDialog>
-            <TooltipContent>Historique des transferts</TooltipContent>
+            <TooltipContent>
+              <FormattedMessage id="shareholding.shares_transfers_history" />
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>

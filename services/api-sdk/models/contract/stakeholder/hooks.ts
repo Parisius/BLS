@@ -61,7 +61,7 @@ export const useOneStakeholder = (stakeholderId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateStakeholder = (options) => {
+export const useCreateStakeholder = (options = {}) => {
   const invalidateAllStakeholders = useInvalidateAllStakeholders();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -71,7 +71,7 @@ export const useCreateStakeholder = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllStakeholders],
+    [invalidateAllStakeholders]
   );
   const mutation = useMutation({
     mutationFn: createStakeholder,

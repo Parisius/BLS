@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -22,7 +23,12 @@ import { Trash } from "lucide-react";
 import DeleteUserButton from "@/components/administration/user/buttons/delete-user-button";
 import { useAllUsers } from "@/services/api-sdk/models/administration/user/user";
 import { Badge } from "@/components/ui/badge";
-export const getColumns = (currentUserId) => [
+
+interface UsersTableProps {
+  className?: string;
+}
+
+export const getColumns = (currentUserId?: string) => [
   {
     accessorKey: "username",
     header: "Nom d'utilisateur",
@@ -46,11 +52,7 @@ export const getColumns = (currentUserId) => [
             <span className="italic">(Vous)</span>
           </>
         ) : (
-          <Button
-            asChild
-            variant="link"
-            className="p-0"
-          >
+          <Button asChild variant="link" className="p-0">
             <a
               href={`mailto:${row.original.email}`}
               target="_blank"
@@ -69,10 +71,7 @@ export const getColumns = (currentUserId) => [
     cell: ({ row }) => (
       <div className="flex flex-wrap items-center gap-2">
         {row.original.roles.map(({ id, title }) => (
-          <Badge
-            key={id}
-            className="bg-accent text-accent-foreground"
-          >
+          <Badge key={id} className="bg-accent text-accent-foreground">
             {title}
           </Badge>
         ))}
@@ -88,10 +87,7 @@ export const getColumns = (currentUserId) => [
     cell: ({ row }) =>
       currentUserId !== row.original.id && (
         <div className="text-end">
-          <DeleteUserButton
-            asChild
-            userId={row.original.id}
-          >
+          <DeleteUserButton asChild userId={row.original.id}>
             <Button
               variant="ghost"
               size="icon"
@@ -106,15 +102,20 @@ export const getColumns = (currentUserId) => [
     enableHiding: false,
   },
 ];
-export default function UsersTable({ className }) {
-  const [columnFilters, setColumnFilters] = React.useState([]);
+
+export default function UsersTable({ className }: UsersTableProps) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllUsers();
+
   const columns = useMemo(() => getColumns(currentUser?.id), [currentUser]);
+
   const users = useMemo(() => {
     if (data && currentUser) {
       const currentUserIndex = data.findIndex(
-        (user) => user.id === currentUser?.id,
+        (user) => user.id === currentUser?.id
       );
       return data
         .toSpliced(currentUserIndex, 1)
@@ -122,16 +123,22 @@ export default function UsersTable({ className }) {
     }
     return [];
   }, [currentUser, data]);
+
   const table = useReactTable({
     data: users,
     columns,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: (updater) => {
+      const newFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+      setColumnFilters(newFilters);
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
     },
   });
+
   return (
     <div className={cn("space-y-5", className)}>
       <Table className="border">
@@ -144,7 +151,7 @@ export default function UsersTable({ className }) {
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               ))}
@@ -154,10 +161,7 @@ export default function UsersTable({ className }) {
         <TableBody>
           {isLoading && !data && (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 Chargement...
               </TableCell>
             </TableRow>
@@ -192,10 +196,7 @@ export default function UsersTable({ className }) {
 
           {!isLoading && data?.length === 0 && (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 Aucun utilisateur trouvé
               </TableCell>
             </TableRow>

@@ -16,7 +16,15 @@ import { useCreateUser } from "@/services/api-sdk/models/administration/user/use
 import { cn } from "@/lib/utils";
 import SubsidiarySelect from "@/components/administration/user/inputs/subsidiary-select";
 import RoleSelect from "@/components/administration/user/inputs/role-select";
-export default function AddUserForm({ formId, className, onSuccess, onError }) {
+
+interface AddUserFormProps {
+  className?: string;
+  formId: string;
+  onSuccess?: (createdData: any) => void;
+  onError?: () => void;
+}
+
+export default function AddUserForm({ formId, className, onSuccess, onError }:AddUserFormProps) {
   const form = useUserForm();
   const { mutateAsync } = useCreateUser();
   const handleSubmit = useCallback(
@@ -42,10 +50,10 @@ export default function AddUserForm({ formId, className, onSuccess, onError }) {
             });
             onError?.();
           },
-        },
+        }
       );
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {

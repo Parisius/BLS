@@ -34,7 +34,7 @@ export const useAllRoles = () =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateRole = (options) => {
+export const useCreateRole = (options = {}) => {
   const invalidateAllRoles = useInvalidateAllRoles();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -44,7 +44,7 @@ export const useCreateRole = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllRoles],
+    [invalidateAllRoles]
   );
   const mutation = useMutation({
     mutationFn: (args) => createRole(args),

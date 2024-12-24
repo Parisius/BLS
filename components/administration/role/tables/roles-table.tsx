@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -17,26 +18,40 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useAllRoles } from "@/services/api-sdk/models/administration/role/role";
+
+interface RolesTableProps {
+  className?: string;
+}
+
 export const getColumns = () => [
   {
     accessorKey: "title",
     header: "Libellé",
   },
 ];
-export default function RolesTable({ className }) {
-  const [columnFilters, setColumnFilters] = React.useState([]);
+
+export default function RolesTable({ className }: RolesTableProps) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const { data, isLoading, isError } = useAllRoles();
   const columns = useMemo(() => getColumns(), []);
+
   const table = useReactTable({
     data: data ?? [],
     columns,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: (updater) => {
+      const newFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+      setColumnFilters(newFilters);
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
     },
   });
+
   return (
     <div className={cn("space-y-5", className)}>
       <Table className="border">
@@ -49,7 +64,7 @@ export default function RolesTable({ className }) {
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               ))}
@@ -59,10 +74,7 @@ export default function RolesTable({ className }) {
         <TableBody>
           {isLoading && !data && (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 Chargement...
               </TableCell>
             </TableRow>
@@ -93,13 +105,9 @@ export default function RolesTable({ className }) {
                 ))}
               </TableRow>
             ))}
-
           {!isLoading && data?.length === 0 && (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 Aucun rôle trouvé
               </TableCell>
             </TableRow>

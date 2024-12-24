@@ -110,7 +110,7 @@ export const useOneAudit = (auditId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateAudit = (options) => {
+export const useCreateAudit = (options = {}) => {
   const invalidateAllAudits = useInvalidateAllAudits();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -120,7 +120,7 @@ export const useCreateAudit = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAudits],
+    [invalidateAllAudits]
   );
   const mutation = useMutation({
     mutationFn: (args) => createAudit(args),
@@ -155,7 +155,7 @@ export const useUpdateAudit = (auditId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAudits, invalidateOneAudit],
+    [invalidateAllAudits, invalidateOneAudit]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateAudit(auditId, args),
@@ -178,7 +178,7 @@ export const useUpdateAudit = (auditId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardAudit = (auditId, options) => {
+export const useForwardAudit = (auditId, options = {}) => {
   const invalidateOneAudit = useInvalidateOneAudit();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -188,7 +188,7 @@ export const useForwardAudit = (auditId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [auditId, invalidateOneAudit],
+    [auditId, invalidateOneAudit]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -225,7 +225,7 @@ export const useCompleteAudit = (auditId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [auditId, invalidateOneAudit],
+    [auditId, invalidateOneAudit]
   );
   const mutation = useMutation({
     mutationFn: (args) => completeAudit(auditId, args),
@@ -248,7 +248,7 @@ export const useCompleteAudit = (auditId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const usePrintAudit = (auditId, options) => {
+export const usePrintAudit = (auditId, options = {}) => {
   const mutation = useMutation({
     mutationFn: () => printAudit(auditId),
     mutationKey: getPrintAuditMutationKey(auditId),

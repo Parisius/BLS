@@ -1,6 +1,7 @@
 import { useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 const validationSchema = z.object({
   name: z
     .string({
@@ -18,9 +19,18 @@ const validationSchema = z.object({
     })
     .min(1, "Le téléphone est requis"),
 });
-export const useIncidentAuthorForm = (options) => {
-  const formContext = useFormContext();
-  const newForm = useForm({
+
+type FormFields = z.infer<typeof validationSchema>;
+
+interface IncidentAuthorFormOptions {
+  noContext?: boolean;
+}
+
+export const useIncidentAuthorForm = (
+  options: IncidentAuthorFormOptions = {}
+) => {
+  const formContext = useFormContext<FormFields>();
+  const newForm = useForm<FormFields>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
       name: "",
@@ -28,6 +38,7 @@ export const useIncidentAuthorForm = (options) => {
       phone: "",
     },
   });
+
   if (options?.noContext) return newForm;
   return formContext ?? newForm;
 };

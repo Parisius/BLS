@@ -7,6 +7,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "bls.lazonebleue.com",
       },
+      {
+        protocol: "https",
+        hostname: "af934bhpat.preview.infomaniak.website",
+      },
     ],
   },
   typescript: {

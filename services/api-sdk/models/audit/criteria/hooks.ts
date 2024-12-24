@@ -109,7 +109,7 @@ export const useOneAuditCriteria = (criteriaId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateAuditCriteria = (options) => {
+export const useCreateAuditCriteria = (options = {}) => {
   const invalidateAllAuditCriteria = useInvalidateAllAuditCriteria();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -119,7 +119,7 @@ export const useCreateAuditCriteria = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAuditCriteria],
+    [invalidateAllAuditCriteria]
   );
   const mutation = useMutation({
     mutationFn: (args) => createAuditCriteria(args),
@@ -142,7 +142,7 @@ export const useCreateAuditCriteria = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateAuditCriteria = (criteriaId, options) => {
+export const useUpdateAuditCriteria = (criteriaId, options = {}) => {
   const invalidateOneAuditCriteria = useInvalidateOneAuditCriteria();
   const invalidateAllAuditCriteria = useInvalidateAllAuditCriteria();
   const getMutationOptions = useCallback(
@@ -154,7 +154,7 @@ export const useUpdateAuditCriteria = (criteriaId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [criteriaId, invalidateAllAuditCriteria, invalidateOneAuditCriteria],
+    [criteriaId, invalidateAllAuditCriteria, invalidateOneAuditCriteria]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateAuditCriteria(criteriaId, args),
@@ -177,7 +177,7 @@ export const useUpdateAuditCriteria = (criteriaId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteAuditCriteria = (criteriaId, options) => {
+export const useDeleteAuditCriteria = (criteriaId, options = {}) => {
   const removeOneAuditCriteria = useRemoveOneAuditCriteriaQuery();
   const invalidateAllAuditCriteria = useInvalidateAllAuditCriteria();
   const getMutationOptions = useCallback(
@@ -189,7 +189,7 @@ export const useDeleteAuditCriteria = (criteriaId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [criteriaId, invalidateAllAuditCriteria, removeOneAuditCriteria],
+    [criteriaId, invalidateAllAuditCriteria, removeOneAuditCriteria]
   );
   const mutation = useMutation({
     mutationFn: () => deleteAuditCriteria(criteriaId),

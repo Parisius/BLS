@@ -11,12 +11,12 @@ export const fetchService = new FetchService({
   baseUrl: process.env.API_URL,
   requestInterceptor: async () => {
     const token = await getToken();
-    const locale = await getDefaultLocaleServer();
+    // const locale = await getDefaultLocaleServer();
     return {
       cache: "no-store",
       headers: {
         Authorization: token ? `Bearer ${token.accessToken}` : "",
-        "X-Locale": locale,
+        // "X-Locale": locale,
       },
     };
   },

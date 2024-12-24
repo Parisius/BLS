@@ -87,7 +87,7 @@ export const useRemoveOneMortgageQuery = () => {
  * @param queries - The queries to filter the mortgages.
  * @returns The query result.
  */
-export const useAllMortgages = (queries) =>
+export const useAllMortgages = (queries = {}) =>
   useQuery({
     queryKey: ALL_MORTGAGES_QUERY_TAG,
     queryFn: () => getAllMortgages(queries),
@@ -117,7 +117,7 @@ export const useCreateMortgage = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMortgages],
+    [invalidateAllMortgages]
   );
   const mutation = useMutation({
     mutationFn: (args) => createMortgage(args),
@@ -152,7 +152,7 @@ export const useStartRealisation = (mortgageId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneMortgage, mortgageId, invalidateAllMortgageSteps],
+    [invalidateOneMortgage, mortgageId, invalidateAllMortgageSteps]
   );
   const mutation = useMutation({
     mutationFn: () => startRealisation(mortgageId),

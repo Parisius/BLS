@@ -21,13 +21,14 @@ export function UpdateAuditCriteriaDialog({ criteriaId, ...props }) {
   const formId = useId();
   const { data, isLoading, isError } = useOneAuditCriteria(criteriaId);
   const form = useAuditCriteriaForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   if (isError) {
     throw new Error("Failed to fetch audit criteria");
   }
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -57,14 +58,12 @@ export function UpdateAuditCriteriaDialog({ criteriaId, ...props }) {
                 formId={formId}
                 criteriaId={criteriaId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
+                  <Button variant="destructive" onClick={() => form.reset()}>
                     Annuler
                   </Button>
                 </DialogClose>

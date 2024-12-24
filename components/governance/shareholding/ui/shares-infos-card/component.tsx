@@ -17,6 +17,7 @@ import { useBankInfos } from "@/services/api-sdk/models/shareholding";
 import UpdateBankInfosDialog from "@/components/governance/shareholding/modals/update-bank-infos-dialog";
 import AddBankCapitalDialog from "@/components/governance/shareholding/modals/add-bank-capital-dialog";
 import { SharesInfosCardSuspense } from "./suspense";
+import { FormattedMessage } from "@/components/intl/formatters";
 export function SharesInfosCardComponent({ className }) {
   const { data, isLoading } = useBankInfos();
   if (isLoading) {
@@ -46,7 +47,9 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <Tag />
-            <span>Dénomination</span>
+            <span>
+              <FormattedMessage id="shareholding.name" />
+            </span>
           </div>
           <span className="italic text-muted-foreground">
             {data?.name ?? "-"}
@@ -55,7 +58,9 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <Landmark />
-            <span>Siège social</span>
+            <span>
+              <FormattedMessage id="shareholding.head_office" />
+            </span>
           </div>
           <span className="italic text-muted-foreground">
             {data?.headOffice ?? "-"}
@@ -64,14 +69,13 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <CircleDollarSign />
-            <span>Capital</span>
+            <span>
+              <FormattedMessage id="shareholding.capital" />
+            </span>
           </div>
           {data?.capital ? (
             <AddBankCapitalDialog asChild>
-              <Button
-                variant="link"
-                className="h-auto p-0 italic underline"
-              >
+              <Button variant="link" className="h-auto p-0 italic underline">
                 {formatAmount(data.capital)}
               </Button>
             </AddBankCapitalDialog>
@@ -93,14 +97,13 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <Banknote />
-            <span>Valeur nominale</span>
+            <span>
+              <FormattedMessage id="shareholding.nominal_value" />
+            </span>
           </div>
           {data?.nominalValue ? (
             <AddBankCapitalDialog asChild>
-              <Button
-                variant="link"
-                className="h-auto p-0 italic underline"
-              >
+              <Button variant="link" className="h-auto p-0 italic underline">
                 {formatAmount(data.nominalValue)}
               </Button>
             </AddBankCapitalDialog>
@@ -122,14 +125,13 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <Banknote />
-            <span>Nombre des actions</span>
+            <span>
+              <FormattedMessage id="shareholding.number_of_shares" />
+            </span>
           </div>
           {data?.nominalValue && data?.capital ? (
             <AddBankCapitalDialog asChild>
-              <Button
-                variant="link"
-                className="h-auto p-0 italic underline"
-              >
+              <Button variant="link" className="h-auto p-0 italic underline">
                 {formatNumber(data.capital / data.nominalValue)}
               </Button>
             </AddBankCapitalDialog>
@@ -151,13 +153,12 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <Users />
-            <span>Actionnaires</span>
+            <span>
+              <FormattedMessage id="shareholding.shareholders" />
+            </span>
           </div>
           <ShareholdersModal asChild>
-            <Button
-              variant="link"
-              className="h-auto p-0 italic underline"
-            >
+            <Button variant="link" className="h-auto p-0 italic underline">
               {formatNumber(data?.shareholdersCount ?? 0)}
             </Button>
           </ShareholdersModal>
@@ -165,7 +166,9 @@ export function SharesInfosCardComponent({ className }) {
         <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-1 font-semibold">
             <User />
-            <span>Actionnaire majoritaire</span>
+            <span>
+              <FormattedMessage id="shareholding.majority_shareholder" />
+            </span>
           </div>
           <span className="inline-flex italic text-muted-foreground">
             {data?.majorityShareholder ? (

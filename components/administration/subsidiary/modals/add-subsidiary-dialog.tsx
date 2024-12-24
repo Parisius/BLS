@@ -18,7 +18,7 @@ import AddSubsidiaryForm from "@/components/administration/subsidiary/forms/add-
 export default function AddSubsidiaryDialog(props) {
   const formId = useId();
   const form = useSubsidiaryForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
@@ -31,17 +31,11 @@ export default function AddSubsidiaryDialog(props) {
             <DialogTitle>Nouvelle filiale</DialogTitle>
             <DialogDescription>Créer une nouvelle filiale.</DialogDescription>
           </DialogHeader>
-          <AddSubsidiaryForm
-            formId={formId}
-            onSuccess={handleSuccess}
-          />
+          <AddSubsidiaryForm formId={formId} onSuccess={handleSuccess} />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
+              <Button variant="destructive" onClick={() => form.reset()}>
                 Annuler
               </Button>
             </DialogClose>

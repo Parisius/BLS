@@ -1,18 +1,27 @@
 import React from "react";
-import { NumericFormat } from "react-number-format";
+import { NumericFormat, NumericFormatProps } from "react-number-format";
 import { Input } from "@/components/ui/input";
-const NumberInput = React.forwardRef(({ onChange, ...props }, ref) => (
-  <NumericFormat
-    thousandSeparator
-    getInputRef={ref}
-    customInput={Input}
-    onValueChange={({ floatValue }, { source }) => {
-      if (source === "event") {
-        onChange?.(floatValue ?? 0);
-      }
-    }}
-    {...props}
-  />
-));
+
+interface NumberInputProps extends Omit<NumericFormatProps, "onChange"> {
+  onChange?: (value: number | undefined) => void;
+}
+
+const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
+  ({ onChange, ...props }, ref) => (
+    <NumericFormat
+      thousandSeparator
+      getInputRef={ref}
+      customInput={Input}
+      onValueChange={({ floatValue }, { source }) => {
+        if (source === "event") {
+          onChange?.(floatValue);
+        }
+      }}
+      {...props}
+    />
+  )
+);
+
 NumberInput.displayName = "NumberInput";
+
 export { NumberInput };

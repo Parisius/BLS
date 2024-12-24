@@ -19,6 +19,7 @@ import { NumberInput } from "@/components/ui/number-input";
 import ThirdPartySelect from "@/components/governance/shareholding/inputs/third-party-select";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function TransferSharesForm({
   formId,
   className,
@@ -27,13 +28,14 @@ export default function TransferSharesForm({
 }) {
   const form = useTransferSharesForm();
   const { mutateAsync } = useTransferShares();
+  const intl = useIntl();
   const setMaxShares = useCallback(
     (shareholder) => {
       if (shareholder) {
         form.setValue("maxShares", shareholder.unencumberedShares);
       }
     },
-    [form],
+    [form]
   );
   const handleSubmit = useCallback(
     async (data) => {
@@ -66,10 +68,10 @@ export default function TransferSharesForm({
             });
             onError?.();
           },
-        },
+        }
       );
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
@@ -99,7 +101,10 @@ export default function TransferSharesForm({
                       <RadioGroupItem value="shareholder" />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Vers un actionnaire
+                      <FormattedMessage
+                        id="shareholding.transfer_shares_to_shareholder"
+                        defaultMessage="To a shareholder"
+                      />
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center gap-1 space-y-0">
@@ -107,7 +112,10 @@ export default function TransferSharesForm({
                       <RadioGroupItem value="new_tier" />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Vers un non-actionnaire
+                      <FormattedMessage
+                        id="shareholding.transfer_shares_to_non_shareholder"
+                        defaultMessage="To a non-shareholder"
+                      />
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -122,7 +130,12 @@ export default function TransferSharesForm({
           name="sellerId"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Cédant</FormLabel>
+              <FormLabel>
+                <FormattedMessage
+                  id="shareholding.transfer_shares_seller"
+                  defaultMessage="Seller"
+                />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <ShareholderSelect
@@ -146,7 +159,12 @@ export default function TransferSharesForm({
             name="shareholderId"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Bénéficiaire</FormLabel>
+                <FormLabel>
+                  <FormattedMessage
+                    id="shareholding.transfer_shares_beneficiary"
+                    defaultMessage="Beneficiary"
+                  />
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <ShareholderSelect
@@ -194,12 +212,19 @@ export default function TransferSharesForm({
             name="thirdParty.name"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Nom du non-actionnaire</FormLabel>
+                <FormLabel>
+                  <FormattedMessage
+                    id="shareholding.transfer_shares_to_non_shareholder_name"
+                    defaultMessage="Name of non-shareholder"
+                  />
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Nom du non-actionnaire"
+                      placeholder={intl.formatMessage({
+                        id: "shareholding.transfer_shares_to_non_shareholder_placeholder",
+                      })}
                       className="h-12 pl-10"
                     />
                     <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -216,7 +241,12 @@ export default function TransferSharesForm({
           name="shares"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nombre d&apos;actions</FormLabel>
+              <FormLabel>
+                <FormattedMessage
+                  id="shareholding.transfer_shares_number"
+                  defaultMessage="Number of Shares"
+                />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <NumberInput
@@ -244,7 +274,12 @@ export default function TransferSharesForm({
           name="transferDate"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Date de transfert</FormLabel>
+              <FormLabel>
+                <FormattedMessage
+                  id="shareholding.transfer_shares_date"
+                  defaultMessage="Date of transfer"
+                />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

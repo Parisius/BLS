@@ -18,10 +18,11 @@ import AddUserForm from "@/components/administration/user/forms/add-user-form";
 export default function AddUserDialog(props) {
   const formId = useId();
   const form = useUserForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   return (
     <Dialog>
       <DialogTrigger {...props} />
@@ -34,14 +35,12 @@ export default function AddUserDialog(props) {
           <AddUserForm
             formId={formId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
+              <Button variant="destructive" onClick={() => form.reset()}>
                 Annuler
               </Button>
             </DialogClose>

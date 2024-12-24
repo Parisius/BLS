@@ -48,7 +48,7 @@ export const useCurrentUser = () =>
  * @param options - The login options.
  * @returns The mutation result.
  */
-export const useLogin = (options) => {
+export const useLogin = (options = {}) => {
   const invalidateCurrentUser = useInvalidateCurrentUser();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -58,7 +58,7 @@ export const useLogin = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateCurrentUser],
+    [invalidateCurrentUser]
   );
   const mutation = useMutation({
     mutationFn: async (args) => {

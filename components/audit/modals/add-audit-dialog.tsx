@@ -22,7 +22,7 @@ import { AuditRoutes } from "@/config/routes/audit";
 export default function AddAuditDialog(props) {
   const formId = useId();
   const { form } = useAddAuditForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const { mutateAsync } = useCreateAudit();
   const router = useRouter();
   const handleSubmit = useCallback(
@@ -44,7 +44,7 @@ export default function AddAuditDialog(props) {
         },
       });
     },
-    [mutateAsync, router],
+    [mutateAsync, router]
   );
   return (
     <Dialog>
@@ -65,10 +65,7 @@ export default function AddAuditDialog(props) {
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
+              <Button variant="destructive" onClick={() => form.reset()}>
                 Annuler
               </Button>
             </DialogClose>

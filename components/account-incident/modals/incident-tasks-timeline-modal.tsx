@@ -23,7 +23,6 @@ export default function IncidentTasksTimelineModal({
       <SheetTrigger {...props} />
       <SheetContent
         side="left"
-        closeClassName="md:hidden"
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>

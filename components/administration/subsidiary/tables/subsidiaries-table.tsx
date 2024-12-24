@@ -6,6 +6,7 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
+  ColumnFiltersState,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -17,6 +18,11 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useAllSubsidiaries } from "@/services/api-sdk/models/administration/subsidiary/subsidiary";
+
+interface SubsidiariesTableProps {
+  className?: string;
+}
+
 export const getColumns = () => [
   {
     accessorKey: "title",
@@ -31,20 +37,32 @@ export const getColumns = () => [
     header: "Adresse",
   },
 ];
-export default function SubsidiariesTable({ className }) {
-  const [columnFilters, setColumnFilters] = React.useState([]);
+
+export default function SubsidiariesTable({
+  className,
+}: SubsidiariesTableProps) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
   const { data, isLoading, isError } = useAllSubsidiaries();
   const columns = useMemo(() => getColumns(), []);
+
   const table = useReactTable({
     data: data ?? [],
     columns,
-    onColumnFiltersChange: setColumnFilters,
+    onColumnFiltersChange: (updater) => {
+      // Handle both function and direct value updates
+      const newFilters =
+        typeof updater === "function" ? updater(columnFilters) : updater;
+      setColumnFilters(newFilters);
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
     },
   });
+
   return (
     <div className={cn("space-y-5", className)}>
       <Table className="border">
@@ -57,7 +75,7 @@ export default function SubsidiariesTable({ className }) {
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               ))}
@@ -67,10 +85,7 @@ export default function SubsidiariesTable({ className }) {
         <TableBody>
           {isLoading && !data && (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 Chargement...
               </TableCell>
             </TableRow>
@@ -101,13 +116,9 @@ export default function SubsidiariesTable({ className }) {
                 ))}
               </TableRow>
             ))}
-
           {!isLoading && data?.length === 0 && (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 Aucune filiale trouvée
               </TableCell>
             </TableRow>

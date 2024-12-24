@@ -103,7 +103,7 @@ export const useOneIncidentAuthor = (authorId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateIncidentAuthor = (options) => {
+export const useCreateIncidentAuthor = (options = {}) => {
   const invalidateAllIncidentAuthors = useInvalidateAllIncidentAuthors();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -113,7 +113,7 @@ export const useCreateIncidentAuthor = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllIncidentAuthors],
+    [invalidateAllIncidentAuthors]
   );
   const mutation = useMutation({
     mutationFn: (args) => createIncidentAuthor(args),
@@ -148,7 +148,7 @@ export const useUpdateIncidentAuthor = (authorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [authorId, invalidateAllIncidentAuthors, invalidateOneIncidentAuthor],
+    [authorId, invalidateAllIncidentAuthors, invalidateOneIncidentAuthor]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateIncidentAuthor(authorId, args),
@@ -183,7 +183,7 @@ export const useDeleteIncidentAuthor = (authorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [authorId, invalidateAllIncidentAuthors, removeOneIncidentAuthor],
+    [authorId, invalidateAllIncidentAuthors, removeOneIncidentAuthor]
   );
   const mutation = useMutation({
     mutationFn: () => deleteIncidentAuthor(authorId),

@@ -74,7 +74,7 @@ export const createShareholder = async (args) => {
       actions_encumbered: args.encumberedShares,
       actions_no_encumbered: args.unencumberedShares,
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to create the shareholder");
@@ -111,7 +111,7 @@ export const updateShareholder = async (shareholderId, args) => {
       actions_encumbered: args.encumberedShares,
       actions_no_encumbered: args.unencumberedShares,
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to update the shareholder");
@@ -136,7 +136,7 @@ export const updateShareholder = async (shareholderId, args) => {
  */
 export const printSharesCertificate = async (shareholderId) => {
   const response = await fetchService.get(
-    `/generate_pdf_certificat_shareholder?shareholder_id=${shareholderId}`,
+    `/generate_pdf_certificat_shareholder?shareholder_id=${shareholderId}`
   );
   if (!response.ok) {
     throw new ApiError("Failed to print the shares certificate");

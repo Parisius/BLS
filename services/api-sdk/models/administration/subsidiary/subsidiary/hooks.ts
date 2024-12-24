@@ -37,7 +37,7 @@ export const useAllSubsidiaries = () =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateSubsidiary = (options) => {
+export const useCreateSubsidiary = (options = {}) => {
   const invalidateAllSubsidiaries = useInvalidateAllSubsidiaries();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -47,7 +47,7 @@ export const useCreateSubsidiary = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllSubsidiaries],
+    [invalidateAllSubsidiaries]
   );
   const mutation = useMutation({
     mutationFn: (args) => createSubsidiary(args),

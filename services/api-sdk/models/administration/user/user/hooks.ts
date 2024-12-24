@@ -44,7 +44,7 @@ export const useAllUsers = () =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateUser = (options) => {
+export const useCreateUser = (options = {}) => {
   const invalidateAllUsers = useInvalidateAllUsers();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -54,7 +54,7 @@ export const useCreateUser = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllUsers],
+    [invalidateAllUsers]
   );
   const mutation = useMutation({
     mutationFn: (args) => createUser(args),
@@ -77,7 +77,7 @@ export const useCreateUser = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteUser = (userId, options) => {
+export const useDeleteUser = (userId, options = {}) => {
   const invalidateAllUsers = useInvalidateAllUsers();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -87,7 +87,7 @@ export const useDeleteUser = (userId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllUsers],
+    [invalidateAllUsers]
   );
   const mutation = useMutation({
     mutationFn: () => deleteUser(userId),

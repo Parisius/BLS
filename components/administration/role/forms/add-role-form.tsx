@@ -14,7 +14,20 @@ import { Tag } from "lucide-react";
 import { useRoleForm } from "@/lib/administration/role/hooks";
 import { useCreateRole } from "@/services/api-sdk/models/administration/role/role";
 import { cn } from "@/lib/utils";
-export default function AddRoleForm({ formId, className, onSuccess, onError }) {
+
+interface AddRoleFormProps {
+  className?: string;
+  formId: string;
+  onSuccess?: (createdData: any) => void;
+  onError?: () => void;
+}
+
+export default function AddRoleForm({
+  formId,
+  className,
+  onSuccess,
+  onError,
+}: AddRoleFormProps) {
   const form = useRoleForm();
   const { mutateAsync } = useCreateRole();
   const handleSubmit = useCallback(
@@ -37,7 +50,7 @@ export default function AddRoleForm({ formId, className, onSuccess, onError }) {
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {

@@ -21,10 +21,20 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteShareholder } from "@/services/api-sdk/models/shareholding";
-export default function DeleteShareholderButton({ shareholderId }) {
+import { FormattedMessage } from "react-intl";
+
+interface DeleteShareholderButtonProps {
+  shareholderId: string;
+  onSuccess?: () => void;
+}
+
+export default function DeleteShareholderButton({
+  shareholderId,
+  onSuccess,
+}: DeleteShareholderButtonProps) {
   const form = useForm();
   const { mutateAsync } = useDeleteShareholder(shareholderId);
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
@@ -57,30 +67,44 @@ export default function DeleteShareholderButton({ shareholderId }) {
             </Button>
           </TooltipTrigger>
         </AlertDialogTrigger>
-        <TooltipContent>Supprimer</TooltipContent>
+        <TooltipContent>
+          <FormattedMessage
+            id="delete_shareholder_tooltip"
+            defaultMessage="Delete"
+          />
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer cet actionnaire ?
+              <FormattedMessage id="shareholding.delete_shareholder_confirm_title" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="shareholding.delete_shareholder_confirm_description" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              className="sr-only"
-              ref={closeRef}
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="sr-only" ref={closeRef} />
+            <AlertDialogCancel type="button">
+              <FormattedMessage
+                id="shareholding.delete_shareholder_cancel"
+                defaultMessage="Cancel"
+              />
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage
+                  id="shareholding.delete_shareholder_submit"
+                  defaultMessage="Delete"
+                />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

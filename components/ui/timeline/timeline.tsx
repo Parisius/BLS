@@ -1,8 +1,10 @@
 "use client";
-import { forwardRef, useMemo } from "react";
+
 import { cn } from "@/lib/utils";
-import { cva } from "class-variance-authority";
-import { TimelineContext } from "@/components/ui/timeline/timeline-context";
+import { cva, type VariantProps } from "class-variance-authority";
+import { forwardRef, HTMLAttributes, useMemo } from "react";
+import { TimelineContext } from "./timeline-context";
+
 export const timelineVariants = cva(
   "[&>div]:relative [&>div]:flex [&>div]:items-center [&>div]:gap-10 [&>div]:p-5",
   {
@@ -15,14 +17,24 @@ export const timelineVariants = cva(
     defaultVariants: {
       orientation: "vertical",
     },
-  },
+  }
 );
-export const Timeline = forwardRef(
+
+interface TimelineProps
+  extends HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof timelineVariants> {
+  className?: string;
+  children: React.ReactNode;
+  orientation?: "vertical" | "horizontal";
+}
+
+export const Timeline = forwardRef<HTMLDivElement, TimelineProps>(
   ({ className, children, orientation, ...props }, ref) => {
     const contextValue = useMemo(
       () => ({ orientation: orientation ?? "vertical" }),
-      [orientation],
+      [orientation]
     );
+
     return (
       <div
         ref={ref}
@@ -36,6 +48,7 @@ export const Timeline = forwardRef(
         </div>
       </div>
     );
-  },
+  }
 );
+
 Timeline.displayName = "Timeline";

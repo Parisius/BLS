@@ -103,7 +103,11 @@ const validationSchema = z.union([
   individualMemberValidationSchema,
   corporateMemberValidationSchema,
 ]);
-export const useStakeholderForm = (options) => {
+
+interface StakeholderFormOptions {
+  noContext?: boolean;
+}
+export const useStakeholderForm = (options: StakeholderFormOptions = {}) => {
   const formContext = useFormContext();
   const form = useForm({
     resolver: zodResolver(validationSchema),

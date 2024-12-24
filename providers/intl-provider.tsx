@@ -28,7 +28,7 @@ export default function IntlProvider({ children, moduleName }) {
   const queryClient = useQueryClient();
   const messages = useMemo(
     () => loadMessages(moduleName, locale),
-    [locale, moduleName],
+    [locale, moduleName]
   );
   const providerValue = useMemo(
     () => ({
@@ -36,21 +36,18 @@ export default function IntlProvider({ children, moduleName }) {
         dispatch({ type: "SET_LOCALE", value });
       },
     }),
-    [],
+    []
   );
   useEffect(() => {
     (async () => {
-      await saveLocaleServer(locale);
-      saveLocale(locale);
+      // await saveLocaleServer(locale);
+      // saveLocale(locale);
       await queryClient.invalidateQueries();
     })();
   }, [locale, queryClient]);
   return (
     <NoSsr>
-      <ReactIntlProvider
-        locale={locale}
-        messages={messages}
-      >
+      <ReactIntlProvider locale={locale} messages={messages}>
         <IntlContext.Provider value={providerValue}>
           {children}
         </IntlContext.Provider>

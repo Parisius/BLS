@@ -83,7 +83,7 @@ export const useOneSharesTransfer = (transferId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useTransferShares = (options) => {
+export const useTransferShares = (options = {}) => {
   const invalidateAllSharesTransfers = useInvalidateAllSharesTransfers();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -93,7 +93,7 @@ export const useTransferShares = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllSharesTransfers],
+    [invalidateAllSharesTransfers]
   );
   const mutation = useMutation({
     mutationFn: ({ transferDate, ...args }) =>
@@ -132,7 +132,7 @@ export const useApproveSharesTransfer = (transferId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllSharesTransfers, invalidateOneSharesTransfer, transferId],
+    [invalidateAllSharesTransfers, invalidateOneSharesTransfer, transferId]
   );
   const mutation = useMutation({
     mutationFn: (args) => approveSharesTransfer(transferId, args),

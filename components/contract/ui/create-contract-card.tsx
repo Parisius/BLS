@@ -11,12 +11,16 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddContractDialog from "@/components/contract/modals/add-contract-dialog";
-export default function CreateContractCard({ className }) {
+export default function CreateContractCard({
+  className,
+}: {
+  className?: string;
+}) {
   return (
     <Card
       className={cn(
         "max-w-96 self-center sm:min-w-96 sm:max-w-[50%]",
-        className,
+        className
       )}
     >
       <CardHeader>

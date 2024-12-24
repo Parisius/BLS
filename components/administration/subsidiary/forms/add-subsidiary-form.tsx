@@ -15,12 +15,20 @@ import { useSubsidiaryForm } from "@/lib/administration/subsidiary/hooks";
 import { useCreateSubsidiary } from "@/services/api-sdk/models/administration/subsidiary/subsidiary";
 import { cn } from "@/lib/utils";
 import CountrySelect from "@/components/ui/country-select";
+
+interface AddSubsidiaryFormProps {
+  className?: string;
+  formId: string;
+  onSuccess?: (createdData: any) => void;
+  onError?: () => void;
+}
+
 export default function AddSubsidiaryForm({
   formId,
   className,
   onSuccess,
   onError,
-}) {
+}: AddSubsidiaryFormProps) {
   const form = useSubsidiaryForm();
   const { mutateAsync } = useCreateSubsidiary();
   const handleSubmit = useCallback(
@@ -43,7 +51,7 @@ export default function AddSubsidiaryForm({
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
@@ -65,11 +73,7 @@ export default function AddSubsidiaryForm({
               <FormLabel>Nom</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Input
-                    {...field}
-                    placeholder="Nom"
-                    className="h-12 pl-10"
-                  />
+                  <Input {...field} placeholder="Nom" className="h-12 pl-10" />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
                 </div>
               </FormControl>

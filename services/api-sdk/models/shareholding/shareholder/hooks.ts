@@ -109,7 +109,7 @@ export const useOneShareholder = (shareholderId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateShareholder = (options) => {
+export const useCreateShareholder = (options = {}) => {
   const invalidateAllShareholders = useInvalidateAllShareholders();
   const invalidateBankInfos = useInvalidateBankInfos();
   const getMutationOptions = useCallback(
@@ -121,7 +121,7 @@ export const useCreateShareholder = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllShareholders, invalidateBankInfos],
+    [invalidateAllShareholders, invalidateBankInfos]
   );
   const mutation = useMutation({
     mutationFn: (args) => createShareholder(args),
@@ -163,7 +163,7 @@ export const useUpdateShareholder = (shareholderId, options) => {
       shareholderId,
       invalidateAllShareholders,
       invalidateBankInfos,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateShareholder(shareholderId, args),
@@ -207,7 +207,7 @@ export const usePrintSharesCertificate = (shareholderId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteShareholder = (shareholderId, options) => {
+export const useDeleteShareholder = (shareholderId, options = {}) => {
   const removeOneShareholder = useRemoveOneShareholderQuery();
   const invalidateAllShareholders = useInvalidateAllShareholders();
   const invalidateBankInfos = useInvalidateBankInfos();
@@ -226,7 +226,7 @@ export const useDeleteShareholder = (shareholderId, options) => {
       shareholderId,
       invalidateAllShareholders,
       invalidateBankInfos,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: () => deleteShareholder(shareholderId),

@@ -128,7 +128,7 @@ export const useOneContractEvent = (eventId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateContractEvent = (contractId, options) => {
+export const useCreateContractEvent = (contractId, options = {}) => {
   const invalidateAllContractEvents = useInvalidateAllContractEvents();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -138,7 +138,7 @@ export const useCreateContractEvent = (contractId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllContractEvents],
+    [invalidateAllContractEvents]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -177,7 +177,7 @@ export const useUpdateContractEvent = (eventId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [eventId, invalidateAllContractEvents, invalidateOneContractEvent],
+    [eventId, invalidateAllContractEvents, invalidateOneContractEvent]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -216,7 +216,7 @@ export const useForwardContractEvent = (eventId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [eventId, invalidateAllContractEvents, invalidateOneContractEvent],
+    [eventId, invalidateAllContractEvents, invalidateOneContractEvent]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -255,7 +255,7 @@ export const useMarkContractEventAsCompleted = (eventId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [eventId, invalidateAllContractEvents, invalidateOneContractEvent],
+    [eventId, invalidateAllContractEvents, invalidateOneContractEvent]
   );
   const mutation = useMutation({
     mutationFn: () => markContractEventAsCompleted(eventId),
@@ -290,7 +290,7 @@ export const useDeleteContractEvent = (eventId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [eventId, invalidateAllContractEvents, removeOneContractEvent],
+    [eventId, invalidateAllContractEvents, removeOneContractEvent]
   );
   const mutation = useMutation({
     mutationFn: () => deleteContractEvent(eventId),

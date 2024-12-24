@@ -67,7 +67,7 @@ export const useAllContractModels = (parentId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateContractModel = (parentId, options) => {
+export const useCreateContractModel = (parentId = {}, options = {}) => {
   const invalidateAllContractModels = useInvalidateAllContractModels();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -77,7 +77,7 @@ export const useCreateContractModel = (parentId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [parentId, invalidateAllContractModels],
+    [parentId, invalidateAllContractModels]
   );
   const mutation = useMutation({
     mutationFn: ({ file, ...args }) => {
@@ -122,7 +122,7 @@ export const useDeleteContractModel = (modelId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllContractModels, modelId, removeContractModelsQuery],
+    [invalidateAllContractModels, modelId, removeContractModelsQuery]
   );
   const mutation = useMutation({
     mutationFn: () => deleteContractModel(modelId),

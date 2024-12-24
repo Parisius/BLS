@@ -44,7 +44,7 @@ export default function ForwardIncidentTaskForm({
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   return (
     <Form {...form}>

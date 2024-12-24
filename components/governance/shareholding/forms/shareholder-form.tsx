@@ -24,8 +24,11 @@ import {
 } from "@/services/api-sdk/types/shareholding";
 import CountrySelect from "@/components/ui/country-select";
 import { NumberInput } from "@/components/ui/number-input";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function ShareholderForm({ formId, className, onSubmit }) {
   const form = useShareholderForm();
+  const intl = useIntl();
+
   return (
     <Form {...form}>
       <form
@@ -38,22 +41,22 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
           name="type"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Type</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="shareholding.add_shareholder_form_type_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
-                      <SelectValue placeholder="Sélectionner un type" />
+                      <SelectValue
+                        placeholder={intl.formatMessage({
+                          id: "shareholding.add_shareholder_form_type_placeholder",
+                        })}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {shareholderTypes.map((type) => (
-                        <SelectItem
-                          value={type.value}
-                          key={type.value}
-                        >
+                        <SelectItem value={type.value} key={type.value}>
                           {type.label}
                         </SelectItem>
                       ))}
@@ -73,22 +76,22 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
             name="corporateType"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Catégorie de personne morale</FormLabel>
+                <FormLabel>
+                  <FormattedMessage id="shareholding.add_shareholder_form_corporate_type_label" />
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger className="h-12 pl-10">
-                        <SelectValue placeholder="Sélectionner une catégorie de personne morale" />
+                        <SelectValue
+                          placeholder={intl.formatMessage({
+                            id: "shareholding.add_shareholder_form_corporate_type_placeholder",
+                          })}
+                        />
                       </SelectTrigger>
                       <SelectContent>
                         {corporateTypes.map((type) => (
-                          <SelectItem
-                            value={type.value}
-                            key={type.value}
-                          >
+                          <SelectItem value={type.value} key={type.value}>
                             {type.label}
                           </SelectItem>
                         ))}
@@ -110,8 +113,12 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
             <FormItem className="col-span-2">
               <FormLabel>
                 {form.watch("type") === "individual"
-                  ? "Nom et Prénom(s)"
-                  : "Dénomination"}
+                  ? intl.formatMessage({
+                      id: "shareholding.add_shareholder_form_name_label_individual",
+                    })
+                  : intl.formatMessage({
+                      id: "shareholding.add_shareholder_form_name_label_corporate",
+                    })}
               </FormLabel>
               <FormControl>
                 <div className="relative">
@@ -119,8 +126,12 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
                     {...field}
                     placeholder={
                       form.watch("type") === "individual"
-                        ? "Nom et Prénom(s)"
-                        : "Dénomination"
+                        ? intl.formatMessage({
+                            id: "shareholding.add_shareholder_form_name_label_individual",
+                          })
+                        : intl.formatMessage({
+                            id: "shareholding.add_shareholder_form_name_label_corporate",
+                          })
                     }
                     className="h-12 pl-10"
                   />
@@ -137,12 +148,16 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
           name="nationality"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nationalité</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="shareholding.add_shareholder_form_nationality_label" />
+              </FormLabel>
               <FormControl>
                 <CountrySelect
                   value={field.value}
                   onValueChange={field.onChange}
-                  placeholder="Nationalité"
+                  placeholder={intl.formatMessage({
+                    id: "shareholding.add_shareholder_form_nationality_placeholder",
+                  })}
                   className="h-12"
                 />
               </FormControl>
@@ -156,12 +171,16 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
           name="address"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="shareholding.add_shareholder_form_address_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Adresse"
+                    placeholder={intl.formatMessage({
+                      id: "shareholding.add_shareholder_form_address_placeholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -177,12 +196,16 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
           name="encumberedShares"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Actions nanties</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="shareholding.add_shareholder_form_encumbered_shares_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <NumberInput
                     {...field}
-                    placeholder="Actions nanties"
+                    placeholder={intl.formatMessage({
+                      id: "shareholding.add_shareholder_form_encumbered_shares_placeholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -198,12 +221,16 @@ export default function ShareholderForm({ formId, className, onSubmit }) {
           name="unencumberedShares"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Actions non nanties</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="shareholding.add_shareholder_form_unencumbered_shares_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <NumberInput
                     {...field}
-                    placeholder="Actions non nanties"
+                    placeholder={intl.formatMessage({
+                      id: "shareholding.add_shareholder_form_unencumbered_shares_placeholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

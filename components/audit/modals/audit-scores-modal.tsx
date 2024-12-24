@@ -23,7 +23,6 @@ export default function AuditScoresModal({
       <SheetTrigger {...props} />
       <SheetContent
         side="right"
-        closeClassName="md:hidden"
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>

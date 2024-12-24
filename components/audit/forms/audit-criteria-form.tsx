@@ -21,7 +21,18 @@ import { useAuditCriteriaForm } from "@/lib/audit/hooks";
 import { auditCriteriaTypes } from "@/services/api-sdk/types/audit";
 import { Textarea } from "@/components/ui/textarea";
 import { NumberInput } from "@/components/ui/number-input";
-export default function AuditCriteriaForm({ formId, className, onSubmit }) {
+
+interface AuditCriteriaFormProps {
+  formId: string;
+  className?: string;
+  onSubmit?: (data) => Promise<void>;
+}
+
+export default function AuditCriteriaForm({
+  formId,
+  className,
+  onSubmit,
+}: AuditCriteriaFormProps) {
   const form = useAuditCriteriaForm();
   return (
     <Form {...form}>
@@ -38,19 +49,13 @@ export default function AuditCriteriaForm({ formId, className, onSubmit }) {
               <FormLabel>Type</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
                       <SelectValue placeholder="Sélectionner un type" />
                     </SelectTrigger>
                     <SelectContent>
                       {auditCriteriaTypes.map((type) => (
-                        <SelectItem
-                          value={type.value}
-                          key={type.value}
-                        >
+                        <SelectItem value={type.value} key={type.value}>
                           {type.label}
                         </SelectItem>
                       ))}

@@ -20,10 +20,11 @@ export default function AddIncidentAuthorDialog(props) {
   const form = useIncidentAuthorForm({
     noContext: true,
   });
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   return (
     <Dialog>
       <DialogTrigger {...props} />
@@ -40,14 +41,12 @@ export default function AddIncidentAuthorDialog(props) {
             formId={formId}
             className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
+              <Button variant="destructive" onClick={() => form.reset()}>
                 Annuler
               </Button>
             </DialogClose>

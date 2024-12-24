@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Dialog,
   DialogClose,
@@ -24,26 +25,41 @@ import { Badge } from "@/components/ui/badge";
 import { getSharesTransferStatus } from "@/lib/governance/shareholding";
 import Link from "next/link";
 import { ShareholdingRoutes } from "@/config/routes";
+import { FormattedMessage } from "react-intl";
+
 export default function SharesTransfersDialog(props) {
   const { data, isLoading, isError } = useAllSharesTransfers();
+
   return (
     <Dialog>
-      <DialogTrigger
-        disabled={!data || data.length === 0}
-        {...props}
-      />
+      <DialogTrigger disabled={!data || data.length === 0} {...props} />
       <DialogContent className="flex max-h-screen max-w-xl flex-col">
         <DialogHeader>
-          <DialogTitle>Historique des transferts</DialogTitle>
-          <DialogDescription>Historique des transferts</DialogDescription>
+          <DialogTitle>
+            <FormattedMessage
+              id="transfer_history_title"
+              defaultMessage="Transfer History"
+            />
+          </DialogTitle>
+          <DialogDescription>
+            <FormattedMessage
+              id="transfer_history_description"
+              defaultMessage="Transfer history of shares"
+            />
+          </DialogDescription>
         </DialogHeader>
         <div className="flex-1 space-y-5 overflow-auto">
           {!data && isLoading && (
-            <p className="italic text-muted-foreground">Chargement...</p>
+            <p className="italic text-muted-foreground">
+              <FormattedMessage id="loading" defaultMessage="Loading..." />
+            </p>
           )}
           {!data && isError && (
             <p className="italic text-destructive">
-              Erreur lors du chargement des données
+              <FormattedMessage
+                id="loading_error"
+                defaultMessage="Error loading data"
+              />
             </p>
           )}
           {data?.map(
@@ -52,7 +68,12 @@ export default function SharesTransfersDialog(props) {
                 <CardHeader>
                   <div className="flex items-start justify-between gap-2">
                     <CardTitle>
-                      {shares} action{shares > 1 && "s"}
+                      {shares}{" "}
+                      <FormattedMessage
+                        id="shares_count"
+                        defaultMessage="share{shares, plural, one {} other {s}}"
+                        values={{ shares }}
+                      />
                     </CardTitle>
                     <Badge
                       className={cn(
@@ -66,7 +87,7 @@ export default function SharesTransfersDialog(props) {
                             status === "approved",
                           "bg-secondary text-secondary-foreground":
                             status === "validated",
-                        },
+                        }
                       )}
                     >
                       {getSharesTransferStatus(status)}
@@ -79,7 +100,11 @@ export default function SharesTransfersDialog(props) {
                   </CardDescription>
                   <div className="flex items-center justify-between gap-2">
                     <CardDescription className="italic">
-                      Transféré le {formatDate(transferDate)}
+                      <FormattedMessage
+                        id="transferred_on"
+                        defaultMessage="Transferred on {date}"
+                        values={{ date: formatDate(transferDate) }}
+                      />
                     </CardDescription>
                     {type === "tier" && (
                       <Button
@@ -90,19 +115,25 @@ export default function SharesTransfersDialog(props) {
                         <Link
                           href={ShareholdingRoutes.sharesTransferPage(id).index}
                         >
-                          Voir details <MoveRight />
+                          <FormattedMessage
+                            id="view_details"
+                            defaultMessage="View details"
+                          />{" "}
+                          <MoveRight />
                         </Link>
                       </Button>
                     )}
                   </div>
                 </CardHeader>
               </Card>
-            ),
+            )
           )}
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="close" defaultMessage="Close" />
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

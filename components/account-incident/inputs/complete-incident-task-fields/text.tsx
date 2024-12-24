@@ -1,10 +1,16 @@
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-export function TextField({ className, ...field }) {
-  return (
-    <Input
-      {...field}
-      className={cn("h-12", className)}
-    />
-  );
+
+type TextFieldProps = {
+  className?: string;
+  disabled?: boolean;
+  onChange?: (...event: any[]) => void;
+  onBlur?: () => void;
+  value?: any;
+  name?: string;
+  ref?: any;
+  [key: string]: any;
+};
+
+export function TextField({ className = "", ...field }: TextFieldProps) {
+  return <input type="text" className={cn("h-12", className)} {...field} />;
 }

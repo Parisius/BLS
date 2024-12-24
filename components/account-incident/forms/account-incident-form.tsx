@@ -1,4 +1,6 @@
 "use client";
+import AuthorSelect from "@/components/account-incident/inputs/author-select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -8,9 +10,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { useAccountIncidentForm } from "@/lib/account-incident/hooks";
 import {
   Select,
   SelectContent,
@@ -18,10 +17,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useAccountIncidentForm } from "@/lib/account-incident/hooks";
+import { cn } from "@/lib/utils";
 import { incidentCategories } from "@/services/api-sdk/types/account-incident/account-incident";
-import { DateInput } from "@/components/ui/date-input";
-import AuthorSelect from "@/components/account-incident/inputs/author-select";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Tag } from "lucide-react";
 export default function AccountIncidentForm({ formId, className, onSubmit }) {
   const form = useAccountIncidentForm();
   return (
@@ -39,19 +38,13 @@ export default function AccountIncidentForm({ formId, className, onSubmit }) {
               <FormLabel>Catégorie</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
                       <SelectValue placeholder="Sélectionner une catégorie" />
                     </SelectTrigger>
                     <SelectContent>
                       {incidentCategories.map((category) => (
-                        <SelectItem
-                          value={category.value}
-                          key={category.value}
-                        >
+                        <SelectItem value={category.value} key={category.value}>
                           {category.label}
                         </SelectItem>
                       ))}
@@ -94,12 +87,17 @@ export default function AccountIncidentForm({ formId, className, onSubmit }) {
             <FormItem className="col-span-2">
               <FormLabel>Date de réception</FormLabel>
               <FormControl>
-                <DateInput
-                  value={field.value}
-                  className="h-12"
-                  onChange={field.onChange}
+                <Input
+                  type="date"
+                  className="w-full h-12 px-3 rounded-md border border-input bg-background"
+                  value={
+                    field.value
+                      ? new Date(field.value).toISOString().split("T")[0]
+                      : ""
+                  }
+                  onChange={(e) => field.onChange(e.target.value)}
                   disabled={form.formState.isSubmitting}
-                  maxDate={new Date()}
+                  max={new Date().toISOString().split("T")[0]}
                 />
               </FormControl>
               <FormMessage />

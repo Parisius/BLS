@@ -123,7 +123,7 @@ export const useRemoveOneContractQuery = () => {
  * @param queries - The queries to filter the contracts.
  * @returns The query result.
  */
-export const useAllContracts = (queries) =>
+export const useAllContracts = (queries = {}) =>
   useQuery({
     queryKey: ALL_CONTRACTS_QUERY_TAG,
     queryFn: () => getAllContracts(queries),
@@ -143,7 +143,7 @@ export const useOneContract = (contractId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateContract = (options) => {
+export const useCreateContract = (options = {}) => {
   const invalidateAllContracts = useInvalidateAllContracts();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -153,7 +153,7 @@ export const useCreateContract = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllContracts],
+    [invalidateAllContracts]
   );
   const mutation = useMutation({
     mutationFn: ({ files, ...args }) => {
@@ -198,7 +198,7 @@ export const useUpdateContract = (contractId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [contractId, invalidateAllContracts, invalidateOneContract],
+    [contractId, invalidateAllContracts, invalidateOneContract]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateContract(contractId, args),
@@ -231,7 +231,7 @@ export const useForwardContract = (contractId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [contractId, invalidateOneContract],
+    [contractId, invalidateOneContract]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -258,7 +258,7 @@ export const useForwardContract = (contractId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCompleteContract = (contractId, options) => {
+export const useCompleteContract = (contractId, options = {}) => {
   const invalidateOneContract = useInvalidateOneContract();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -268,7 +268,7 @@ export const useCompleteContract = (contractId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneContract, contractId],
+    [invalidateOneContract, contractId]
   );
   const mutation = useMutation({
     mutationFn: ({ files, ...args }) => {
@@ -301,7 +301,7 @@ export const useCompleteContract = (contractId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const usePlanContractDates = (contractId, options) => {
+export const usePlanContractDates = (contractId, options = {}) => {
   const invalidateOneContract = useInvalidateOneContract();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -311,7 +311,7 @@ export const usePlanContractDates = (contractId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [contractId, invalidateOneContract],
+    [contractId, invalidateOneContract]
   );
   const mutation = useMutation({
     mutationFn: (args) => {
@@ -359,7 +359,7 @@ export const useDeleteContract = (contractId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [contractId, invalidateAllContracts, removeOneContract],
+    [contractId, invalidateAllContracts, removeOneContract]
   );
   const mutation = useMutation({
     mutationFn: () => deleteContract(contractId),

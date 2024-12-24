@@ -88,7 +88,7 @@ export const useOneIncidentTask = (taskId) =>
  * @param options - The options for the mutation.
  * @returns The mutation object.
  */
-export const useCompleteIncidentTask = (taskId, options) => {
+export const useCompleteIncidentTask = (taskId, options = {}) => {
   const invalidateOneIncidentTask = useInvalidateOneIncidentTask();
   const invalidateAllIncidentTasks = useInvalidateAllIncidentTasks();
   const invalidateOneAccountIncident = useInvalidateOneAccountIncident();
@@ -109,7 +109,7 @@ export const useCompleteIncidentTask = (taskId, options) => {
       invalidateOneAccountIncident,
       invalidateOneIncidentTask,
       taskId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => {
@@ -137,7 +137,7 @@ export const useCompleteIncidentTask = (taskId, options) => {
             [key]: formData,
           };
         },
-        { type: args.type },
+        { type: args.type }
       );
       return completeIncidentTask(taskId, newArgs);
     },
@@ -160,7 +160,7 @@ export const useCompleteIncidentTask = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardIncidentTask = (taskId, options) => {
+export const useForwardIncidentTask = (taskId, options = {}) => {
   const invalidateOneIncidentTask = useInvalidateOneIncidentTask();
   const invalidateAllIncidentTasks = useInvalidateAllIncidentTasks();
   const getMutationOptions = useCallback(
@@ -172,7 +172,7 @@ export const useForwardIncidentTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [taskId, invalidateAllIncidentTasks, invalidateOneIncidentTask],
+    [taskId, invalidateAllIncidentTasks, invalidateOneIncidentTask]
   );
   const mutation = useMutation({
     mutationFn: (args) =>

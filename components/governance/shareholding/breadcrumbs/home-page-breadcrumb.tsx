@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +10,7 @@ import {
 import { ModulesRoutes } from "@/config/routes";
 import { Component } from "lucide-react";
 import Link from "next/link";
+import { FormattedMessage } from "react-intl";
 export function HomePageBreadcrumb() {
   return (
     <Breadcrumb>
@@ -24,13 +26,15 @@ export function HomePageBreadcrumb() {
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link href={ModulesRoutes.submodules("governance")}>
-              Gouvernance
+              <FormattedMessage id="shareholding.breadcrumb1" />
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Structure de l&apos;actionnariat</BreadcrumbPage>
+          <BreadcrumbPage>
+            <FormattedMessage id="shareholding.breadcrumb2" />
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

@@ -16,7 +16,7 @@ import {
 import React from "react";
 import { auditModules } from "@/services/api-sdk/types/audit";
 import { useModuleForm } from "@/lib/audit/hooks";
-export default function ModuleForm({ className }) {
+export default function ModuleForm({ className }: { className?: string }) {
   const form = useModuleForm();
   return (
     <Form {...form}>
@@ -28,19 +28,13 @@ export default function ModuleForm({ className }) {
             <FormItem>
               <FormLabel>Module</FormLabel>
               <FormControl>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Sélectionner un module" />
                   </SelectTrigger>
                   <SelectContent>
                     {auditModules.map((module) => (
-                      <SelectItem
-                        value={module.value}
-                        key={module.value}
-                      >
+                      <SelectItem value={module.value} key={module.value}>
                         {module.labels.singular}
                       </SelectItem>
                     ))}

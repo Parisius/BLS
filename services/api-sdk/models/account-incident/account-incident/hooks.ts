@@ -98,7 +98,7 @@ export const useOneAccountIncident = (incidentId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateAccountIncident = (options) => {
+export const useCreateAccountIncident = (options = {}) => {
   const invalidateAllAccountIncidents = useInvalidateAllAccountIncidents();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -108,7 +108,7 @@ export const useCreateAccountIncident = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAccountIncidents],
+    [invalidateAllAccountIncidents]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -135,7 +135,7 @@ export const useCreateAccountIncident = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const usePrintAccountIncident = (incidentId, options) => {
+export const usePrintAccountIncident = (incidentId, options = {}) => {
   const mutation = useMutation({
     mutationFn: () => printAccountIncident(incidentId),
     mutationKey: getPrintAccountIncidentMutationKey(incidentId),

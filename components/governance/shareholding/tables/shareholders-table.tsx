@@ -1,11 +1,10 @@
 "use client";
-import * as React from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import DeleteShareholderButton from "@/components/governance/shareholding/buttons/delete-shareholder-button";
+import PrintSharesCertificateButton from "@/components/governance/shareholding/buttons/print-shares-certificate-button";
+import AddShareholderDialog from "@/components/governance/shareholding/modals/add-shareholder-dialog";
+import { UpdateShareholderDialog } from "@/components/governance/shareholding/modals/update-shareholder-dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -14,167 +13,206 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Pencil, Printer, UserPlus, UserSearch } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
+import { useAllShareholders } from "@/services/api-sdk/models/shareholding";
 import {
   corporateTypes,
   shareholderTypes,
 } from "@/services/api-sdk/types/shareholding";
-import { UpdateShareholderDialog } from "@/components/governance/shareholding/modals/update-shareholder-dialog";
-import DeleteShareholderButton from "@/components/governance/shareholding/buttons/delete-shareholder-button";
-import { useAllShareholders } from "@/services/api-sdk/models/shareholding";
-import AddShareholderDialog from "@/components/governance/shareholding/modals/add-shareholder-dialog";
-import PrintSharesCertificateButton from "@/components/governance/shareholding/buttons/print-shares-certificate-button";
-import TableFilter from "@/components/ui/table-filter";
-export const columns = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: "Nom / Dénomination",
-  },
-  {
-    accessorKey: "nationality",
-    header: "Nationalité",
-  },
-  {
-    accessorKey: "address",
-    header: "Adresse",
-  },
-  {
-    accessorFn: (row) =>
-      shareholderTypes.find((type) => type.value === row.type)?.label,
-    header: "Type",
-    cell: ({ getValue }) => getValue(),
-    meta: {
-      filterVariant: "select",
-      filterOptions: shareholderTypes,
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Pencil, Printer, UserPlus, UserSearch } from "lucide-react";
+import * as React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
+
+interface Shareholder {
+  id: string;
+  name: string;
+  nationality: string;
+  address: string;
+  type: string;
+  corporateType: string;
+  unencumberedShares: number;
+  encumberedShares: number;
+  sharePercentage: number;
+}
+
+export default function ShareholdersTable({
+  containerClassName,
+  tableWrapperClassName,
+}: {
+  containerClassName?: string;
+  tableWrapperClassName?: string;
+}) {
+  const intl = useIntl();
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const { data: initialData, isLoading, isError } = useAllShareholders();
+  const [tableData, setTableData] = React.useState<Shareholder[]>([]);
+
+  React.useEffect(() => {
+    if (initialData) {
+      setTableData(initialData);
+    }
+  }, [initialData]);
+
+  const handleDelete = (id: string) => {
+    setTableData((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const columns: ColumnDef<Shareholder>[] = [
+    {
+      accessorKey: "name",
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_name" />
+        </div>
+      ),
     },
-  },
-  {
-    accessorFn: (row) =>
-      corporateTypes.find((type) => type.value === row.corporateType)?.label,
-    header: "Catégorie",
-    cell: ({ getValue }) => getValue(),
-    meta: {
-      filterVariant: "select",
-      filterOptions: corporateTypes,
+    {
+      accessorKey: "nationality",
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_nationality" />
+        </div>
+      ),
     },
-  },
-  {
-    accessorKey: "unencumberedShares",
-    header: "Actions non nanties",
-    meta: {
-      filterVariant: "range",
+    {
+      accessorKey: "address",
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_address" />
+        </div>
+      ),
     },
-  },
-  {
-    accessorKey: "encumberedShares",
-    header: "Actions nanties",
-    meta: {
-      filterVariant: "range",
+    {
+      id: "type",
+      accessorFn: (row) =>
+        shareholderTypes.find((type) => type.value === row.type)?.label,
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_type" />
+        </div>
+      ),
+      cell: ({ getValue }) => getValue(),
     },
-  },
-  {
-    accessorFn: (row) => row.encumberedShares + row.unencumberedShares,
-    header: "Total des actions",
-    cell: ({ getValue }) => getValue(),
-    meta: {
-      filterVariant: "range",
+    {
+      id: "category",
+      accessorFn: (row) =>
+        corporateTypes.find((type) => type.value === row.corporateType)?.label,
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_category" />
+        </div>
+      ),
+      cell: ({ getValue }) => getValue(),
     },
-  },
-  {
-    accessorKey: "sharePercentage",
-    header: "Pourcentage des actions",
-    cell: ({ getValue }) => `${getValue()}%`,
-    meta: {
-      filterVariant: "range",
+    {
+      accessorKey: "unencumberedShares",
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_unencumbered_shares" />
+        </div>
+      ),
     },
-  },
-  {
-    id: "actions",
-    cell: ({ row }) => (
-      <div className="text-nowrap text-end">
-        <Tooltip>
-          <UpdateShareholderDialog
-            asChild
-            shareholderId={row.original.id}
-          >
+    {
+      accessorKey: "encumberedShares",
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_encumbered_shares" />
+        </div>
+      ),
+    },
+    {
+      id: "totalShares",
+      accessorFn: (row) => row.encumberedShares + row.unencumberedShares,
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_total_shares" />
+        </div>
+      ),
+      cell: ({ getValue }) => getValue(),
+    },
+    {
+      accessorKey: "sharePercentage",
+      header: () => (
+        <div>
+          <FormattedMessage id="shareholding.table_headers_share_percentage" />
+        </div>
+      ),
+      cell: ({ getValue }) => `${getValue()}%`,
+    },
+    {
+      id: "actions",
+      header: () => (
+        <div className="text-center">
+          <FormattedMessage id="shareholding.table_headers_actions" />
+        </div>
+      ),
+      cell: ({ row }) => (
+        <div className="text-nowrap text-center">
+          <Tooltip>
+            <UpdateShareholderDialog asChild shareholderId={row.original.id}>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full"
+                >
+                  <Pencil size={16} />
+                </Button>
+              </TooltipTrigger>
+            </UpdateShareholderDialog>
+            <TooltipContent>
+              <FormattedMessage id="shareholding.actions_edit" />
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                type="button"
+              <PrintSharesCertificateButton
+                shareholderId={row.original.id}
                 variant="ghost"
                 size="icon"
                 className="rounded-full"
               >
-                <Pencil size={16} />
-              </Button>
+                <Printer size={16} />
+              </PrintSharesCertificateButton>
             </TooltipTrigger>
-          </UpdateShareholderDialog>
-          <TooltipContent>Modifier</TooltipContent>
-        </Tooltip>
+            <TooltipContent>
+              <FormattedMessage id="shareholding.actions_print_certificate" />
+            </TooltipContent>
+          </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <PrintSharesCertificateButton
-              shareholderId={row.original.id}
-              variant="ghost"
-              size="icon"
-              className="rounded-full"
-            >
-              <Printer size={16} />
-            </PrintSharesCertificateButton>
-          </TooltipTrigger>
-          <TooltipContent>Imprimer le certificat d&apos;actions</TooltipContent>
-        </Tooltip>
+          <DeleteShareholderButton
+            shareholderId={row.original.id}
+            onSuccess={() => handleDelete(row.original.id)}
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+  ];
 
-        <DeleteShareholderButton shareholderId={row.original.id} />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-];
-export default function ShareholdersTable({
-  containerClassName,
-  tableWrapperClassName,
-}) {
-  const [globalFilter, setGlobalFilter] = React.useState("");
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnFilters, setColumnFilters] = React.useState([]);
-  const { data, isLoading, isError } = useAllShareholders();
   const table = useReactTable({
-    data: data ?? [],
+    data: tableData,
     columns,
-    filterFns: {},
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
@@ -186,24 +224,31 @@ export default function ShareholdersTable({
       columnFilters,
     },
   });
+
   return (
     <div className={cn("space-y-5 overflow-auto", containerClassName)}>
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "shareholding.search_placeholder",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className="max-w-sm pl-10 focus-visible:ring-0"
+            className="w-full pl-10 focus-visible:ring-0"
           />
           <UserSearch className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
         <AddShareholderDialog asChild>
           <Button
-            aria-label="Ajouter un directeur"
+            aria-label={intl.formatMessage({
+              id: "add_shareholder_button_aria_label",
+            })}
             className="gap-2"
           >
             <UserPlus />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              <FormattedMessage id="shareholding.add_shareholder_button_aria_label" />
+            </span>
           </Button>
         </AddShareholderDialog>
       </div>
@@ -218,37 +263,29 @@ export default function ShareholdersTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
-                    {header.column.getCanFilter() ? (
-                      <div className="py-2">
-                        <TableFilter column={header.column} />
-                      </div>
-                    ) : null}
                   </TableHead>
                 ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {isLoading && !data && (
+            {isLoading && !tableData.length && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Chargement...
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="shareholding.loading" />
                 </TableCell>
               </TableRow>
             )}
 
-            {isError && !data && (
+            {isError && !tableData.length && (
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
                   className="text-center text-destructive"
                 >
-                  Erreur lors du chargement
+                  <FormattedMessage id="shareholding.errorLoading" />
                 </TableCell>
               </TableRow>
             )}
@@ -266,20 +303,17 @@ export default function ShareholdersTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))}
 
-            {!isLoading && data?.length === 0 && (
+            {!isLoading && tableData.length === 0 && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucun actionnaire trouvé
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="shareholding.noShareholders" />
                 </TableCell>
               </TableRow>
             )}

@@ -11,12 +11,16 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddAccountIncidentDialog from "@/components/account-incident/modals/add-account-incident-dialog";
-export default function CreateAccountIncidentCard({ className }) {
+export default function CreateAccountIncidentCard({
+  className,
+}: {
+  className?: any;
+}) {
   return (
     <Card
       className={cn(
         "max-w-96 self-center sm:min-w-96 sm:max-w-[50%]",
-        className,
+        className
       )}
     >
       <CardHeader>

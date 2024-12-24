@@ -14,7 +14,7 @@ export default function AuthLayout({ children }) {
             width={300}
             height={100}
           />
-          <p className="text-center text-2xl text-primary-foreground">
+          <p className="text-center text-xl text-primary-foreground w-2/3">
             <FormattedMessage id="auth.welcome" />
           </p>
         </div>

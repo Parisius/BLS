@@ -18,10 +18,11 @@ import AddAuditCriteriaForm from "@/components/audit/forms/add-audit-criteria-fo
 export default function AddAuditCriteriaDialog({ module, ...props }) {
   const formId = useId();
   const form = useAuditCriteriaForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   return (
     <Dialog>
       <DialogTrigger {...props} />
@@ -38,14 +39,12 @@ export default function AddAuditCriteriaDialog({ module, ...props }) {
             className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
             module={module}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
+              <Button variant="destructive" onClick={() => form.reset()}>
                 Annuler
               </Button>
             </DialogClose>

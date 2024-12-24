@@ -20,8 +20,8 @@ import ConfirmAccountIncidentCreationModal from "@/components/account-incident/m
 export default function AddAccountIncidentDialog(props) {
   const formId = useId();
   const form = useAccountIncidentForm();
-  const closeRef = useRef(null);
-  const closeConfirmRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const closeConfirmRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const handleSuccess = useCallback(
     ({ id }) => {
@@ -29,7 +29,7 @@ export default function AddAccountIncidentDialog(props) {
       closeConfirmRef.current?.click();
       router.push(AccountIncidentRoutes.accountIncidentPage(id).index);
     },
-    [router],
+    [router]
   );
   return (
     <Dialog>
@@ -48,10 +48,7 @@ export default function AddAccountIncidentDialog(props) {
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
+              <Button variant="destructive" onClick={() => form.reset()}>
                 Annuler
               </Button>
             </DialogClose>

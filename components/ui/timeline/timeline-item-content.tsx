@@ -1,8 +1,10 @@
 "use client";
-import { forwardRef, useContext } from "react";
-import { cva } from "class-variance-authority";
+
+import { forwardRef, useContext, HTMLAttributes } from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { TimelineContext } from "@/components/ui/timeline/timeline-context";
+import { TimelineContext } from "./timeline-context";
+
 export const timelineItemContentVariants = cva("row-start-1 text-sm", {
   variants: {
     variant: {
@@ -112,21 +114,34 @@ export const timelineItemContentVariants = cva("row-start-1 text-sm", {
     orientation: "vertical",
   },
 });
-export const TimelineItemContent = forwardRef(
-  ({ className, variant, position, children, ...props }, ref) => {
-    const { orientation } = useContext(TimelineContext);
-    return (
-      <div
-        ref={ref}
-        {...props}
-        className={cn(
-          timelineItemContentVariants({ variant, orientation, position }),
-          className,
-        )}
-      >
-        <div>{children}</div>
-      </div>
-    );
-  },
-);
+
+type TimelineItemContentProps = HTMLAttributes<HTMLDivElement> &
+  VariantProps<typeof timelineItemContentVariants> & {
+    children: React.ReactNode;
+  };
+
+interface TimelineContextType {
+  orientation: "vertical" | "horizontal";
+}
+
+export const TimelineItemContent = forwardRef<
+  HTMLDivElement,
+  TimelineItemContentProps
+>(({ className, variant, position, children, ...props }, ref) => {
+  const { orientation } = useContext(TimelineContext) as TimelineContextType;
+
+  return (
+    <div
+      ref={ref}
+      {...props}
+      className={cn(
+        timelineItemContentVariants({ variant, orientation, position }),
+        className
+      )}
+    >
+      <div>{children}</div>
+    </div>
+  );
+});
+
 TimelineItemContent.displayName = "TimelineItemContent";
