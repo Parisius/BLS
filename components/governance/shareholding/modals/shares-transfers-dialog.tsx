@@ -22,10 +22,41 @@ import { cn, formatDate } from "@/lib/utils";
 import { MoveRight } from "lucide-react";
 import { useAllSharesTransfers } from "@/services/api-sdk/models/shareholding";
 import { Badge } from "@/components/ui/badge";
-import { getSharesTransferStatus } from "@/lib/governance/shareholding";
 import Link from "next/link";
 import { ShareholdingRoutes } from "@/config/routes";
 import { FormattedMessage } from "react-intl";
+
+/**
+ * Get the status of a shares transfer.
+ * @param status - The status of the shares transfer.
+ * @returns The status of the shares transfer as a string.
+ */
+const getSharesTransferStatus = (status: string) => {
+  switch (status) {
+    case "pending":
+      return <FormattedMessage id="status_pending" defaultMessage="Pending" />;
+    case "rejected":
+      return (
+        <FormattedMessage id="status_rejected" defaultMessage="Rejected" />
+      );
+    case "cancelled":
+      return (
+        <FormattedMessage id="status_cancelled" defaultMessage="Cancelled" />
+      );
+    case "validated":
+      return (
+        <FormattedMessage id="status_validated" defaultMessage="Validated" />
+      );
+    case "approved":
+      return (
+        <FormattedMessage id="status_approved" defaultMessage="Transferred" />
+      );
+    default:
+      return (
+        <FormattedMessage id="status_unknown" defaultMessage="Undefined" />
+      );
+  }
+};
 
 export default function SharesTransfersDialog(props) {
   const { data, isLoading, isError } = useAllSharesTransfers();

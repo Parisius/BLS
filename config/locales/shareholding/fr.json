@@ -89,5 +89,11 @@
   "shares_count": "{shares} action{shares, plural, one {} other {s}}",
   "transferred_on": "Transféré le {date}",
   "view_details": "Voir les détails",
-  "close": "Fermer"
+  "close": "Fermer",
+  "status_pending": "En attente",
+  "status_rejected": "Rejeté",
+  "status_cancelled": "Annulé",
+  "status_validated": "Validé",
+  "status_approved": "Transféré",
+  "status_unknown": "Non défini"
 }
