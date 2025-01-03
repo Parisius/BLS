@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { FormattedMessage } from "react-intl";
 export function SharesTransferDetailsPageBreadcrumb({ reference }) {
   return (
     <Breadcrumb>
@@ -36,12 +37,12 @@ export function SharesTransferDetailsPageBreadcrumb({ reference }) {
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
                 <Link href={ModulesRoutes.submodules("governance")}>
-                  Gouvernance
+                  <FormattedMessage id="shareholding.breadcrumb1" />
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={ShareholdingRoutes.index}>
-                  Transfert d&apos;actions
+                  <FormattedMessage id="shareholding.breadcrumb3" />
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -51,7 +52,7 @@ export function SharesTransferDetailsPageBreadcrumb({ reference }) {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={ModulesRoutes.submodules("governance")}>
-                Gouvernance
+                <FormattedMessage id="shareholding.breadcrumb1" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -59,7 +60,7 @@ export function SharesTransferDetailsPageBreadcrumb({ reference }) {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={ShareholdingRoutes.index}>
-                Transfert d&apos;actions
+                <FormattedMessage id="shareholding.breadcrumb3" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>

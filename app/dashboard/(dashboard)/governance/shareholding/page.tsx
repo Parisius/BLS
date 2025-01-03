@@ -1,3 +1,4 @@
+"use client";
 import { ArrowLeftRight, History, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HomePageBreadcrumb } from "@/components/governance/shareholding/breadcrumbs";

@@ -11,6 +11,10 @@ export default function PrintAttendantsListButton({
   className,
   children,
   ...props
+}: {
+  className?: string;
+  meetingId: string;
+  children;
 }) {
   const form = useForm();
   const { mutateAsync } = usePrintMeetingAttendantsList(meetingId);
@@ -29,10 +33,7 @@ export default function PrintAttendantsListButton({
     });
   }, [mutateAsync]);
   return (
-    <form
-      className="contents"
-      onSubmit={form.handleSubmit(handlePrint)}
-    >
+    <form className="contents" onSubmit={form.handleSubmit(handlePrint)}>
       <Button
         {...props}
         type="submit"

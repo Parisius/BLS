@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import React from "react";
 import mime from "mime";
 import { useOneSharesTransfer } from "@/services/api-sdk/models/shareholding";
+import { FormattedMessage } from "react-intl";
 const getIcon = (filename) => {
   const fileType = mime.getType(filename);
   const extension = fileType ? mime.getExtension(fileType) : null;
@@ -44,15 +45,19 @@ export default function SharesTransferFilesModal({
     throw new Error("An error occurred while fetching the data");
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <FormattedMessage
+          id="shareholding.loading"
+          defaultMessage="Loading..."
+        />
+      </div>
+    );
   }
   return (
     <Sheet>
       <SheetTrigger {...props} />
-      <SheetContent
-        side="right"
-        className="flex flex-col gap-5"
-      >
+      <SheetContent side="right" className="flex flex-col gap-5">
         <SheetHeader>
           <SheetTitle>Archives</SheetTitle>
           <SheetDescription className="line-clamp-1">
@@ -71,7 +76,9 @@ export default function SharesTransferFilesModal({
                 >
                   <span
                     style={{
-                      backgroundImage: `url('/global/images/${getIcon(fileUrl)}')`,
+                      backgroundImage: `url('/global/images/${getIcon(
+                        fileUrl
+                      )}')`,
                     }}
                     className="block h-20 bg-contain bg-center bg-no-repeat"
                   />
@@ -82,12 +89,20 @@ export default function SharesTransferFilesModal({
           </div>
         ) : (
           <div className="flex-1 text-center font-medium italic sm:text-lg">
-            Aucun fichier n&apos;a été ajouté à cette transaction.
+            <FormattedMessage
+              id="shareholding.archives_noFiles"
+              defaultMessage="Loading..."
+            />
           </div>
         )}
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage
+                id="shareholding.transfert_timeline_close"
+                defaultMessage="Loading..."
+              />
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

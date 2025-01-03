@@ -11,6 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import React from "react";
 import SharesTransferTasksTimeline from "@/components/governance/shareholding/ui/shares-transfer-tasks-timeline";
+import { FormattedMessage } from "react-intl";
+
 export default function SharesTransferTasksTimelineModal({
   transferId,
   reference,
@@ -22,11 +24,12 @@ export default function SharesTransferTasksTimelineModal({
       <SheetTrigger {...props} />
       <SheetContent
         side="left"
-        closeClassName="md:hidden"
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>
-          <SheetTitle>Planification de la transaction</SheetTitle>
+          <SheetTitle>
+            <FormattedMessage id="shareholding.transfert_timeline_planification" />
+          </SheetTitle>
           <SheetDescription className="line-clamp-1">
             {reference}
           </SheetDescription>
@@ -39,7 +42,9 @@ export default function SharesTransferTasksTimelineModal({
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="shareholding.transfert_timeline_close" />
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

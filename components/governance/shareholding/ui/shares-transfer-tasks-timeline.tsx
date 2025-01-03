@@ -31,34 +31,47 @@ import { useAllSharesTransferTasks } from "@/services/api-sdk/models/shareholdin
 import CompleteSharesTransferTaskDialog from "@/components/governance/shareholding/modals/complete-shares-transfer-task-dialog";
 import ForwardSharesTransferTaskDialog from "@/components/governance/shareholding/modals/forward-shares-transfer-task-dialog";
 import SharesTransferTaskForwardsDialog from "@/components/governance/shareholding/modals/shares-transfer-task-forwards-dialog";
+import { FormattedMessage } from "react-intl";
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 export default function SharesTransferTasksTimeline({
   transferId,
   currentTaskId,
 }) {
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllSharesTransferTasks(transferId);
+
   if (isError) {
     throw new Error("Failed to fetch transfer tasks");
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <FormattedMessage id="shareholding.transfer_timeline_loading" />
+      </div>
+    );
   }
   if (!data || data.length === 0) {
-    return <div>No tasks found</div>;
+    return (
+      <div>
+        <FormattedMessage id="shareholding.transfer_timeline_no_tasks_found" />
+      </div>
+    );
   }
+
   return (
     <Timeline>
       <TimelineSeparator />
       {data.map(
         (
           { id, title, completed, dueDate, form, forwards, createdBy },
-          index,
+          index
         ) => (
           <TimelineItem
             key={id}
@@ -82,7 +95,9 @@ export default function SharesTransferTasksTimeline({
                       </Button>
                     </TooltipTrigger>
                   </DropdownMenuTrigger>
-                  <TooltipContent>Menu</TooltipContent>
+                  <TooltipContent>
+                    <FormattedMessage id="shareholding.transfer_timeline_menu" />
+                  </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
                   {currentTaskId === id && (
@@ -96,22 +111,19 @@ export default function SharesTransferTasksTimeline({
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareCheck />
-                        Valider
+                        <FormattedMessage id="shareholding.transfer_timeline_validate" />
                       </DropdownMenuItem>
                     </CompleteSharesTransferTaskDialog>
                   )}
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardSharesTransferTaskDialog
-                      asChild
-                      taskId={id}
-                    >
+                    <ForwardSharesTransferTaskDialog asChild taskId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        <FormattedMessage id="shareholding.transfer_timeline_forward_task" />
                       </DropdownMenuItem>
                     </ForwardSharesTransferTaskDialog>
                   )}
@@ -126,7 +138,7 @@ export default function SharesTransferTasksTimeline({
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareStack />
-                        Historique des transferts
+                        <FormattedMessage id="shareholding.transfer_timeline_history_of_transfers" />
                       </DropdownMenuItem>
                     </SharesTransferTaskForwardsDialog>
                   )}
@@ -143,7 +155,11 @@ export default function SharesTransferTasksTimeline({
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  (
+                  <FormattedMessage id="shareholding.transfer_timeline_completed" />
+                  )
+                </p>
               )}
             </TimelineItemContent>
 
@@ -156,16 +172,16 @@ export default function SharesTransferTasksTimeline({
               </TimelineItemContent>
             )}
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": data.every(
-            (task) => task.completed,
+            (task) => task.completed
           ),
         })}
       >
-        Terminé !!!
+        <FormattedMessage id="shareholding.transfer_timeline_finish" />
       </TimelineHead>
     </Timeline>
   );

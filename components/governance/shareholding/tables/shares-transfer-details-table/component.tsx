@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -10,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { cn, formatDate } from "@/lib/utils";
 import { getSharesTransferStatus } from "@/lib/governance/shareholding";
 import React from "react";
+import { FormattedMessage } from "react-intl";
+
 export function SharesTransferDetailsTable({
   reference,
   seller,
@@ -23,18 +26,30 @@ export function SharesTransferDetailsTable({
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Référence</TableHead>
-          <TableHead>Cédant</TableHead>
-          <TableHead>Bénéficiaire</TableHead>
-          <TableHead>Nombre d&apos;actions</TableHead>
-          <TableHead>Date de transfert</TableHead>
-          <TableHead className={cn(currentTask && "text-destructive")}>
-            Prochaine tâche
+          <TableHead>
+            <FormattedMessage id="shareholding.transfer_detail_reference" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="shareholding.transfer_detail_seller" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="shareholding.transfer_detail_buyer" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="shareholding.transfer_detail_sharesCount" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="shareholding.transfer_detail_transferDate" />
           </TableHead>
           <TableHead className={cn(currentTask && "text-destructive")}>
-            Prochain délai
+            <FormattedMessage id="shareholding.transfer_detail_nextTask" />
           </TableHead>
-          <TableHead>Statut</TableHead>
+          <TableHead className={cn(currentTask && "text-destructive")}>
+            <FormattedMessage id="shareholding.transfer_detail_nextDeadline" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="shareholding.transfer_detail_status" />
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -43,18 +58,26 @@ export function SharesTransferDetailsTable({
           <TableCell>{seller.name}</TableCell>
           <TableCell>{buyer.name}</TableCell>
           <TableCell>
-            {shares} action{shares > 1 ? "s" : ""}
+            {shares}{" "}
+            <FormattedMessage
+              id="shareholding.transfer_detail_shares"
+              values={{ count: shares }}
+            />
           </TableCell>
           <TableCell>{formatDate(transferDate)}</TableCell>
           <TableCell
             className={cn("max-w-32", currentTask && "text-destructive")}
           >
-            {currentTask?.title ?? "Aucune tâche"}
+            {currentTask?.title ?? (
+              <FormattedMessage id="shareholding.transfer_detail_noTask" />
+            )}
           </TableCell>
           <TableCell className={cn(currentTask && "text-destructive")}>
-            {currentTask?.dueDate
-              ? formatDate(currentTask.dueDate)
-              : "Aucun délai"}
+            {currentTask?.dueDate ? (
+              formatDate(currentTask.dueDate)
+            ) : (
+              <FormattedMessage id="shareholding.transfer_detail_noDeadline" />
+            )}
           </TableCell>
           <TableCell>
             <Badge

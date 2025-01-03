@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { GeneralMeetingRoutes } from "@/config/routes";
 import Link from "next/link";
 import { MoveRight } from "lucide-react";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function CurrentGeneralMeetingCard({
   meetingId,
   title,
@@ -26,11 +27,13 @@ export default function CurrentGeneralMeetingCard({
 }) {
   const { label: statusLabel, color } = formatStatus(status);
   const { label: meetingTypeLabel } = formatMeetingType(meetingType);
+  const intl = useIntl();
+
   return (
     <Card className={cn("w-full", className)}>
       <CardHeader className="gap-3">
         <CardDescription className="italic">
-          Vous avez une session d&apos;AG en cours de préparation
+          <FormattedMessage id="generalMeeting.currentMeeting_ongoingPreparation" />
         </CardDescription>
         <div className="flex items-start gap-2">
           <CardTitle className="line-clamp-2">{title}</CardTitle>
@@ -39,40 +42,47 @@ export default function CurrentGeneralMeetingCard({
           </Badge>
         </div>
         <CardDescription>
-          <span className="font-bold">Ref:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="generalMeeting.currentMeeting_reference" />:
+          </span>{" "}
           <span className="italic">{reference}</span>
         </CardDescription>
         <CardDescription>
-          <span className="font-bold">Date de tenue:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="generalMeeting.currentMeeting_meetingDate" />:
+          </span>{" "}
           <span className="italic">{formatDate(meetingDate)}</span>
         </CardDescription>
         <CardDescription>
           <span className={cn("font-bold", nextTask && "text-destructive")}>
-            Prochaine tâche:
+            <FormattedMessage id="generalMeeting.currentMeeting_nextTask" />:
           </span>{" "}
           <span className="italic">
-            {nextTask?.title || "Aucune tâche en attente"}
+            {nextTask?.title ||
+              intl.formatMessage({
+                id: "generalMeeting.currentMeeting_noTaskPending",
+              })}
           </span>
         </CardDescription>
         <CardDescription>
           <span className={cn("font-bold", nextTask && "text-destructive")}>
-            Prochaine échéance:{" "}
+            <FormattedMessage id="generalMeeting.currentMeeting_nextDeadline" />
+            :
           </span>
           <span className="italic">
             {nextTask?.dueDate
               ? formatDate(nextTask.dueDate)
-              : "Aucune échéance en attente"}
+              : intl.formatMessage({
+                  id: "generalMeeting.currentMeeting_noDeadlinePending",
+                })}
           </span>
         </CardDescription>
         <div className="flex items-center justify-between gap-2">
           <Badge style={{ backgroundColor: color }}>{statusLabel}</Badge>
-          <Button
-            asChild
-            variant="link"
-            className="gap-2 px-0 italic"
-          >
+          <Button asChild variant="link" className="gap-2 px-0 italic">
             <Link href={GeneralMeetingRoutes.session(meetingId).index}>
-              Voir details <MoveRight />
+              <FormattedMessage id="generalMeeting.currentMeeting_seeDetails" />
+              <MoveRight />
             </Link>
           </Button>
         </div>

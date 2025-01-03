@@ -11,12 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Scale } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddEvaluationDialog from "@/components/evaluation/modals/add-evaluation-dialog";
-export default function EvaluateCollaboratorCard({ className }) {
+export default function EvaluateCollaboratorCard({
+  className,
+}: {
+  className?: string;
+}) {
   return (
     <Card
       className={cn(
         "max-w-96 self-center sm:min-w-96 sm:max-w-[50%]",
-        className,
+        className
       )}
     >
       <CardHeader>

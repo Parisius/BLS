@@ -20,6 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SharesTransferDetailsPageLoading from "./loading";
+import { FormattedMessage } from "react-intl";
+
 export default function Page({ params: { id } }) {
   const { data, isLoading, isError } = useOneSharesTransfer(id);
   if (isError) {
@@ -35,7 +37,10 @@ export default function Page({ params: { id } }) {
     <div className="container flex flex-1 flex-col gap-10 overflow-y-auto py-5">
       <SharesTransferDetailsPageBreadcrumb reference={data.transferNumber} />
       <h1 className="text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-        Transaction N° {data.transferNumber}
+        <FormattedMessage
+          id="shareholding.transfer_detail_transactionNumber"
+          values={{ number: data.transferNumber }}
+        />
       </h1>
       <div className="flex flex-row items-center justify-between gap-2">
         <SharesTransferTasksTimelineModal
@@ -49,16 +54,13 @@ export default function Page({ params: { id } }) {
             className="gap-2"
           >
             <GanttChart />
-            Planifier
+            <FormattedMessage id="shareholding.transfer_detail_planTransaction" />
           </Button>
         </SharesTransferTasksTimelineModal>
 
         <DropdownMenu>
           <Tooltip>
-            <DropdownMenuTrigger
-              asChild
-              className="cursor-pointer sm:hidden"
-            >
+            <DropdownMenuTrigger asChild className="cursor-pointer sm:hidden">
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -70,7 +72,9 @@ export default function Page({ params: { id } }) {
                 </Button>
               </TooltipTrigger>
             </DropdownMenuTrigger>
-            <TooltipContent>Menu</TooltipContent>
+            <TooltipContent>
+              <FormattedMessage id="shareholding.transfer_detail_menu" />
+            </TooltipContent>
           </Tooltip>
           <DropdownMenuContent>
             {data.status === "validated" && (
@@ -84,7 +88,7 @@ export default function Page({ params: { id } }) {
                   onSelect={(e) => e.preventDefault()}
                 >
                   <CheckCheck />
-                  Approuver
+                  <FormattedMessage id="shareholding.transfer_detail_approve" />
                 </DropdownMenuItem>
               </ApproveSharesTransferDialog>
             )}
@@ -99,7 +103,7 @@ export default function Page({ params: { id } }) {
                 onSelect={(e) => e.preventDefault()}
               >
                 <Files />
-                Archives
+                <FormattedMessage id="shareholding.transfer_detail_archives" />
               </DropdownMenuItem>
             </SharesTransferFilesModal>
           </DropdownMenuContent>
@@ -118,7 +122,7 @@ export default function Page({ params: { id } }) {
                 className="gap-2"
               >
                 <CheckCheck />
-                Approuver
+                <FormattedMessage id="shareholding.transfer_detail_approve" />
               </Button>
             </ApproveSharesTransferDialog>
           )}
@@ -140,7 +144,9 @@ export default function Page({ params: { id } }) {
                 </Button>
               </TooltipTrigger>
             </SharesTransferFilesModal>
-            <TooltipContent>Archives</TooltipContent>
+            <TooltipContent>
+              <FormattedMessage id="shareholding.transfer_detail_archives" />
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>

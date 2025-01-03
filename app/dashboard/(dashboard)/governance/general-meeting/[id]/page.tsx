@@ -30,6 +30,7 @@ import { notFound } from "next/navigation";
 import { GeneralMeetingDetailsTable } from "@/components/governance/general-meeting/tables/general-meeting-details-table";
 import ProcedureModal from "@/components/governance/general-meeting/modals/procedure-modal";
 import GeneralMeetingDetailsPageLoading from "./loading";
+import { FormattedMessage } from "react-intl";
 export default function Page({ params: { id } }) {
   const { data, isLoading, isError } = useOneGeneralMeeting(id);
   if (isError) {
@@ -54,21 +55,18 @@ export default function Page({ params: { id } }) {
           meetingDate={data.meetingDate}
           meetingTitle={data.title}
         >
-          <Button
-            aria-label="Planification de l'AG"
-            className="gap-2"
-          >
+          <Button aria-label="Planification de l'AG" className="gap-2">
             <GanttChart />
-            Planifier
+            <FormattedMessage
+              id="generalMeeting.general_meeting_currentMeeting_view_plan"
+              defaultMessage="Plan"
+            />
           </Button>
         </GeneralMeetingTimelineModal>
 
         <DropdownMenu>
           <Tooltip>
-            <DropdownMenuTrigger
-              asChild
-              className="cursor-pointer sm:hidden"
-            >
+            <DropdownMenuTrigger asChild className="cursor-pointer sm:hidden">
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -83,40 +81,40 @@ export default function Page({ params: { id } }) {
             <TooltipContent>Menu</TooltipContent>
           </Tooltip>
           <DropdownMenuContent>
-            <AttendantsDialog
-              asChild
-              meetingId={id}
-            >
+            <AttendantsDialog asChild meetingId={id}>
               <DropdownMenuItem
                 className="cursor-pointer gap-2 sm:hidden"
                 onSelect={(e) => e.preventDefault()}
               >
                 <Users />
-                Créer la liste de présence
+                <FormattedMessage
+                  id="generalMeeting.general_meeting_currentMeeting_view_createAttendantsList"
+                  defaultMessage="Create attendance list"
+                />
               </DropdownMenuItem>
             </AttendantsDialog>
-            <ChecklistModal
-              asChild
-              meetingId={id}
-            >
+            <ChecklistModal asChild meetingId={id}>
               <DropdownMenuItem
                 className="cursor-pointer gap-2 sm:hidden"
                 onSelect={(e) => e.preventDefault()}
               >
                 <ListChecks />
-                Checklist
+                <FormattedMessage
+                  id="generalMeeting.general_meeting_currentMeeting_view_checklist"
+                  defaultMessage="Checklist"
+                />
               </DropdownMenuItem>
             </ChecklistModal>
-            <ProcedureModal
-              asChild
-              meetingId={id}
-            >
+            <ProcedureModal asChild meetingId={id}>
               <DropdownMenuItem
                 className="cursor-pointer gap-2 sm:hidden"
                 onSelect={(e) => e.preventDefault()}
               >
                 <LayoutList />
-                Procédures
+                <FormattedMessage
+                  id="generalMeeting.general_meeting_currentMeeting_view_procedures"
+                  defaultMessage="Procedures"
+                />
               </DropdownMenuItem>
             </ProcedureModal>
             <GeneralMeetingFilesModal
@@ -136,31 +134,28 @@ export default function Page({ params: { id } }) {
         </DropdownMenu>
 
         <div className="hidden items-center justify-between gap-2 sm:flex">
-          <AttendantsDialog
-            asChild
-            meetingId={id}
-          >
-            <Button
-              variant="secondary"
-              className="gap-2"
-            >
+          <AttendantsDialog asChild meetingId={id}>
+            <Button variant="secondary" className="gap-2">
               <Users />
-              Créer la liste de présence
+              <FormattedMessage
+                id="generalMeeting.general_meeting_currentMeeting_view_createAttendantsList"
+                defaultMessage="Create attendance list"
+              />
             </Button>
           </AttendantsDialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="gap-2">
                 <BookOpenCheck />
-                Tenir AG
+                <FormattedMessage
+                  id="generalMeeting.general_meeting_currentMeeting_view_holdMeeting"
+                  defaultMessage="Hold meeting"
+                />
               </Button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
-              <ChecklistModal
-                asChild
-                meetingId={id}
-              >
+              <ChecklistModal asChild meetingId={id}>
                 <DropdownMenuItem
                   className="cursor-pointer gap-2"
                   onSelect={(e) => e.preventDefault()}
@@ -170,16 +165,16 @@ export default function Page({ params: { id } }) {
                 </DropdownMenuItem>
               </ChecklistModal>
 
-              <ProcedureModal
-                asChild
-                meetingId={id}
-              >
+              <ProcedureModal asChild meetingId={id}>
                 <DropdownMenuItem
                   className="cursor-pointer gap-2"
                   onSelect={(e) => e.preventDefault()}
                 >
                   <LayoutList />
-                  Procédures
+                  <FormattedMessage
+                    id="generalMeeting.general_meeting_currentMeeting_view_procedures"
+                    defaultMessage="Procedures"
+                  />
                 </DropdownMenuItem>
               </ProcedureModal>
             </DropdownMenuContent>
