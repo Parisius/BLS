@@ -12,15 +12,18 @@ import {
 import { Button } from "@/components/ui/button";
 import ProcedureTable from "@/components/governance/general-meeting/tables/procedure-table";
 import PrintProceduresButton from "@/components/governance/general-meeting/buttons/print-procedures-button";
+import { FormattedMessage } from "react-intl";
 export default function ProcedureModal({ meetingId, ...props }) {
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <DialogContent className="max-h-screen max-w-md">
         <DialogHeader>
-          <DialogTitle>Procédures</DialogTitle>
+          <DialogTitle>
+            <FormattedMessage id="generalMeeting.processs_modal_title" />
+          </DialogTitle>
           <DialogDescription>
-            Voici la liste des choses à faire pour tenir l&apos;AG
+            <FormattedMessage id="generalMeeting.processs_modal_description" />
           </DialogDescription>
         </DialogHeader>
         <ProcedureTable
@@ -29,10 +32,12 @@ export default function ProcedureModal({ meetingId, ...props }) {
         />
         <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="generalMeeting.processs_modal_close_btn" />
+            </Button>
           </DialogClose>
           <PrintProceduresButton meetingId={meetingId}>
-            Générer la liste
+            <FormattedMessage id="generalMeeting.processs_modal_generat_list_btn" />
           </PrintProceduresButton>
         </DialogFooter>
       </DialogContent>

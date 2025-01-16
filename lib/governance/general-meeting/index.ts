@@ -1,28 +1,38 @@
-import { meetingTypes } from "@/services/api-sdk/types/general-meeting";
-export const formatStatus = (status) => {
+import {
+  meetingTypeMessages,
+  statusMessages,
+} from "@/services/api-sdk/types/general-meeting";
+export const STATUS_COLORS = {
+  pending: "hsl(147 100% 35%)",
+  closed: "rgb(107 114 128)",
+};
+
+// lib/governance/general-meeting/index.js
+export const formatStatus = (status, intl) => {
   switch (status) {
     case "pending":
       return {
         status: "pending",
-        label: "En cours de préparation",
-        color: "hsl(147 100% 35%)",
+        label: intl.formatMessage(statusMessages.pending),
+        color: STATUS_COLORS.pending,
       };
     case "closed":
       return {
         status: "closed",
-        label: "Terminée",
-        color: "rgb(107 114 128)",
+        label: intl.formatMessage(statusMessages.closed),
+        color: STATUS_COLORS.closed,
       };
     default:
       return {
         status,
-        label: "Terminée",
-        color: "rgb(107 114 128)",
+        label: intl.formatMessage(statusMessages.closed),
+        color: STATUS_COLORS.closed,
       };
   }
 };
-export const formatMeetingType = (meetingType) =>
-  meetingTypes.find((type) => type.value === meetingType) ?? {
-    value: "ordinary",
-    label: "Ordinaire",
+export const formatMeetingType = (type, intl) => {
+  return {
+    value: type,
+    label: intl.formatMessage(meetingTypeMessages[type]),
   };
+};

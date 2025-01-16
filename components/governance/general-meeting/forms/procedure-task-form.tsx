@@ -10,8 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { useProcedureTaskForm } from "@/lib/governance/general-meeting/hooks";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function ProcedureTaskForm({ formId, onSubmit }) {
   const form = useProcedureTaskForm();
+  const intl = useIntl();
   return (
     <Form {...form}>
       <form
@@ -24,12 +26,16 @@ export default function ProcedureTaskForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de la tâche</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.edit_task_modal_input_title" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de la tâche"
+                    placeholder={intl.formatMessage({
+                      id: "generalMeeting.edit_task_modal_input_title",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

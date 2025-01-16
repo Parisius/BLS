@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   TableBody,
@@ -22,7 +23,8 @@ import {
   formatStatus,
 } from "@/lib/governance/general-meeting";
 import PrintGeneralMeetingButton from "@/components/governance/general-meeting/buttons/print-general-meeting-button";
-import { FormattedMessage } from "react-intl";
+import { FormattedMessage, useIntl } from "react-intl";
+
 export function GeneralMeetingDetailsTable({
   id,
   title,
@@ -32,8 +34,11 @@ export function GeneralMeetingDetailsTable({
   meetingDate,
   nextTask,
 }) {
-  const { label: statusLabel, color } = formatStatus(status);
-  const { label: meetingTypeLabel } = formatMeetingType(meetingType);
+  const intl = useIntl();
+
+  const statusFormatted = formatStatus(status, intl);
+  const meetingTypeFormatted = formatMeetingType(meetingType, intl);
+
   return (
     <Table className="border">
       <TableHeader>
@@ -45,7 +50,6 @@ export function GeneralMeetingDetailsTable({
             <FormattedMessage id="generalMeeting.general_meeting_table_header_type" />
           </TableHead>
           <TableHead>
-            {" "}
             <FormattedMessage id="generalMeeting.general_meeting_table_header_reference" />
           </TableHead>
           <TableHead className={cn(nextTask && "text-destructive")}>
@@ -55,11 +59,9 @@ export function GeneralMeetingDetailsTable({
             <FormattedMessage id="generalMeeting.general_meeting_table_header_next_deadline" />
           </TableHead>
           <TableHead>
-            {" "}
             <FormattedMessage id="generalMeeting.general_meeting_table_header_date" />
           </TableHead>
           <TableHead>
-            {" "}
             <FormattedMessage id="generalMeeting.general_meeting_table_header_status" />
           </TableHead>
           <TableHead />
@@ -70,20 +72,26 @@ export function GeneralMeetingDetailsTable({
           <TableCell>{title}</TableCell>
           <TableCell>
             <Badge className="bg-muted text-muted-foreground hover:bg-muted/90">
-              {meetingTypeLabel}
+              {meetingTypeFormatted.label}
             </Badge>
           </TableCell>
           <TableCell>{reference}</TableCell>
           <TableCell className={cn("max-w-32", nextTask && "text-destructive")}>
-            {nextTask?.title ?? "Aucune tâche"}
+            {nextTask?.title ??
+              intl.formatMessage({ id: "generalMeeting.no_task" })}
           </TableCell>
           <TableCell className={cn(nextTask && "text-destructive")}>
-            {nextTask?.dueDate ? formatDate(nextTask.dueDate) : "Aucun délai"}
+            {nextTask?.dueDate
+              ? formatDate(nextTask.dueDate)
+              : intl.formatMessage({ id: "generalMeeting.no_deadline" })}
           </TableCell>
           <TableCell>{formatDate(meetingDate)}</TableCell>
           <TableCell>
-            <Badge style={{ backgroundColor: color }} className="text-nowrap">
-              {statusLabel}
+            <Badge
+              style={{ backgroundColor: statusFormatted.color }}
+              className="text-nowrap"
+            >
+              {statusFormatted.label}
             </Badge>
           </TableCell>
           <TableCell>
@@ -96,7 +104,6 @@ export function GeneralMeetingDetailsTable({
                 </TooltipTrigger>
               </UpdateGeneralMeetingDialog>
               <TooltipContent>
-                {" "}
                 <FormattedMessage id="generalMeeting.general_meeting_action_edit" />
               </TooltipContent>
             </Tooltip>
@@ -113,7 +120,6 @@ export function GeneralMeetingDetailsTable({
                 </PrintGeneralMeetingButton>
               </TooltipTrigger>
               <TooltipContent>
-                {" "}
                 <FormattedMessage id="generalMeeting.general_meeting_action_print" />
               </TooltipContent>
             </Tooltip>

@@ -107,7 +107,7 @@ export const useOneMeetingChecklistTask = (taskId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateMeetingChecklistTask = (meetingId, options) => {
+export const useCreateMeetingChecklistTask = (meetingId, options = {}) => {
   const invalidateAllMeetingChecklistTasks =
     useAllMeetingChecklistTasksInvalidate(meetingId);
   const getMutationOptions = useCallback(
@@ -118,7 +118,7 @@ export const useCreateMeetingChecklistTask = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingChecklistTasks],
+    [invalidateAllMeetingChecklistTasks]
   );
   const mutation = useMutation({
     mutationFn: (...args) => createMeetingChecklistTask(meetingId, ...args),
@@ -159,7 +159,7 @@ export const useUpdateMeetingChecklistTask = (taskId, options) => {
       invalidateOneMeetingChecklistTask,
       taskId,
       invalidateAllMeetingChecklistTasks,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateMeetingChecklistTask(taskId, args),
@@ -200,7 +200,7 @@ export const useUpdateMeetingChecklistTaskStatus = (taskId, options) => {
       invalidateAllMeetingChecklistTasks,
       invalidateOneMeetingChecklistTask,
       taskId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateMeetingChecklistTaskStatus(taskId, args),
@@ -235,12 +235,12 @@ export const useToggleMeetingChecklistTasksStatus = (options) => {
         await Promise.all(
           args[2].map(async (task) => {
             await invalidateOneMeetingChecklistTask(task.id);
-          }),
+          })
         );
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingChecklistTasks, invalidateOneMeetingChecklistTask],
+    [invalidateAllMeetingChecklistTasks, invalidateOneMeetingChecklistTask]
   );
   const mutation = useMutation({
     mutationFn: (args) => toggleMeetingChecklistTasksStatus(args),
@@ -263,7 +263,7 @@ export const useToggleMeetingChecklistTasksStatus = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteMeetingChecklistTask = (taskId, options) => {
+export const useDeleteMeetingChecklistTask = (taskId, options = {}) => {
   const invalidateAllMeetingChecklistTasks =
     useAllMeetingChecklistTasksInvalidate();
   const removeOneMeetingTask = useRemoveOneMeetingChecklistTaskQuery();
@@ -276,7 +276,7 @@ export const useDeleteMeetingChecklistTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingChecklistTasks, removeOneMeetingTask, taskId],
+    [invalidateAllMeetingChecklistTasks, removeOneMeetingTask, taskId]
   );
   const mutation = useMutation({
     mutationFn: () => deleteMeetingChecklistTask(taskId),

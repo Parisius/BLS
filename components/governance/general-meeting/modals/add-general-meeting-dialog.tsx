@@ -17,17 +17,18 @@ import { useGeneralMeetingForm } from "@/lib/governance/general-meeting/hooks";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { GeneralMeetingRoutes } from "@/config/routes";
 import AddGeneralMeetingForm from "@/components/governance/general-meeting/forms/add-general-meeting-form";
+import { FormattedMessage } from "react-intl";
 export default function AddGeneralMeetingDialog(props) {
   const formId = useId();
   const form = useGeneralMeetingForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const handleSuccess = useCallback(
     ({ id }) => {
       closeRef.current?.click();
       router.push(GeneralMeetingRoutes.session(id).index);
     },
-    [router],
+    [router]
   );
   return (
     <Dialog>
@@ -35,23 +36,19 @@ export default function AddGeneralMeetingDialog(props) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouvelle session d&apos;AG</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="generalMeeting.add_general_meeting_modal_title" />
+            </DialogTitle>
             <DialogDescription>
-              Planifier une nouvelle session d&apos;assemblée générale.
+              <FormattedMessage id="generalMeeting.add_general_meeting_modal_description" />
             </DialogDescription>
           </DialogHeader>
-          <AddGeneralMeetingForm
-            formId={formId}
-            onSuccess={handleSuccess}
-          />
+          <AddGeneralMeetingForm formId={formId} onSuccess={handleSuccess} />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                <FormattedMessage id="generalMeeting.add_general_meeting_modal_cancel_btn" />
               </Button>
             </DialogClose>
             <Button
@@ -59,7 +56,11 @@ export default function AddGeneralMeetingDialog(props) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Planifier"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="generalMeeting.add_general_meeting_modal_validation_btn" />
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

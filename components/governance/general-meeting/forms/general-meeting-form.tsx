@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Form,
   FormControl,
@@ -18,9 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { meetingTypes } from "@/services/api-sdk/types/general-meeting";
+import { FormattedMessage, useIntl } from "react-intl";
+import { getMeetingTypes } from "@/services/api-sdk/types/general-meeting";
+
 export default function GeneralMeetingForm({ formId, onSubmit }) {
   const form = useGeneralMeetingForm();
+  const intl = useIntl();
+  const localizedMeetingTypes = getMeetingTypes(intl);
+
   return (
     <Form {...form}>
       <form
@@ -33,13 +39,17 @@ export default function GeneralMeetingForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de l&apos;AG</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.add_general_meeting_form_name_field" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Intitulé de l'AG"
+                    placeholder={intl.formatMessage({
+                      id: "generalMeeting.add_general_meeting_form_name_field",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -49,27 +59,26 @@ export default function GeneralMeetingForm({ formId, onSubmit }) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="meetingType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type de l&apos;AG</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.add_general_meeting_form_type_field" />
+              </FormLabel>
               <FormControl>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Type de l'AG" />
+                    <SelectValue
+                      placeholder={intl.formatMessage({
+                        id: "generalMeeting.add_general_meeting_form_type_field",
+                      })}
+                    />
                   </SelectTrigger>
                   <SelectContent>
-                    {meetingTypes.map((type) => (
-                      <SelectItem
-                        key={type.value}
-                        value={type.value}
-                      >
+                    {localizedMeetingTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
                         {type.label}
                       </SelectItem>
                     ))}
@@ -80,13 +89,14 @@ export default function GeneralMeetingForm({ formId, onSubmit }) {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="meetingDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de tenue de l&apos;AG</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.add_general_meeting_form_date_field" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

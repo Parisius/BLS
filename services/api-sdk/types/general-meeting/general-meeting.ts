@@ -1,21 +1,57 @@
-export const meetingTypes = [
-  {
-    value: "ordinary",
-    label: "Ordinaire",
+import { defineMessages } from "react-intl";
+export const meetingTypeMessages = defineMessages({
+  ordinary: {
+    id: "generalMeeting.meetingType.ordinary",
+    defaultMessage: "Ordinary",
   },
-  {
-    value: "extraordinary",
-    label: "Extraordinaire",
+  extraordinary: {
+    id: "generalMeeting.meetingType.extraordinary",
+    defaultMessage: "Extraordinary",
   },
-  {
-    value: "mixte",
-    label: "Mixte",
+  mixte: {
+    id: "generalMeeting.meetingType.mixte",
+    defaultMessage: "Mixed",
   },
-  {
-    value: "special",
-    label: "Spéciale",
+  special: {
+    id: "generalMeeting.meetingType.special",
+    defaultMessage: "Special",
   },
-];
+});
+
+export const statusMessages = defineMessages({
+  pending: {
+    id: "generalMeeting.status.pending",
+    defaultMessage: "In preparation",
+  },
+  closed: {
+    id: "generalMeeting.status.closed",
+    defaultMessage: "Closed",
+  },
+});
+
+export const fileTypeMessages = defineMessages({
+  convocation: {
+    id: "generalMeeting.fileType.convocation",
+    defaultMessage: "Convocation",
+  },
+  agenda: {
+    id: "generalMeeting.fileType.agenda",
+    defaultMessage: "Agenda",
+  },
+  pv: {
+    id: "generalMeeting.fileType.pv",
+    defaultMessage: "Minutes",
+  },
+  attendance_list: {
+    id: "generalMeeting.fileType.attendance_list",
+    defaultMessage: "Attendance list",
+  },
+  other: {
+    id: "generalMeeting.fileType.other",
+    defaultMessage: "Other file",
+  },
+});
+
 export const fileTypes = [
   {
     value: "convocation",
@@ -36,5 +72,46 @@ export const fileTypes = [
   {
     value: "other",
     label: "Autre fichier",
+  },
+];
+export const getMeetingTypes = (intl) => [
+  {
+    value: "ordinary",
+    label: intl.formatMessage(meetingTypeMessages.ordinary),
+  },
+  {
+    value: "extraordinary",
+    label: intl.formatMessage(meetingTypeMessages.extraordinary),
+  },
+  {
+    value: "mixte",
+    label: intl.formatMessage(meetingTypeMessages.mixte),
+  },
+  {
+    value: "special",
+    label: intl.formatMessage(meetingTypeMessages.special),
+  },
+];
+
+export const getFileTypes = (intl) => [
+  {
+    value: "convocation",
+    label: intl.formatMessage(fileTypeMessages.convocation),
+  },
+  {
+    value: "agenda",
+    label: intl.formatMessage(fileTypeMessages.agenda),
+  },
+  {
+    value: "pv",
+    label: intl.formatMessage(fileTypeMessages.pv),
+  },
+  {
+    value: "attendance_list",
+    label: intl.formatMessage(fileTypeMessages.attendance_list),
+  },
+  {
+    value: "other",
+    label: intl.formatMessage(fileTypeMessages.other),
   },
 ];

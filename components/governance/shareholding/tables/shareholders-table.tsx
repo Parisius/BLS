@@ -313,7 +313,7 @@ export default function ShareholdersTable({
             {!isLoading && tableData.length === 0 && (
               <TableRow>
                 <TableCell colSpan={columns.length} className="text-center">
-                  <FormattedMessage id="shareholding.noShareholders" />
+                  <FormattedMessage id="shareholding.no_shareholders" />
                 </TableCell>
               </TableRow>
             )}

@@ -135,7 +135,7 @@ export const useOneGeneralMeeting = (id) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateGeneralMeeting = (options) => {
+export const useCreateGeneralMeeting = (options = {}) => {
   const invalidateCurrentGeneralMeeting = useCurrentGeneralMeetingInvalidate();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -145,7 +145,7 @@ export const useCreateGeneralMeeting = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateCurrentGeneralMeeting],
+    [invalidateCurrentGeneralMeeting]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -184,7 +184,7 @@ export const useUpdateGeneralMeeting = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingTasks, invalidateOneGeneralMeeting, meetingId],
+    [invalidateAllMeetingTasks, invalidateOneGeneralMeeting, meetingId]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -212,7 +212,7 @@ export const useUpdateGeneralMeeting = (meetingId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useAddGeneralMeetingFile = (meetingId, options) => {
+export const useAddGeneralMeetingFile = (meetingId, options = {}) => {
   const invalidateOneGeneralMeeting = useOneGeneralMeetingInvalidate();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -222,7 +222,7 @@ export const useAddGeneralMeetingFile = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneGeneralMeeting, meetingId],
+    [invalidateOneGeneralMeeting, meetingId]
   );
   const mutation = useMutation({
     mutationFn: (args) => {

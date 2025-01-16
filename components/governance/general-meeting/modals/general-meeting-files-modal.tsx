@@ -15,6 +15,7 @@ import mime from "mime";
 import AddFilesButton from "@/components/governance/general-meeting/buttons/add-files-button";
 import { useOneGeneralMeeting } from "@/services/api-sdk/models/general-meeting";
 import { fileTypes } from "@/services/api-sdk/types/general-meeting";
+import { FormattedMessage } from "react-intl";
 const getIcon = (filename) => {
   const fileType = mime.getType(filename);
   const extension = fileType ? mime.getExtension(fileType) : null;
@@ -46,15 +47,16 @@ export default function GeneralMeetingFilesModal({
     throw new Error("An error occurred while fetching the data");
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <FormattedMessage id="generalMeeting.loading" />
+      </div>
+    );
   }
   return (
     <Sheet>
       <SheetTrigger {...props} />
-      <SheetContent
-        side="right"
-        className="flex flex-col gap-5"
-      >
+      <SheetContent side="right" className="flex flex-col gap-5">
         <SheetHeader>
           <SheetTitle>Archives</SheetTitle>
           <SheetDescription className="line-clamp-1">
@@ -74,15 +76,17 @@ export default function GeneralMeetingFilesModal({
                 >
                   <span
                     style={{
-                      backgroundImage: `url('/global/images/${getIcon(fileUrl)}')`,
+                      backgroundImage: `url('/global/images/${getIcon(
+                        fileUrl
+                      )}')`,
                     }}
                     className="block h-20 bg-contain bg-center bg-no-repeat"
                   />
                   <span className="line-clamp-2 text-center">
                     {fileType === "other"
                       ? filename
-                      : (fileTypes.find((type) => type.value === fileType)
-                          ?.label ?? filename)}
+                      : fileTypes.find((type) => type.value === fileType)
+                          ?.label ?? filename}
                   </span>
                 </a>
               ))}
@@ -90,12 +94,15 @@ export default function GeneralMeetingFilesModal({
           </div>
         ) : (
           <div className="flex-1 text-center font-medium italic sm:text-lg">
-            Aucun fichier n&apos;a été ajouté à cette session.
+            <FormattedMessage id="generalMeeting.no_session_file" />
           </div>
         )}
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {" "}
+              <FormattedMessage id="generalMeeting.checklist_modal_close_btn" />
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

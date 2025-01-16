@@ -11,13 +11,16 @@ import AddGeneralMeetingDialog from "@/components/governance/general-meeting/mod
 import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FormattedMessage } from "react-intl";
 export default function EmptyGeneralMeetingCard({ className }) {
   return (
     <Card className={cn("max-w-96", className)}>
       <CardHeader>
-        <CardTitle>Planifier une session d&apos;AG</CardTitle>
+        <CardTitle>
+          <FormattedMessage id="generalMeeting.currentMeeting_ongoingPreparation_title" />
+        </CardTitle>
         <CardDescription>
-          Vous n&apos;avez aucune session d&apos;AG en cours de préparation
+          <FormattedMessage id="generalMeeting.currentMeeting_ongoingPreparation" />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
@@ -32,7 +35,7 @@ export default function EmptyGeneralMeetingCard({ className }) {
         <AddGeneralMeetingDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouvelle AG
+            <FormattedMessage id="generalMeeting.currentMeeting_ongoingPreparation_cta" />
           </Button>
         </AddGeneralMeetingDialog>
       </CardFooter>

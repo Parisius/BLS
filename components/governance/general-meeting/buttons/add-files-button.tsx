@@ -9,13 +9,24 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { fileTypes } from "@/services/api-sdk/types/general-meeting";
+import {
+  fileTypes,
+  getFileTypes,
+} from "@/services/api-sdk/types/general-meeting";
 import { useAddGeneralMeetingFile } from "@/services/api-sdk/models/general-meeting";
 import { toast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
-export default function AddFilesButton({ meetingId, className }) {
+import { FormattedMessage, useIntl } from "react-intl";
+export default function AddFilesButton({
+  meetingId,
+  className,
+}: {
+  meetingId: string;
+  className?: string;
+}) {
   const form = useForm();
+  const intl = useIntl();
   const { mutateAsync } = useAddGeneralMeetingFile(meetingId);
   const [fileType, setFileType] = useState("other");
   const handleFileTypeSelection = useCallback((type) => {
@@ -35,12 +46,12 @@ export default function AddFilesButton({ meetingId, className }) {
                     "Une erreur est survenue lors de l'ajout du fichier.",
                   className: "bg-destructive text-destructive-foreground",
                 }),
-            },
-          ),
+            }
+          )
         )();
       }
     },
-    [fileType, form, mutateAsync],
+    [fileType, form, mutateAsync]
   );
   return (
     <DropdownMenu>
@@ -54,13 +65,13 @@ export default function AddFilesButton({ meetingId, className }) {
           ) : (
             <>
               <FilePlus />
-              Ajouter un fichier
+              <FormattedMessage id="generalMeeting.add_session_file" />
             </>
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {fileTypes.map(({ value, label }) => (
+        {getFileTypes(intl).map(({ value, label }) => (
           <DropdownMenuItem
             key={value}
             onClick={() => handleFileTypeSelection(value)}

@@ -33,6 +33,7 @@ import DeleteChecklistTaskButton from "@/components/governance/general-meeting/b
 import ChecklistTaskCheckbox from "@/components/governance/general-meeting/buttons/checklist-task-checkbox";
 import ChecklistAllTasksCheckbox from "@/components/governance/general-meeting/buttons/checklist-all-tasks-checkbox";
 import { useAllMeetingChecklistTasks } from "@/services/api-sdk/models/general-meeting";
+import { FormattedMessage, useIntl } from "react-intl";
 export const columns = [
   {
     id: "select",
@@ -43,7 +44,7 @@ export const columns = [
   },
   {
     accessorKey: "title",
-    header: "Tâches",
+    header: () => <FormattedMessage id="generalMeeting.task_title" />,
   },
   {
     id: "actions",
@@ -51,10 +52,7 @@ export const columns = [
       <div className="flex items-center sm:opacity-0 sm:transition sm:duration-500 sm:group-hover:opacity-100">
         <Tooltip>
           <UpdateChecklistTaskDialogErrorBoundary>
-            <UpdateChecklistTaskDialog
-              asChild
-              taskId={row.original.id}
-            >
+            <UpdateChecklistTaskDialog asChild taskId={row.original.id}>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -66,7 +64,9 @@ export const columns = [
               </TooltipTrigger>
             </UpdateChecklistTaskDialog>
           </UpdateChecklistTaskDialogErrorBoundary>
-          <TooltipContent>Modifier</TooltipContent>
+          <TooltipContent>
+            <FormattedMessage id="generalMeeting.modify_task_btn" />
+          </TooltipContent>
         </Tooltip>
 
         <DeleteChecklistTaskButton taskId={row.original.id} />
@@ -81,6 +81,7 @@ export default function ChecklistTable({
   containerClassName,
   tableWrapperClassName,
 }) {
+  const intl = useIntl();
   const { data, isLoading, isError } = useAllMeetingChecklistTasks(meetingId);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
@@ -100,29 +101,33 @@ export default function ChecklistTable({
     throw Error("Failed to fetch checklist tasks");
   }
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div>
+        {" "}
+        <FormattedMessage id="generalMeeting.loading" />
+      </div>
+    );
   }
   return (
     <div className={cn("space-y-5 overflow-auto", containerClassName)}>
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "generalMeeting.general_meeting_attendants_table_search",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
             className="max-w-sm pl-10 focus-visible:ring-0"
           />
           <Search className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
-        <AddChecklistTaskDialog
-          asChild
-          meetingId={meetingId}
-        >
-          <Button
-            aria-label="Ajouter une tâche"
-            className="gap-2"
-          >
+        <AddChecklistTaskDialog asChild meetingId={meetingId}>
+          <Button aria-label="Ajouter une tâche" className="gap-2">
             <ListTodo />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              {" "}
+              <FormattedMessage id="generalMeeting.add_task_btn" />
+            </span>
           </Button>
         </AddChecklistTaskDialog>
       </div>
@@ -137,7 +142,7 @@ export default function ChecklistTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -159,7 +164,7 @@ export default function ChecklistTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -167,11 +172,8 @@ export default function ChecklistTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucune tâche trouvée
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="generalMeeting.general_meeting_table_no_task" />
                 </TableCell>
               </TableRow>
             )}

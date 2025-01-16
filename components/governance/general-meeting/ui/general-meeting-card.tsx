@@ -11,6 +11,7 @@ import { formatDate } from "@/lib/utils";
 import { formatStatus } from "@/lib/governance/general-meeting";
 import Link from "next/link";
 import { GeneralMeetingRoutes } from "@/config/routes";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function GeneralMeetingCard({
   meetingId,
   title,
@@ -18,7 +19,8 @@ export default function GeneralMeetingCard({
   meetingDate,
   status,
 }) {
-  const { label: statusLabel, color } = formatStatus(status);
+  const intl = useIntl();
+  const { label: statusLabel, color } = formatStatus(status, intl);
   return (
     <Card className="w-72 sm:w-80">
       <CardHeader className="gap-2">
@@ -28,22 +30,21 @@ export default function GeneralMeetingCard({
           <span className="italic">{reference}</span>
         </CardDescription>
         <CardDescription>
-          <span className="font-bold">Date de tenue:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="generalMeeting.currentMeeting_meetingDate" />:
+          </span>{" "}
           <span className="italic">{formatDate(meetingDate)}</span>
         </CardDescription>
         <div className="flex items-center justify-between gap-2">
           <Badge style={{ backgroundColor: color }}>{statusLabel}</Badge>
 
-          <Button
-            asChild
-            variant="link"
-            className="gap-2 px-0 italic"
-          >
+          <Button asChild variant="link" className="gap-2 px-0 italic">
             <Link
               key={reference}
               href={GeneralMeetingRoutes.session(meetingId).index}
             >
-              Voir details <MoveRight />
+              <FormattedMessage id="generalMeeting.currentMeeting_seeDetails" />
+              <MoveRight />
             </Link>
           </Button>
         </div>

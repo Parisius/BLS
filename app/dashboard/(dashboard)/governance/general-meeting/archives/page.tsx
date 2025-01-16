@@ -17,6 +17,7 @@ import {
 } from "@/components/governance/general-meeting/ui/archived-general-meeting-list";
 import { Portal } from "@/components/ui/portal";
 import { SearchInput, SearchProvider } from "@/providers/search-provider";
+import { FormattedMessage } from "react-intl";
 export default function ArchivedGeneralMeetingPage() {
   return (
     <SearchProvider>
@@ -31,7 +32,7 @@ export default function ArchivedGeneralMeetingPage() {
           </OpenSessionButtonErrorBoundary>
         </div>
         <h1 className="relative text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-          Choisir une session d&apos;AG
+          <FormattedMessage id="generalMeeting.archives_page_title" />
         </h1>
         <div className="flex items-end justify-between gap-10 sm:items-center sm:justify-end">
           <div className="flex flex-col items-center gap-2 sm:flex-row">
@@ -39,7 +40,7 @@ export default function ArchivedGeneralMeetingPage() {
               id="session-year-label"
               className="text-nowrap text-foreground/75"
             >
-              Année de session
+              <FormattedMessage id="generalMeeting.year_filter" />
             </span>
             <Select defaultValue="2024">
               <SelectTrigger

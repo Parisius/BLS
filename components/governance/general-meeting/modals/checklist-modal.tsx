@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import ChecklistTable from "@/components/governance/general-meeting/tables/checklist-table";
 import PrintChecklistButton from "@/components/governance/general-meeting/buttons/print-checklist-button";
+import { FormattedMessage } from "react-intl";
 export default function ChecklistModal({ meetingId, ...props }) {
   return (
     <Dialog>
@@ -20,7 +21,7 @@ export default function ChecklistModal({ meetingId, ...props }) {
         <DialogHeader>
           <DialogTitle>Checklist</DialogTitle>
           <DialogDescription>
-            Voici la liste des choses à faire pour préparer l&apos;AG
+            <FormattedMessage id="generalMeeting.checklist_modal_description" />
           </DialogDescription>
         </DialogHeader>
         <ChecklistTable
@@ -29,10 +30,12 @@ export default function ChecklistModal({ meetingId, ...props }) {
         />
         <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="generalMeeting.checklist_modal_close_btn" />
+            </Button>
           </DialogClose>
           <PrintChecklistButton meetingId={meetingId}>
-            Générer la liste
+            <FormattedMessage id="generalMeeting.checklist_modal_generat_list_btn" />
           </PrintChecklistButton>
         </DialogFooter>
       </DialogContent>

@@ -3,6 +3,7 @@ import { useArchivedGeneralMeetings } from "@/services/api-sdk/models/general-me
 import GeneralMeetingCard from "@/components/governance/general-meeting/ui/general-meeting-card";
 import { useSearchResults } from "@/providers/search-provider";
 import { ArchivedGeneralMeetingListSuspense } from "./suspense";
+import { FormattedMessage } from "react-intl";
 export function ArchivedGeneralMeetingList() {
   const { data, isError } = useArchivedGeneralMeetings();
   const filteredData = useSearchResults(data ?? []);
@@ -15,14 +16,14 @@ export function ArchivedGeneralMeetingList() {
   if (data.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucune session d&apos;AG archivée n&apos;a été trouvée
+        <FormattedMessage id="generalMeeting.no_archived_session" />
       </p>
     );
   }
   if (filteredData.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucune session d&apos;AG archivée ne correspond à votre recherche
+        <FormattedMessage id="generalMeeting.no_archived_session_result" />
       </p>
     );
   }
