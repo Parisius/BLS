@@ -13,6 +13,7 @@ import React from "react";
 import GeneralMeetingTimeline from "@/components/governance/general-meeting/ui/general-meeting-timeline";
 import { ListTodo } from "lucide-react";
 import AddTaskDialog from "@/components/governance/general-meeting/modals/add-task-dialog";
+import { FormattedMessage } from "react-intl";
 export default function GeneralMeetingTimelineModal({
   meetingId,
   meetingDate,
@@ -24,32 +25,28 @@ export default function GeneralMeetingTimelineModal({
       <SheetTrigger {...props} />
       <SheetContent
         side="left"
-        closeClassName="md:hidden"
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>
           <div className="sm:flex sm:items-center sm:justify-between">
-            <SheetTitle>Planification de l&apos;AG</SheetTitle>
-            <AddTaskDialog
-              asChild
-              meetingId={meetingId}
-            >
+            <SheetTitle>
+              {" "}
+              <FormattedMessage id="generalMeeting.timeline_modal_title" />
+            </SheetTitle>
+            <AddTaskDialog asChild meetingId={meetingId}>
               <Button className="hidden gap-2 sm:inline-flex">
                 <ListTodo />
-                Ajouter une tâche
+                <FormattedMessage id="generalMeeting.timeline_modal_add_task" />
               </Button>
             </AddTaskDialog>
           </div>
           <SheetDescription className="line-clamp-1">
             {meetingTitle}
           </SheetDescription>
-          <AddTaskDialog
-            asChild
-            meetingId={meetingId}
-          >
+          <AddTaskDialog asChild meetingId={meetingId}>
             <Button className="sm gap-2 sm:hidden">
               <ListTodo />
-              Ajouter une tâche
+              <FormattedMessage id="generalMeeting.timeline_modal_add_task" />
             </Button>
           </AddTaskDialog>
         </SheetHeader>
@@ -61,7 +58,10 @@ export default function GeneralMeetingTimelineModal({
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {" "}
+              <FormattedMessage id="generalMeeting.timeline_modal_close" />
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

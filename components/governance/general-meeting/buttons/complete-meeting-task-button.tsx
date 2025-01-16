@@ -15,10 +15,11 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useMarkMeetingTaskAsCompleted } from "@/services/api-sdk/models/general-meeting";
+import { FormattedMessage } from "react-intl";
 export default function CompleteMeetingTaskButton({ taskId, ...props }) {
   const form = useForm();
   const { mutateAsync } = useMarkMeetingTaskAsCompleted(taskId);
-  const ref = useRef(null);
+  const ref = useRef<HTMLButtonElement>(null);
   const handleComplete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
@@ -44,23 +45,24 @@ export default function CompleteMeetingTaskButton({ taskId, ...props }) {
         <form onSubmit={form.handleSubmit(handleComplete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir compléter cette tâche ?
+              <FormattedMessage id="generalMeeting.validate_timeline_modal_title" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="generalMeeting.validate_timeline_modal_description" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              ref={ref}
-              className="sr-only"
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
-            <Button
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Terminer"}
+            <AlertDialogCancel ref={ref} className="sr-only" />
+            <AlertDialogCancel type="button">
+              {" "}
+              <FormattedMessage id="generalMeeting.validate_timeline_modal_close_btn" />
+            </AlertDialogCancel>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="generalMeeting.validate_timeline_modal_validation_btn" />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

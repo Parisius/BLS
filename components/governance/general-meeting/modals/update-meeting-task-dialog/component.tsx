@@ -17,17 +17,19 @@ import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import UpdateMeetingTaskForm from "@/components/governance/general-meeting/forms/update-meeting-task-form";
 import { UpdateMeetingTaskDialogSuspense } from "@/components/governance/general-meeting/modals/update-meeting-task-dialog/suspense";
 import { useOneMeetingTask } from "@/services/api-sdk/models/general-meeting";
+import { FormattedMessage } from "react-intl";
 export function UpdateMeetingTaskDialog({ taskId, ...props }) {
   const formId = useId();
   const { data, isLoading, isError } = useOneMeetingTask(taskId);
   const form = useTaskForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   if (isError) {
     throw new Error("Failed to fetch meeting task");
   }
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -44,9 +46,12 @@ export function UpdateMeetingTaskDialog({ taskId, ...props }) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier tâche</DialogTitle>
+            <DialogTitle>
+              {" "}
+              <FormattedMessage id="generalMeeting.edit_timeline_task_modal_title" />
+            </DialogTitle>
             <DialogDescription>
-              Modifier les détails de la tâche.
+              <FormattedMessage id="generalMeeting.edit_timeline_task_modal_description" />
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -57,15 +62,13 @@ export function UpdateMeetingTaskDialog({ taskId, ...props }) {
                 formId={formId}
                 taskId={taskId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    <FormattedMessage id="generalMeeting.timeline_modal_close" />
                   </Button>
                 </DialogClose>
                 <Button
@@ -76,7 +79,7 @@ export function UpdateMeetingTaskDialog({ taskId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    <FormattedMessage id="generalMeeting.timeline_modal_edit_btn" />
                   )}
                 </Button>
               </DialogFooter>

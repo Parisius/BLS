@@ -37,6 +37,7 @@ import {
 import ForwardMeetingTaskDialog from "@/components/governance/general-meeting/modals/forward-meeting-task-dialog";
 import MeetingTaskForwardsDialog from "@/components/governance/general-meeting/modals/meeting-task-forwards-dialog";
 import { useCurrentUser } from "@/services/api-sdk/models/user/user";
+import { FormattedMessage } from "react-intl";
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
@@ -50,10 +51,19 @@ export default function GeneralMeetingTimeline({ meetingId, meetingDate }) {
     throw new Error("Failed to fetch meeting tasks");
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <FormattedMessage id="generalMeeting.loading" />
+      </div>
+    );
   }
   if (!data || data.length === 0) {
-    return <div>No tasks found</div>;
+    return (
+      <div>
+        {" "}
+        <FormattedMessage id="generalMeeting.general_meeting_table_no_task" />
+      </div>
+    );
   }
   return (
     <Timeline>
@@ -85,39 +95,30 @@ export default function GeneralMeetingTimeline({ meetingId, meetingDate }) {
                   <TooltipContent>Menu</TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
-                  <CompleteMeetingTaskButton
-                    asChild
-                    taskId={id}
-                  >
+                  <CompleteMeetingTaskButton asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <SquareCheck />
-                      Valider
+                      <FormattedMessage id="generalMeeting.timeline_modal_validate_btn" />
                     </DropdownMenuItem>
                   </CompleteMeetingTaskButton>
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardMeetingTaskDialog
-                      asChild
-                      taskId={id}
-                    >
+                    <ForwardMeetingTaskDialog asChild taskId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        <FormattedMessage id="generalMeeting.timeline_modal_share_btn" />
                       </DropdownMenuItem>
                     </ForwardMeetingTaskDialog>
                   )}
 
                   {forwards && forwards.length > 0 && (
-                    <MeetingTaskForwardsDialog
-                      asChild
-                      forwards={forwards}
-                    >
+                    <MeetingTaskForwardsDialog asChild forwards={forwards}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
@@ -128,31 +129,25 @@ export default function GeneralMeetingTimeline({ meetingId, meetingDate }) {
                     </MeetingTaskForwardsDialog>
                   )}
 
-                  <UpdateMeetingTaskDialog
-                    asChild
-                    taskId={id}
-                  >
+                  <UpdateMeetingTaskDialog asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <Pencil />
-                      Modifier
+                      <FormattedMessage id="generalMeeting.timeline_modal_edit_btn" />
                     </DropdownMenuItem>
                   </UpdateMeetingTaskDialog>
 
                   <DropdownMenuSeparator />
 
-                  <DeleteMeetingTaskButton
-                    asChild
-                    taskId={id}
-                  >
+                  <DeleteMeetingTaskButton asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2 text-destructive"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <Trash />
-                      Supprimer
+                      <FormattedMessage id="generalMeeting.timeline_modal_delete_btn" />
                     </DropdownMenuItem>
                   </DeleteMeetingTaskButton>
                 </DropdownMenuContent>
@@ -168,7 +163,10 @@ export default function GeneralMeetingTimeline({ meetingId, meetingDate }) {
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  ({" "}
+                  <FormattedMessage id="generalMeeting.timeline_task_status" />)
+                </p>
               )}
             </TimelineItemContent>
             <TimelineItemContent
@@ -178,16 +176,16 @@ export default function GeneralMeetingTimeline({ meetingId, meetingDate }) {
               {formatDate(dueDate)}
             </TimelineItemContent>
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": data.every(
-            ({ completed }) => completed,
+            ({ completed }) => completed
           ),
         })}
       >
-        Terminé !!!
+        <FormattedMessage id="generalMeeting.timeline_status" />
       </TimelineHead>
     </Timeline>
   );

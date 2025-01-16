@@ -16,12 +16,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForwardMeetingTaskForm } from "@/lib/governance/general-meeting/hooks";
 import { useForwardMeetingTask } from "@/services/api-sdk/models/general-meeting";
 import UserSelect from "@/components/governance/general-meeting/inputs/user-select";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function ForwardMeetingTaskForm({
   formId,
   taskId,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useForwardMeetingTaskForm();
   const { mutateAsync } = useForwardMeetingTask(taskId);
   const handleSubmit = useCallback(
@@ -44,7 +46,7 @@ export default function ForwardMeetingTaskForm({
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   return (
     <Form {...form}>
@@ -58,12 +60,16 @@ export default function ForwardMeetingTaskForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Objet</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.share_task_modal_object_input" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Objet"
+                    placeholder={intl.formatMessage({
+                      id: "generalMeeting.share_task_modal_object_input",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -79,7 +85,9 @@ export default function ForwardMeetingTaskForm({
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.share_task_modal_date_input" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -97,7 +105,9 @@ export default function ForwardMeetingTaskForm({
           name="receiverId"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Destinataire</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.share_task_modal_recever_input" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <UserSelect
@@ -119,12 +129,16 @@ export default function ForwardMeetingTaskForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observations</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="generalMeeting.share_task_modal_observations_input" />
+              </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   disabled={form.formState.isSubmitting}
-                  placeholder="Observations"
+                  placeholder={intl.formatMessage({
+                    id: "generalMeeting.share_task_modal_observations_input",
+                  })}
                   className="resize-none"
                   rows={5}
                 />

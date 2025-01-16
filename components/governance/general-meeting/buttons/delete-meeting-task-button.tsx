@@ -15,6 +15,7 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteMeetingTask } from "@/services/api-sdk/models/general-meeting";
+import { FormattedMessage } from "react-intl";
 export default function DeleteMeetingTaskButton({ taskId, ...props }) {
   const form = useForm();
   const { mutateAsync } = useDeleteMeetingTask(taskId);
@@ -42,24 +43,28 @@ export default function DeleteMeetingTaskButton({ taskId, ...props }) {
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer cette tâche ?
+              <FormattedMessage id="generalMeeting.delete_task_modal_title" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="generalMeeting.delete_task_modal_description" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              ref={ref}
-              className="sr-only"
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel ref={ref} className="sr-only" />
+            <AlertDialogCancel type="button">
+              {" "}
+              <FormattedMessage id="generalMeeting.delete_task_modal_cancel_delete_btn" />
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="generalMeeting.delete_task_modal_delete_btn" />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>
