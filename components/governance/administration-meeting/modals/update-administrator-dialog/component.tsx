@@ -17,17 +17,19 @@ import { useOneAdministrator } from "@/services/api-sdk/models/administration-me
 import { useUpdateAdministratorForm } from "@/lib/governance/administration-meeting/hooks";
 import UpdateAdministratorForm from "@/components/governance/administration-meeting/forms/update-administrator-form";
 import { UpdateAdministratorDialogSuspense } from "./suspense";
+import { FormattedMessage } from "react-intl";
 export function UpdateAdministratorDialog({ administratorId, ...props }) {
   const formId = useId();
   const { data, isLoading, isError } = useOneAdministrator(administratorId);
   const form = useUpdateAdministratorForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   if (isError) {
     throw new Error("Failed to fetch data");
   }
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -53,9 +55,11 @@ export function UpdateAdministratorDialog({ administratorId, ...props }) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier un administrateur</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="sessionAdministrator.update_administrator_dialog_title" />
+            </DialogTitle>
             <DialogDescription>
-              Modifier les informations d&apos;un administrateur.
+              <FormattedMessage id="sessionAdministrator.update_administrator_dialog_description" />
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -67,15 +71,13 @@ export function UpdateAdministratorDialog({ administratorId, ...props }) {
                 className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
                 administratorId={administratorId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    <FormattedMessage id="sessionAdministrator.update_administrator_dialog_cancel_button" />
                   </Button>
                 </DialogClose>
                 <Button
@@ -86,7 +88,7 @@ export function UpdateAdministratorDialog({ administratorId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    <FormattedMessage id="sessionAdministrator.update_administrator_dialog_submit_button" />
                   )}
                 </Button>
               </DialogFooter>

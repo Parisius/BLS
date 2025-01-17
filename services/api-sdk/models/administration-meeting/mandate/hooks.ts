@@ -63,7 +63,7 @@ export const useOneMandate = (mandateId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateMandate = (mandateId, options) => {
+export const useUpdateMandate = (mandateId, options = {}) => {
   const invalidateOneMandate = useInvalidateOneMandate();
   const invalidateAllAdministrators = useInvalidateAllAdministrators();
   const getMutationOptions = useCallback(
@@ -75,7 +75,7 @@ export const useUpdateMandate = (mandateId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneMandate, mandateId, invalidateAllAdministrators],
+    [invalidateOneMandate, mandateId, invalidateAllAdministrators]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -114,7 +114,7 @@ export const useRenewMandate = (administratorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneAdministrator, administratorId, invalidateAllAdministrators],
+    [invalidateOneAdministrator, administratorId, invalidateAllAdministrators]
   );
   const mutation = useMutation({
     mutationFn: (args) =>

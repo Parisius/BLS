@@ -33,6 +33,7 @@ import DeleteAdministratorButton from "@/components/governance/administration-me
 import { useAllAdministrators } from "@/services/api-sdk/models/administration-meeting/administrator";
 import AddAdministratorDialog from "@/components/governance/administration-meeting/modals/add-administrator-dialog";
 import TableFilter from "@/components/ui/table-filter";
+import { FormattedMessage, useIntl } from "react-intl";
 export const columns = [
   {
     id: "select",
@@ -58,15 +59,27 @@ export const columns = [
   },
   {
     accessorKey: "name",
-    header: "Nom & Prénom (s)",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_name" />
+      </div>
+    ),
   },
   {
     accessorKey: "nationality",
-    header: "Nationalité",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_nationality" />
+      </div>
+    ),
   },
   {
     accessorKey: "role",
-    header: "Fonction",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_role" />
+      </div>
+    ),
     cell: ({ row }) =>
       administratorRoles.find((role) => role.value === row.original.role)
         ?.label,
@@ -77,10 +90,14 @@ export const columns = [
   },
   {
     accessorKey: "quality",
-    header: "Qualité",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_quality" />
+      </div>
+    ),
     cell: ({ row }) =>
       administratorQualities.find(
-        (quality) => quality.value === row.original.quality,
+        (quality) => quality.value === row.original.quality
       )?.label,
     meta: {
       filterVariant: "select",
@@ -89,12 +106,20 @@ export const columns = [
   },
   {
     accessorKey: "birthDate",
-    header: "Date de naissance",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_birthdate" />
+      </div>
+    ),
     cell: ({ row }) => formatDate(row.original.birthDate),
   },
   {
     accessorKey: "age",
-    header: "Âge",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_age" />
+      </div>
+    ),
     cell: ({ row }) =>
       formatDuration(row.original.birthDate, new Date(), { format: ["years"] }),
     meta: {
@@ -103,21 +128,26 @@ export const columns = [
   },
   {
     accessorKey: "birthPlace",
-    header: "Lieu de naissance",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_birthplace" />
+      </div>
+    ),
   },
   {
     accessorKey: "address",
-    header: "Adresse",
+    header: () => (
+      <div>
+        <FormattedMessage id="sessionAdministrator.administrators_table_column_address" />
+      </div>
+    ),
   },
   {
     id: "actions",
     cell: ({ row }) => (
       <div className="text-nowrap text-end">
         <Tooltip>
-          <UpdateAdministratorDialog
-            asChild
-            administratorId={row.original.id}
-          >
+          <UpdateAdministratorDialog asChild administratorId={row.original.id}>
             <TooltipTrigger asChild>
               <Button
                 type="button"
@@ -129,7 +159,9 @@ export const columns = [
               </Button>
             </TooltipTrigger>
           </UpdateAdministratorDialog>
-          <TooltipContent>Modifier</TooltipContent>
+          <TooltipContent>
+            <FormattedMessage id="sessionAdministrator.administrators_table_actions_edit_tooltip" />
+          </TooltipContent>
         </Tooltip>
 
         <DeleteAdministratorButton administratorId={row.original.id} />
@@ -142,7 +174,11 @@ export const columns = [
 export default function AdministratorsTable({
   containerClassName,
   tableWrapperClassName,
+}: {
+  containerClassName?: string;
+  tableWrapperClassName: string;
 }) {
+  const intl = useIntl();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -167,19 +203,20 @@ export default function AdministratorsTable({
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "sessionAdministrator.administrators_table_search_placeholder",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className="max-w-sm pl-10 focus-visible:ring-0"
+            className="w-full pl-10 focus-visible:ring-0"
           />
           <UserSearch className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
         <AddAdministratorDialog asChild>
-          <Button
-            aria-label="Ajouter un directeur"
-            className="gap-2"
-          >
+          <Button aria-label="Ajouter un directeur" className="gap-2">
             <UserPlus />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              <FormattedMessage id="sessionAdministrator.administrators_table_add_button" />
+            </span>
           </Button>
         </AddAdministratorDialog>
       </div>
@@ -194,13 +231,13 @@ export default function AdministratorsTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
-                    {header.column.getCanFilter() ? (
+                    {/* {header.column.getCanFilter() ? (
                       <div className="py-2">
                         <TableFilter column={header.column} />
                       </div>
-                    ) : null}
+                    ) : null} */}
                   </TableHead>
                 ))}
               </TableRow>
@@ -209,11 +246,8 @@ export default function AdministratorsTable({
           <TableBody>
             {isLoading && !data && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Chargement...
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="sessionAdministrator.administrators_table_loading_message" />
                 </TableCell>
               </TableRow>
             )}
@@ -224,7 +258,7 @@ export default function AdministratorsTable({
                   colSpan={columns.length}
                   className="text-center text-destructive"
                 >
-                  Erreur lors du chargement
+                  <FormattedMessage id="sessionAdministrator.administrators_table_error_message" />
                 </TableCell>
               </TableRow>
             )}
@@ -242,7 +276,7 @@ export default function AdministratorsTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -251,11 +285,8 @@ export default function AdministratorsTable({
 
             {!isLoading && data?.length === 0 && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucun administrateur trouvé
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="sessionAdministrator.administrators_table_no_results_message" />
                 </TableCell>
               </TableRow>
             )}

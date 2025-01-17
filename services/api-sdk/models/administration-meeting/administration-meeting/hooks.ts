@@ -66,7 +66,7 @@ export const getPrintAdministrationMeetingMutationKey = (meetingId) => [
  * @returns The mutation tag.
  */
 export const getPrintAdministrationMeetingChecklistMutationKey = (
-  meetingId,
+  meetingId
 ) => [
   "ADMINISTRATION_MEETING",
   "PRINT_ADMINISTRATION_MEETING_CHECKLIST",
@@ -78,7 +78,7 @@ export const getPrintAdministrationMeetingChecklistMutationKey = (
  * @returns The mutation tag.
  */
 export const getPrintAdministrationMeetingProceduresMutationKey = (
-  meetingId,
+  meetingId
 ) => [
   "ADMINISTRATION_MEETING",
   "PRINT_ADMINISTRATION_MEETING_PROCEDURES",
@@ -139,7 +139,7 @@ export const useOneAdministrationMeeting = (id) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateAdministrationMeeting = (options) => {
+export const useCreateAdministrationMeeting = (options = {}) => {
   const invalidateCurrentAdministrationMeeting =
     useCurrentAdministrationMeetingInvalidate();
   const getMutationOptions = useCallback(
@@ -150,7 +150,7 @@ export const useCreateAdministrationMeeting = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateCurrentAdministrationMeeting],
+    [invalidateCurrentAdministrationMeeting]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -190,7 +190,7 @@ export const useUpdateAdministrationMeeting = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingTasks, invalidateOneAdministrationMeeting, meetingId],
+    [invalidateAllMeetingTasks, invalidateOneAdministrationMeeting, meetingId]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -231,7 +231,7 @@ export const useAddAdministrationMeetingFile = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingTasks, invalidateOneAdministrationMeeting, meetingId],
+    [invalidateAllMeetingTasks, invalidateOneAdministrationMeeting, meetingId]
   );
   const mutation = useMutation({
     mutationFn: (args) => {

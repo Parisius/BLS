@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardDescription,
@@ -66,11 +67,7 @@ export default function CurrentAdministrationMeetingCard({
         </CardDescription>
         <div className="flex items-center justify-between gap-2">
           <Badge style={{ backgroundColor: color }}>{statusLabel}</Badge>
-          <Button
-            asChild
-            variant="link"
-            className="gap-2 px-0 italic"
-          >
+          <Button asChild variant="link" className="gap-2 px-0 italic">
             <Link href={AdministrationMeetingRoutes.session(meetingId).index}>
               Voir details <MoveRight />
             </Link>

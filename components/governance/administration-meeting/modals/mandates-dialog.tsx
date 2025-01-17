@@ -21,12 +21,17 @@ import {
 } from "@/components/ui/tooltip";
 import { Pencil, Repeat } from "lucide-react";
 import { UpdateMandateDialog } from "@/components/governance/administration-meeting/modals/update-mandate-dialog";
+import { FormattedMessage } from "react-intl";
 const getStatusLabel = (status) => {
   switch (status) {
     case "active":
-      return "En cours";
+      return (
+        <FormattedMessage id="sessionAdministrator.mandates_status_active" />
+      );
     case "expired":
-      return "Terminé";
+      return (
+        <FormattedMessage id="sessionAdministrator.mandates_status_expired" />
+      );
     default:
       return "";
   }
@@ -41,8 +46,12 @@ export default function MandatesDialog({
       <DialogTrigger {...props} />
       <DialogContent className="flex max-h-screen max-w-xl flex-col">
         <DialogHeader>
-          <DialogTitle>Historique des mandats</DialogTitle>
-          <DialogDescription>Historique des mandats</DialogDescription>
+          <DialogTitle>
+            <FormattedMessage id="sessionAdministrator.mandates_dialog_title" />
+          </DialogTitle>
+          <DialogDescription>
+            <FormattedMessage id="sessionAdministrator.mandates_dialog_description" />
+          </DialogDescription>
         </DialogHeader>
         <div className="flex-1 space-y-5 overflow-auto">
           {mandates?.map(
@@ -81,15 +90,14 @@ export default function MandatesDialog({
                               </Button>
                             </TooltipTrigger>
                           </RenewMandateDialog>
-                          <TooltipContent>Renouveler</TooltipContent>
+                          <TooltipContent>
+                            <FormattedMessage id="sessionAdministrator.mandates_dialog_renew_tooltip" />
+                          </TooltipContent>
                         </Tooltip>
                       )}
 
                       <Tooltip>
-                        <UpdateMandateDialog
-                          asChild
-                          mandateId={id}
-                        >
+                        <UpdateMandateDialog asChild mandateId={id}>
                           <TooltipTrigger asChild>
                             <Button
                               type="button"
@@ -101,21 +109,27 @@ export default function MandatesDialog({
                             </Button>
                           </TooltipTrigger>
                         </UpdateMandateDialog>
-                        <TooltipContent>Modifier</TooltipContent>
+                        <TooltipContent>
+                          <FormattedMessage id="sessionAdministrator.mandates_dialog_edit_tooltip" />
+                        </TooltipContent>
                       </Tooltip>
                     </div>
                   )}
                 </CardHeader>
                 <CardContent className="space-y-5">
                   <div className="flex items-center justify-between gap-5">
-                    <span className="font-semibold">Début de mandat</span>
+                    <span className="font-semibold">
+                      <FormattedMessage id="sessionAdministrator.mandates_dialog_start_label" />
+                    </span>
                     <span className="italic text-muted-foreground">
                       {formatDate(startDate)}
                     </span>
                   </div>
 
                   <div className="flex items-center justify-between gap-5">
-                    <span className="font-semibold">Fin de mandat</span>
+                    <span className="font-semibold">
+                      <FormattedMessage id="sessionAdministrator.mandates_dialog_end_label" />
+                    </span>
                     <span className="italic text-muted-foreground">
                       {formatDate(endDate)}
                     </span>
@@ -123,7 +137,7 @@ export default function MandatesDialog({
 
                   <div className="flex items-center justify-between gap-5">
                     <span className="font-semibold">
-                      Renouvellement de mandat
+                      <FormattedMessage id="sessionAdministrator.mandates_dialog_renewal_label" />
                     </span>
                     <span className="italic text-muted-foreground">
                       {formatDate(renewalDate)}
@@ -131,12 +145,14 @@ export default function MandatesDialog({
                   </div>
                 </CardContent>
               </Card>
-            ),
+            )
           )}
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="sessionAdministrator.mandates_dialog_close_btn" />
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

@@ -11,13 +11,16 @@ import AddAdministrationMeetingDialog from "@/components/governance/administrati
 import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { FormattedMessage } from "react-intl";
 export default function EmptyAdministrationMeetingCard({ className }) {
   return (
     <Card className={cn("max-w-96", className)}>
       <CardHeader>
-        <CardTitle>Planifier une session de CA</CardTitle>
+        <CardTitle>
+          <FormattedMessage id="sessionAdministrator.plan_meeting_card_title" />
+        </CardTitle>
         <CardDescription>
-          Vous n&apos;avez aucune session de CA en cours de préparation
+          <FormattedMessage id="sessionAdministrator.plan_meeting_card_description" />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
@@ -32,7 +35,7 @@ export default function EmptyAdministrationMeetingCard({ className }) {
         <AddAdministrationMeetingDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouveau CA
+            <FormattedMessage id="sessionAdministrator.plan_meeting_card_button" />
           </Button>
         </AddAdministrationMeetingDialog>
       </CardFooter>

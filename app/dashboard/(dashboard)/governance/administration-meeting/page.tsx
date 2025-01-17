@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import AdministratorsMandatesModal from "@/components/governance/administration-meeting/modals/administrators-mandates-modal";
+import { FormattedMessage } from "react-intl";
 export default function AdministrationMeetingPage() {
   return (
     <div className="container flex flex-1 flex-col gap-10 overflow-y-auto py-5">
@@ -24,36 +25,30 @@ export default function AdministrationMeetingPage() {
         <div className="flex flex-col items-center gap-2 sm:flex-row">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="secondary"
-                className="gap-2"
-              >
+              <Button variant="secondary" className="gap-2">
                 <Users />
-                Voir les administrateurs
+                <FormattedMessage id="sessionAdministrator.view_administrators_btn" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <AdministratorsModal asChild>
                 <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-                  Liste des administrateurs
+                  <FormattedMessage id="sessionAdministrator.administrators_list" />
                 </DropdownMenuItem>
               </AdministratorsModal>
 
               <AdministratorsMandatesModal asChild>
                 <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-                  Gestion des mandats
+                  <FormattedMessage id="sessionAdministrator.manage_mandates" />
                 </DropdownMenuItem>
               </AdministratorsMandatesModal>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            asChild
-            className="gap-2"
-          >
+          <Button asChild className="gap-2">
             <Link href={AdministrationMeetingRoutes.archives}>
               <FolderSearch />
-              Consulter les archives
+              <FormattedMessage id="sessionAdministrator.view_archives_btn" />
             </Link>
           </Button>
         </div>

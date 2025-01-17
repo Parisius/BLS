@@ -101,7 +101,7 @@ export const useOneAdministrator = (administratorId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateAdministrator = (options) => {
+export const useCreateAdministrator = (options = {}) => {
   const invalidateAllAdministrators = useInvalidateAllAdministrators();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -111,7 +111,7 @@ export const useCreateAdministrator = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllAdministrators],
+    [invalidateAllAdministrators]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -139,7 +139,7 @@ export const useCreateAdministrator = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateAdministrator = (administratorId, options) => {
+export const useUpdateAdministrator = (administratorId, options = {}) => {
   const invalidateOneAdministrator = useInvalidateOneAdministrator();
   const invalidateAllAdministrators = useInvalidateAllAdministrators();
   const getMutationOptions = useCallback(
@@ -151,7 +151,7 @@ export const useUpdateAdministrator = (administratorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [administratorId, invalidateAllAdministrators, invalidateOneAdministrator],
+    [administratorId, invalidateAllAdministrators, invalidateOneAdministrator]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -178,7 +178,7 @@ export const useUpdateAdministrator = (administratorId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteAdministrator = (administratorId, options) => {
+export const useDeleteAdministrator = (administratorId, options = {}) => {
   const removeOneAdministrator = useRemoveOneAdministratorQuery();
   const invalidateAllAdministrators = useInvalidateAllAdministrators();
   const getMutationOptions = useCallback(
@@ -190,7 +190,7 @@ export const useDeleteAdministrator = (administratorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [administratorId, invalidateAllAdministrators, removeOneAdministrator],
+    [administratorId, invalidateAllAdministrators, removeOneAdministrator]
   );
   const mutation = useMutation({
     mutationFn: () => deleteAdministrator(administratorId),

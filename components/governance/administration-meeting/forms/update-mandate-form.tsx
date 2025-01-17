@@ -12,6 +12,7 @@ import {
 import { DateInput } from "@/components/ui/date-input";
 import { useUpdateMandate } from "@/services/api-sdk/models/administration-meeting";
 import { useUpdateMandateForm } from "@/lib/governance/administration-meeting/hooks";
+import { FormattedMessage } from "react-intl";
 export default function UpdateMandateForm({
   formId,
   mandateId,
@@ -40,7 +41,7 @@ export default function UpdateMandateForm({
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
   return (
     <Form {...form}>
@@ -54,7 +55,9 @@ export default function UpdateMandateForm({
           name="startDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de début du mandat</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_mandate_form_start_date_label" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

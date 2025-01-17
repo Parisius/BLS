@@ -4,8 +4,11 @@ import { toast } from "@/components/ui/use-toast";
 import { useUpdateAdministratorForm } from "@/lib/governance/administration-meeting/hooks";
 import {
   administratorQualities,
+  administratorQualitiesItnl,
   administratorRoles,
+  administratorRolesItnl,
   administratorTypes,
+  administratorTypesItnl,
 } from "@/services/api-sdk/types/administration-meeting";
 import { useUpdateAdministrator } from "@/services/api-sdk/models/administration-meeting/administrator";
 import {
@@ -29,6 +32,7 @@ import { Input } from "@/components/ui/input";
 import CountrySelect from "@/components/ui/country-select";
 import { DateInput } from "@/components/ui/date-input";
 import { NumberInput } from "@/components/ui/number-input";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function UpdateAdministratorForm({
   formId,
   administratorId,
@@ -38,6 +42,7 @@ export default function UpdateAdministratorForm({
 }) {
   const form = useUpdateAdministratorForm();
   const { mutateAsync } = useUpdateAdministrator(administratorId);
+  const intl = useIntl();
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
@@ -58,8 +63,22 @@ export default function UpdateAdministratorForm({
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess]
   );
+  const translatedQualities = administratorQualitiesItnl.map((quality) => ({
+    ...quality,
+    label: intl.formatMessage(quality.label),
+  }));
+
+  const translatedRoles = administratorRolesItnl.map((role) => ({
+    ...role,
+    label: intl.formatMessage(role.label),
+  }));
+
+  const translatedTypes = administratorTypesItnl.map((type) => ({
+    ...type,
+    label: intl.formatMessage(type.label),
+  }));
   return (
     <Form {...form}>
       <form
@@ -72,22 +91,22 @@ export default function UpdateAdministratorForm({
           name="type"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Type</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_type_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
-                      <SelectValue placeholder="Sélectionner un type" />
+                      <SelectValue
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_type_placeholder",
+                        })}
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {administratorTypes.map((type) => (
-                        <SelectItem
-                          value={type.value}
-                          key={type.value}
-                        >
+                      {translatedTypes.map((type) => (
+                        <SelectItem value={type.value} key={type.value}>
                           {type.label}
                         </SelectItem>
                       ))}
@@ -106,22 +125,22 @@ export default function UpdateAdministratorForm({
           name="quality"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Qualité</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_quality_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
-                      <SelectValue placeholder="Sélectionner une qualité" />
+                      <SelectValue
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_quality_placeholder",
+                        })}
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {administratorQualities.map((quality) => (
-                        <SelectItem
-                          value={quality.value}
-                          key={quality.value}
-                        >
+                      {translatedQualities.map((quality) => (
+                        <SelectItem value={quality.value} key={quality.value}>
                           {quality.label}
                         </SelectItem>
                       ))}
@@ -140,22 +159,22 @@ export default function UpdateAdministratorForm({
           name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Fonction</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_role_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
-                      <SelectValue placeholder="Sélectionner une fonction" />
+                      <SelectValue
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_role_placeholder",
+                        })}
+                      />
                     </SelectTrigger>
                     <SelectContent>
-                      {administratorRoles.map((role) => (
-                        <SelectItem
-                          value={role.value}
-                          key={role.value}
-                        >
+                      {translatedRoles.map((role) => (
+                        <SelectItem value={role.value} key={role.value}>
                           {role.label}
                         </SelectItem>
                       ))}
@@ -174,12 +193,16 @@ export default function UpdateAdministratorForm({
           name="name"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nom & Prénom (s)</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_name_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Nom & Prénom (s)"
+                    placeholder={intl.formatMessage({
+                      id: "sessionAdministrator.update_administrator_form_name_placeholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -195,12 +218,16 @@ export default function UpdateAdministratorForm({
           name="nationality"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nationalité</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_nationality_label" />
+              </FormLabel>
               <FormControl>
                 <CountrySelect
                   value={field.value}
                   onValueChange={field.onChange}
-                  placeholder="Nationalité"
+                  placeholder={intl.formatMessage({
+                    id: "sessionAdministrator.update_administrator_form_nationality_placeholder",
+                  })}
                   className="h-12"
                 />
               </FormControl>
@@ -214,7 +241,9 @@ export default function UpdateAdministratorForm({
           name="birthDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de naissance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_birth_date_label" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -234,12 +263,16 @@ export default function UpdateAdministratorForm({
           name="birthPlace"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lieu de naissance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_birth_place_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Lieu de naissance"
+                    placeholder={intl.formatMessage({
+                      id: "sessionAdministrator.update_administrator_form_birth_place_placeholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -255,12 +288,16 @@ export default function UpdateAdministratorForm({
           name="address"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.update_administrator_form_address_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Adresse"
+                    placeholder={intl.formatMessage({
+                      id: "sessionAdministrator.update_administrator_form_address_placeholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -278,12 +315,16 @@ export default function UpdateAdministratorForm({
               name="share"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nombre de parts</FormLabel>
+                  <FormLabel>
+                    <FormattedMessage id="sessionAdministrator.update_administrator_form_share_label" />
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <NumberInput
                         {...field}
-                        placeholder="Nombre de parts"
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_share_placeholder",
+                        })}
                         className="h-12 pl-10"
                       />
                       <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -299,12 +340,16 @@ export default function UpdateAdministratorForm({
               name="sharePercentage"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Pourcentage de parts</FormLabel>
+                  <FormLabel>
+                    <FormattedMessage id="sessionAdministrator.update_administrator_form_share_percentage_label" />
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <NumberInput
                         {...field}
-                        placeholder="Pourcentage de parts"
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_share_percentage_placeholder",
+                        })}
                         className="h-12 pl-10"
                       />
                       <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -324,12 +369,17 @@ export default function UpdateAdministratorForm({
               name="denomination"
               render={({ field }) => (
                 <FormItem className="col-span-2">
-                  <FormLabel>Dénomination</FormLabel>
+                  <FormLabel>
+                    {" "}
+                    <FormattedMessage id="sessionAdministrator.update_administrator_form_denomination_label" />
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         {...field}
-                        placeholder="Dénomination"
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_denomination_placeholder",
+                        })}
                         className="h-12 pl-10"
                       />
                       <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -345,12 +395,16 @@ export default function UpdateAdministratorForm({
               name="companyHeadOffice"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Siège social</FormLabel>
+                  <FormLabel>
+                    <FormattedMessage id="sessionAdministrator.update_administrator_form_company_head_office_label" />
+                  </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         {...field}
-                        placeholder="Siège social"
+                        placeholder={intl.formatMessage({
+                          id: "sessionAdministrator.update_administrator_form_company_head_office_placeholder",
+                        })}
                         className="h-12 pl-10"
                       />
                       <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -366,12 +420,16 @@ export default function UpdateAdministratorForm({
               name="companyNationality"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nationalité de la société</FormLabel>
+                  <FormLabel>
+                    <FormattedMessage id="sessionAdministrator.update_administrator_form_company_nationality_label" />
+                  </FormLabel>
                   <FormControl>
                     <CountrySelect
                       value={field.value}
                       onValueChange={field.onChange}
-                      placeholder="Nationalité"
+                      placeholder={intl.formatMessage({
+                        id: "sessionAdministrator.update_administrator_form_company_nationality_placeholder",
+                      })}
                       className="h-12"
                     />
                   </FormControl>

@@ -17,17 +17,19 @@ import { useOneMandate } from "@/services/api-sdk/models/administration-meeting"
 import { useUpdateMandateForm } from "@/lib/governance/administration-meeting/hooks";
 import { UpdateMandateDialogSuspense } from "@/components/governance/administration-meeting/modals/update-mandate-dialog/suspense";
 import UpdateMandateForm from "@/components/governance/administration-meeting/forms/update-mandate-form";
+import { FormattedMessage } from "react-intl";
 export function UpdateMandateDialog({ mandateId, ...props }) {
   const formId = useId();
   const { data, isLoading, isError } = useOneMandate(mandateId);
   const form = useUpdateMandateForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   if (isError) {
     throw new Error("Failed to fetch mandate");
   }
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -41,9 +43,11 @@ export function UpdateMandateDialog({ mandateId, ...props }) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier mandat</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="sessionAdministrator.update_mandate_dialog_title" />
+            </DialogTitle>
             <DialogDescription>
-              Modifier les détails du mandat.
+              <FormattedMessage id="sessionAdministrator.update_mandate_dialog_description" />
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -54,15 +58,13 @@ export function UpdateMandateDialog({ mandateId, ...props }) {
                 formId={formId}
                 mandateId={mandateId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    <FormattedMessage id="sessionAdministrator.update_mandate_dialog_cancel_btn" />
                   </Button>
                 </DialogClose>
                 <Button
@@ -73,7 +75,7 @@ export function UpdateMandateDialog({ mandateId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    <FormattedMessage id="sessionAdministrator.update_mandate_dialog_submit_btn" />
                   )}
                 </Button>
               </DialogFooter>

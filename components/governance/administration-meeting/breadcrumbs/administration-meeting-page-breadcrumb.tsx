@@ -9,6 +9,7 @@ import {
 import { ModulesRoutes } from "@/config/routes";
 import { Component } from "lucide-react";
 import Link from "next/link";
+import { FormattedMessage } from "react-intl";
 export function AdministrationMeetingPageBreadcrumb() {
   return (
     <Breadcrumb>
@@ -24,13 +25,15 @@ export function AdministrationMeetingPageBreadcrumb() {
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
             <Link href={ModulesRoutes.submodules("governance")}>
-              Gouvernance
+              <FormattedMessage id="sessionAdministrator.breadcrumb1" />
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Conseil d&apos;administration</BreadcrumbPage>
+          <BreadcrumbPage>
+            <FormattedMessage id="sessionAdministrator.breadcrumb2" />
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

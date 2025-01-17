@@ -21,10 +21,11 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteAdministrator } from "@/services/api-sdk/models/administration-meeting/administrator";
+import { FormattedMessage } from "react-intl";
 export default function DeleteAdministratorButton({ administratorId }) {
   const form = useForm();
   const { mutateAsync } = useDeleteAdministrator(administratorId);
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
@@ -57,30 +58,35 @@ export default function DeleteAdministratorButton({ administratorId }) {
             </Button>
           </TooltipTrigger>
         </AlertDialogTrigger>
-        <TooltipContent>Supprimer</TooltipContent>
+        <TooltipContent>
+          <FormattedMessage id="sessionAdministrator.delete_administrator_button_tooltip" />
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer cet administrateur ?
+              <FormattedMessage id="sessionAdministrator.delete_administrator_button_title" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="sessionAdministrator.delete_administrator_button_description" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              className="sr-only"
-              ref={closeRef}
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="sr-only" ref={closeRef} />
+            <AlertDialogCancel type="button">
+              <FormattedMessage id="sessionAdministrator.delete_administrator_button_cancel" />
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="sessionAdministrator.delete_administrator_button_confirm" />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

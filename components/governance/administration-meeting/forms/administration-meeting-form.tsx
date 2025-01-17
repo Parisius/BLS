@@ -18,9 +18,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { meetingTypes } from "@/services/api-sdk/types/administration-meeting";
+import {
+  boardMeetingTypes,
+  meetingTypes,
+} from "@/services/api-sdk/types/administration-meeting";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function AdministrationMeetingForm({ formId, onSubmit }) {
   const form = useAdministrationMeetingForm();
+  const intl = useIntl();
+  const translatedMeetingTypes = boardMeetingTypes.map((type) => ({
+    ...type,
+    label: intl.formatMessage({
+      id: `sessionAdministrator.meeting.type.${type.value}`,
+    }),
+  }));
   return (
     <Form {...form}>
       <form
@@ -33,13 +44,17 @@ export default function AdministrationMeetingForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé du CA</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.add_meeting_dialog_form_meeting_title_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Intitulé du CA"
+                    placeholder={intl.formatMessage({
+                      id: "sessionAdministrator.add_meeting_dialog_form_meeting_title_label",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -55,21 +70,18 @@ export default function AdministrationMeetingForm({ formId, onSubmit }) {
           name="meetingType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type du CA</FormLabel>
+              <FormLabel>
+                {" "}
+                <FormattedMessage id="sessionAdministrator.add_meeting_dialog_form_meeting_title_label" />
+              </FormLabel>
               <FormControl>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="h-12">
                     <SelectValue placeholder="Type du CA" />
                   </SelectTrigger>
                   <SelectContent>
-                    {meetingTypes.map((type) => (
-                      <SelectItem
-                        key={type.value}
-                        value={type.value}
-                      >
+                    {translatedMeetingTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
                         {type.label}
                       </SelectItem>
                     ))}
@@ -86,7 +98,10 @@ export default function AdministrationMeetingForm({ formId, onSubmit }) {
           name="meetingDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de tenue du CA</FormLabel>
+              <FormLabel>
+                {" "}
+                <FormattedMessage id="sessionAdministrator.add_meeting_dialog_form_meeting_date_label" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
