@@ -17,17 +17,19 @@ import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useOneAdministrationMeeting } from "@/services/api-sdk/models/administration-meeting";
 import UpdateAdministrationMeetingForm from "@/components/governance/administration-meeting/forms/update-administration-meeting-form";
 import { UpdateAdministrationMeetingDialogSuspense } from "./suspense";
+import { FormattedMessage } from "react-intl";
 export function UpdateAdministrationMeetingDialog({ meetingId, ...props }) {
   const formId = useId();
   const { data, isLoading, isError } = useOneAdministrationMeeting(meetingId);
   const form = useAdministrationMeetingForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   if (isError) {
     throw new Error("Failed to fetch administration meeting");
   }
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+  const handleError = useCallback(() => {}, []);
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -43,10 +45,11 @@ export function UpdateAdministrationMeetingDialog({ meetingId, ...props }) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier CA</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="sessionAdministrator.edit_ca_dialog_title_edit" />
+            </DialogTitle>
             <DialogDescription>
-              Modifier les informations de la session de conseil
-              d&apos;administration.
+              <FormattedMessage id="sessionAdministrator.edit_ca_dialog_description_edit" />
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -57,15 +60,13 @@ export function UpdateAdministrationMeetingDialog({ meetingId, ...props }) {
                 formId={formId}
                 meetingId={meetingId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    <FormattedMessage id="sessionAdministrator.edit_ca_button_cancel" />
                   </Button>
                 </DialogClose>
                 <Button
@@ -76,7 +77,7 @@ export function UpdateAdministrationMeetingDialog({ meetingId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    <FormattedMessage id="sessionAdministrator.edit_ca_button_edit" />
                   )}
                 </Button>
               </DialogFooter>

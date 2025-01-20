@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import React, { useRef } from "react";
 import AttendantsTable from "@/components/governance/administration-meeting/tables/attendants-table";
 import PrintAttendantsListButton from "@/components/governance/administration-meeting/buttons/print-attendants-list-button";
+import { FormattedMessage } from "react-intl";
 export default function AttendantsDialog({ meetingId, ...props }) {
   const closeRef = useRef(null);
   return (
@@ -20,10 +21,11 @@ export default function AttendantsDialog({ meetingId, ...props }) {
       <DialogTrigger {...props} />
       <DialogContent className="max-h-screen max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Liste de présence</DialogTitle>
+          <DialogTitle>
+            <FormattedMessage id="sessionAdministrator.dialog_title_attendants" />
+          </DialogTitle>
           <DialogDescription>
-            Constituer la liste des personnes présentes au Conseil
-            d&apos;Administration
+            <FormattedMessage id="sessionAdministrator.dialog_description_attendants" />
           </DialogDescription>
         </DialogHeader>
         <AttendantsTable
@@ -33,10 +35,12 @@ export default function AttendantsDialog({ meetingId, ...props }) {
         <DialogFooter className="gap-2">
           <DialogClose ref={closeRef} />
           <DialogClose asChild>
-            <Button variant="muted">Annuler</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="sessionAdministrator.button_cancel" />
+            </Button>
           </DialogClose>
           <PrintAttendantsListButton meetingId={meetingId}>
-            Générer la liste
+            <FormattedMessage id="sessionAdministrator.button_generate_list" />
           </PrintAttendantsListButton>
         </DialogFooter>
       </DialogContent>

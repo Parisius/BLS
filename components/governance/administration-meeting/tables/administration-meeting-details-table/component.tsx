@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -21,6 +22,7 @@ import {
   formatStatus,
 } from "@/lib/governance/administration-meeting";
 import PrintAdministrationMeetingButton from "@/components/governance/administration-meeting/buttons/print-administration-meeting-button";
+import { FormattedMessage, useIntl } from "react-intl";
 export function AdministrationMeetingDetailsTable({
   id,
   title,
@@ -30,23 +32,37 @@ export function AdministrationMeetingDetailsTable({
   meetingDate,
   nextTask,
 }) {
-  const { label: statusLabel, color } = formatStatus(status);
+  const intl = useIntl();
+  const { label: statusLabel, color } = formatStatus(status, intl);
   const { label: meetingTypeLabel } = formatMeetingType(meetingType);
   return (
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Intitulé</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Référence</TableHead>
-          <TableHead className={cn(nextTask && "text-destructive")}>
-            Prochaine tâche
+          <TableHead>
+            <FormattedMessage id="sessionAdministrator.heading_title" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="sessionAdministrator.heading_type" />
+          </TableHead>
+          <TableHead>
+            {" "}
+            <FormattedMessage id="sessionAdministrator.heading_reference" />
           </TableHead>
           <TableHead className={cn(nextTask && "text-destructive")}>
-            Prochain délai
+            <FormattedMessage id="sessionAdministrator.heading_next_task" />
           </TableHead>
-          <TableHead>Date de tenue</TableHead>
-          <TableHead>Statut</TableHead>
+          <TableHead className={cn(nextTask && "text-destructive")}>
+            <FormattedMessage id="sessionAdministrator.heading_next_due_date" />
+            :
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="sessionAdministrator.heading_meeting_date" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="sessionAdministrator.heading_status" />
+          </TableHead>
+          <TableHead>Actions</TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -60,37 +76,36 @@ export function AdministrationMeetingDetailsTable({
           </TableCell>
           <TableCell>{reference}</TableCell>
           <TableCell className={cn("max-w-32", nextTask && "text-destructive")}>
-            {nextTask?.title ?? "Aucune tâche"}
+            {nextTask?.title ?? (
+              <FormattedMessage id="sessionAdministrator.no_task" />
+            )}
           </TableCell>
           <TableCell className={cn(nextTask && "text-destructive")}>
-            {nextTask?.dueDate ? formatDate(nextTask.dueDate) : "Aucun délai"}
+            {nextTask?.dueDate ? (
+              formatDate(nextTask.dueDate)
+            ) : (
+              <FormattedMessage id="sessionAdministrator.no_due_date" />
+            )}
           </TableCell>
           <TableCell>{formatDate(meetingDate)}</TableCell>
           <TableCell>
-            <Badge
-              style={{ backgroundColor: color }}
-              className="text-nowrap"
-            >
+            <Badge style={{ backgroundColor: color }} className="text-nowrap">
               {statusLabel}
             </Badge>
           </TableCell>
           <TableCell>
             <Tooltip>
-              <UpdateAdministrationMeetingDialog
-                asChild
-                meetingId={id}
-              >
+              <UpdateAdministrationMeetingDialog asChild meetingId={id}>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full">
                     <Pencil />
                   </Button>
                 </TooltipTrigger>
               </UpdateAdministrationMeetingDialog>
-              <TooltipContent>Modifier</TooltipContent>
+              <TooltipContent>
+                {" "}
+                <FormattedMessage id="sessionAdministrator.tooltip_edit" />
+              </TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -104,7 +119,10 @@ export function AdministrationMeetingDetailsTable({
                   <Printer />
                 </PrintAdministrationMeetingButton>
               </TooltipTrigger>
-              <TooltipContent>Imprimer</TooltipContent>
+              <TooltipContent>
+                {" "}
+                <FormattedMessage id="sessionAdministrator.tooltip_print" />
+              </TooltipContent>
             </Tooltip>
           </TableCell>
         </TableRow>

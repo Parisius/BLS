@@ -33,34 +33,35 @@ import {
 } from "@/components/governance/administration-meeting/modals/update-attendant-dialog";
 import DeleteAttendantButton from "@/components/governance/administration-meeting/buttons/delete-attendant-button";
 import AddAttendantDialog from "@/components/governance/administration-meeting/modals/add-attendant-dialog";
+import { FormattedMessage } from "react-intl";
+import { useIntl } from "@/lib/intl/hooks";
 export const getColumns = (meetingId) => [
   {
     id: "select",
     header: ({ table }) => (
-      <AllAttendantsCheckbox
-        meetingId={meetingId}
-        table={table}
-      />
+      <AllAttendantsCheckbox meetingId={meetingId} table={table} />
     ),
-    cell: ({ row }) => (
-      <AttendantCheckbox
-        meetingId={meetingId}
-        row={row}
-      />
-    ),
+    cell: ({ row }) => <AttendantCheckbox meetingId={meetingId} row={row} />,
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "name",
-    header: "Nom & Prénom (s)",
+    header: () => (
+      <FormattedMessage id="sessionAdministrator.attendant_table_column_name" />
+    ),
   },
   {
-    header: "Qualité",
+    id: "quality",
+    header: () => (
+      <FormattedMessage id="table_column_quality" defaultMessage="Quality" />
+    ),
     cell: ({ row }) =>
-      row.original.type === "administrator"
-        ? "Administrateur"
-        : row.original.grade,
+      row.original.type === "administrator" ? (
+        <FormattedMessage id="sessionAdministrator.attendant_table_column_quality_admin" />
+      ) : (
+        row.original.grade
+      ),
   },
   {
     id: "actions",
@@ -69,10 +70,7 @@ export const getColumns = (meetingId) => [
         <div className="flex items-center">
           <Tooltip>
             <UpdateAttendantDialogErrorBoundary>
-              <UpdateAttendantDialog
-                asChild
-                attendantId={row.original.id}
-              >
+              <UpdateAttendantDialog asChild attendantId={row.original.id}>
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
@@ -84,7 +82,9 @@ export const getColumns = (meetingId) => [
                 </TooltipTrigger>
               </UpdateAttendantDialog>
             </UpdateAttendantDialogErrorBoundary>
-            <TooltipContent>Modifier</TooltipContent>
+            <TooltipContent>
+              <FormattedMessage id="sessionAdministrator.attendant_table_action_modify" />
+            </TooltipContent>
           </Tooltip>
 
           <DeleteAttendantButton attendantId={row.original.id} />
@@ -98,7 +98,12 @@ export default function AttendantsTable({
   meetingId,
   containerClassName,
   tableWrapperClassName,
+}: {
+  meetingId?: string;
+  containerClassName?: string;
+  tableWrapperClassName?: string;
 }) {
+  const intl = useIntl();
   const { data, isLoading, isError } = useAllMeetingAttendants(meetingId);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
@@ -119,29 +124,31 @@ export default function AttendantsTable({
     throw Error("Failed to fetch attendants");
   }
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div>
+        <FormattedMessage id="sessionAdministrator.loading" />
+      </div>
+    );
   }
   return (
     <div className={cn("space-y-5 overflow-auto", containerClassName)}>
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "sessionAdministrator.attendant_placeholder_search",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className="max-w-sm pl-10 focus-visible:ring-0"
+            className="w-full pl-10 focus-visible:ring-0"
           />
           <Search className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
-        <AddAttendantDialog
-          asChild
-          meetingId={meetingId}
-        >
-          <Button
-            aria-label="Ajouter une tâche"
-            className="gap-2"
-          >
+        <AddAttendantDialog asChild meetingId={meetingId}>
+          <Button aria-label="Ajouter une tâche" className="gap-2">
             <ListTodo />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              <FormattedMessage id="sessionAdministrator.attendant_button_add_task" />
+            </span>
           </Button>
         </AddAttendantDialog>
       </div>
@@ -156,7 +163,7 @@ export default function AttendantsTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -178,7 +185,7 @@ export default function AttendantsTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -186,11 +193,8 @@ export default function AttendantsTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucun participant trouvé
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="sessionAdministrator.attendant_table_no_attendants" />
                 </TableCell>
               </TableRow>
             )}

@@ -15,11 +15,15 @@ import { FormProvider } from "react-hook-form";
 import { useAttendantForm } from "@/lib/governance/administration-meeting/hooks";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import AddAttendantForm from "@/components/governance/administration-meeting/forms/add-attendant-form";
+import { FormattedMessage } from "react-intl";
 export default function AddAttendantDialog({ meetingId, ...props }) {
   const formId = useId();
   const form = useAttendantForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleSuccess = useCallback(() => {
+    closeRef.current?.click();
+  }, []);
+  const handleError = useCallback(() => {
     closeRef.current?.click();
   }, []);
   return (
@@ -28,24 +32,24 @@ export default function AddAttendantDialog({ meetingId, ...props }) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouveau participant</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="sessionAdministrator.add_attendant_dialog_title" />
+            </DialogTitle>
             <DialogDescription>
-              Ajouter un participant à cette réunion.
+              <FormattedMessage id="sessionAdministrator.add_attendant_dialog_description" />
             </DialogDescription>
           </DialogHeader>
           <AddAttendantForm
             formId={formId}
             meetingId={meetingId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                <FormattedMessage id="sessionAdministrator.add_attendant_cancel_button" />
               </Button>
             </DialogClose>
             <Button
@@ -53,7 +57,11 @@ export default function AddAttendantDialog({ meetingId, ...props }) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Ajouter"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="sessionAdministrator.add_attendant_submit_button" />
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

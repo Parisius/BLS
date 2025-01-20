@@ -17,15 +17,19 @@ import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useOneMeetingAttendant } from "@/services/api-sdk/models/administration-meeting";
 import UpdateAttendantForm from "@/components/governance/administration-meeting/forms/update-attendant-form";
 import { UpdateAttendantDialogSuspense } from "./suspense";
+import { FormattedMessage } from "react-intl";
 export function UpdateAttendantDialog({ attendantId, ...props }) {
   const formId = useId();
   const { data, isLoading, isError } = useOneMeetingAttendant(attendantId);
   const form = useAttendantForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   if (isError) {
     throw new Error("Failed to fetch meeting attendant");
   }
   const handleSuccess = useCallback(() => {
+    closeRef.current?.click();
+  }, []);
+  const handleError = useCallback(() => {
     closeRef.current?.click();
   }, []);
   useEffect(() => {
@@ -42,9 +46,11 @@ export function UpdateAttendantDialog({ attendantId, ...props }) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier un participant</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="sessionAdministrator.attendant_table_action_modify" />
+            </DialogTitle>
             <DialogDescription>
-              Modifier les détails du participant
+              <FormattedMessage id="sessionAdministrator.update_attendant_dialog_description" />
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -55,15 +61,13 @@ export function UpdateAttendantDialog({ attendantId, ...props }) {
                 formId={formId}
                 attendantId={attendantId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    <FormattedMessage id="sessionAdministrator.update_attendant_cancel_button" />
                   </Button>
                 </DialogClose>
                 <Button
@@ -74,7 +78,7 @@ export function UpdateAttendantDialog({ attendantId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    <FormattedMessage id="sessionAdministrator.update_attendant_cancel_button" />
                   )}
                 </Button>
               </DialogFooter>

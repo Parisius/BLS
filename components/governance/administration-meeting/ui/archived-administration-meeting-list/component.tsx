@@ -3,6 +3,7 @@ import { useArchivedAdministrationMeetings } from "@/services/api-sdk/models/adm
 import AdministrationMeetingCard from "@/components/governance/administration-meeting/ui/administration-meeting-card";
 import { useSearchResults } from "@/providers/search-provider";
 import { ArchivedAdministrationMeetingListSuspense } from "./suspense";
+import { FormattedMessage } from "react-intl";
 export function ArchivedAdministrationMeetingList() {
   const { data, isError } = useArchivedAdministrationMeetings();
   const filteredData = useSearchResults(data ?? []);
@@ -15,14 +16,14 @@ export function ArchivedAdministrationMeetingList() {
   if (data.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucune session de CA archivée n&apos;a été trouvée
+        <FormattedMessage id="sessionAdministrator.no_meetings_found" />
       </p>
     );
   }
   if (filteredData.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucune session de CA archivée ne correspond à votre recherche
+        <FormattedMessage id="sessionAdministrator.no_search_results" />
       </p>
     );
   }

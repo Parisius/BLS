@@ -10,8 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { BriefcaseBusiness, User } from "lucide-react";
 import { useAttendantForm } from "@/lib/governance/administration-meeting/hooks";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function AttendantForm({ formId, onSubmit }) {
   const form = useAttendantForm();
+  const intl = useIntl();
   return (
     <Form {...form}>
       <form
@@ -24,12 +26,16 @@ export default function AttendantForm({ formId, onSubmit }) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom & Prénom (s)</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.attendant_form_name_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Nom & Prénom (s)"
+                    placeholder={intl.formatMessage({
+                      id: "sessionAdministrator.attendant_form_name_label",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -45,12 +51,16 @@ export default function AttendantForm({ formId, onSubmit }) {
           name="grade"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Qualité</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.attendant_form_grade_label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Qualité"
+                    placeholder={intl.formatMessage({
+                      id: "sessionAdministrator.attendant_form_grade_label",
+                    })}
                     className="h-12 pl-10"
                   />
                   <BriefcaseBusiness className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

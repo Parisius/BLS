@@ -1,23 +1,43 @@
+"use client";
 import { meetingTypes } from "@/services/api-sdk/types/administration-meeting";
-export const formatStatus = (status) => {
+import { defineMessages } from "react-intl";
+
+export const messages = defineMessages({
+  statusPending: {
+    id: "sessionAdministrator.status.pending",
+    defaultMessage: "En cours de préparation",
+  },
+  statusClosed: {
+    id: "sessionAdministrator.status.closed",
+    defaultMessage: "Terminée",
+  },
+});
+
+const statusColors = {
+  pending: "hsl(147 100% 35%)",
+  closed: "rgb(107 114 128)",
+  default: "rgb(107 114 128)",
+};
+
+export const formatStatus = (status, intl) => {
   switch (status) {
     case "pending":
       return {
         status: "pending",
-        label: "En cours de préparation",
-        color: "hsl(147 100% 35%)",
+        label: intl.formatMessage(messages.statusPending),
+        color: statusColors.pending,
       };
     case "closed":
       return {
         status: "closed",
-        label: "Terminée",
-        color: "rgb(107 114 128)",
+        label: intl.formatMessage(messages.statusClosed),
+        color: statusColors.closed,
       };
     default:
       return {
         status,
-        label: "Terminée",
-        color: "rgb(107 114 128)",
+        label: intl.formatMessage(messages.statusClosed),
+        color: statusColors.default,
       };
   }
 };

@@ -17,6 +17,7 @@ import {
 } from "@/components/governance/administration-meeting/ui/archived-administration-meeting-list";
 import { SearchInput, SearchProvider } from "@/providers/search-provider";
 import { Portal } from "@/components/ui/portal";
+import { FormattedMessage } from "react-intl";
 export default function ArchivedAdministrationMeetingPage() {
   return (
     <SearchProvider>
@@ -31,7 +32,7 @@ export default function ArchivedAdministrationMeetingPage() {
           </OpenSessionButtonErrorBoundary>
         </div>
         <h1 className="relative text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-          Choisir une session de CA
+          <FormattedMessage id="sessionAdministrator.archived_meeting_title" />
         </h1>
         <div className="flex items-end justify-between gap-10 sm:items-center sm:justify-end">
           <div className="flex flex-col items-center gap-2 sm:flex-row">
@@ -39,7 +40,7 @@ export default function ArchivedAdministrationMeetingPage() {
               id="session-year-label"
               className="text-nowrap text-foreground/75"
             >
-              Année de session
+              <FormattedMessage id="sessionAdministrator.session_year_label" />
             </span>
             <Select defaultValue="2024">
               <SelectTrigger

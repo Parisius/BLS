@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { FormattedMessage } from "react-intl";
 export function ArchivesPageBreadcrumb() {
   return (
     <Breadcrumb>
@@ -36,12 +37,12 @@ export function ArchivesPageBreadcrumb() {
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
                 <Link href={ModulesRoutes.submodules("governance")}>
-                  Gouvernance
+                  <FormattedMessage id="sessionAdministrator.breadcrumb1" />
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={AdministrationMeetingRoutes.index}>
-                  Conseil d&apos;administration
+                  <FormattedMessage id="sessionAdministrator.breadcrumb2" />
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -51,7 +52,7 @@ export function ArchivesPageBreadcrumb() {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={ModulesRoutes.submodules("governance")}>
-                Gouvernance
+                <FormattedMessage id="sessionAdministrator.breadcrumb1" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -59,7 +60,7 @@ export function ArchivesPageBreadcrumb() {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={AdministrationMeetingRoutes.index}>
-                Conseil d&apos;administration
+                <FormattedMessage id="sessionAdministrator.breadcrumb2" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>

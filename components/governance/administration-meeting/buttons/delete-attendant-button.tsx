@@ -21,10 +21,11 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteMeetingAttendant } from "@/services/api-sdk/models/administration-meeting";
+import { FormattedMessage } from "react-intl";
 export default function DeleteAttendantButton({ attendantId }) {
   const form = useForm();
   const { mutateAsync } = useDeleteMeetingAttendant(attendantId);
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
@@ -57,30 +58,35 @@ export default function DeleteAttendantButton({ attendantId }) {
             </Button>
           </TooltipTrigger>
         </AlertDialogTrigger>
-        <TooltipContent>Supprimer</TooltipContent>
+        <TooltipContent>
+          <FormattedMessage id="sessionAdministrator.delete" />
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer ce participant ?
+              <FormattedMessage id="sessionAdministrator.deleteParticipant" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="sessionAdministrator.irreversibleAction" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              ref={closeRef}
-              className="sr-only"
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel ref={closeRef} className="sr-only" />
+            <AlertDialogCancel type="button">
+              <FormattedMessage id="sessionAdministrator.cancel" />
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="sessionAdministrator.delete" />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>
