@@ -21,6 +21,7 @@ import { useCallback } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteMeetingChecklistTask } from "@/services/api-sdk/models/administration-meeting";
+import { FormattedMessage } from "react-intl";
 export default function DeleteChecklistTaskButton({ taskId }) {
   const form = useForm();
   const { mutateAsync } = useDeleteMeetingChecklistTask(taskId);
@@ -55,26 +56,34 @@ export default function DeleteChecklistTaskButton({ taskId }) {
             </Button>
           </TooltipTrigger>
         </AlertDialogTrigger>
-        <TooltipContent>Supprimer</TooltipContent>
+        <TooltipContent>
+          <FormattedMessage id="sessionAdministrator.delete_Tooltip" />
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer cette tâche ?
+              <FormattedMessage id="sessionAdministrator.delete_Title" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="sessionAdministrator.delete_Description" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel type="button">
+              <FormattedMessage id="sessionAdministrator.cancel_Button" />
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="sessionAdministrator.delete_Button" />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

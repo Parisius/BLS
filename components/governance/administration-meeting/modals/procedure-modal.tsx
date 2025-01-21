@@ -12,15 +12,18 @@ import {
 import { Button } from "@/components/ui/button";
 import ProcedureTable from "@/components/governance/administration-meeting/tables/procedure-table";
 import PrintProceduresButton from "@/components/governance/administration-meeting/buttons/print-procedures-button";
+import { FormattedMessage } from "react-intl";
 export default function ProcedureModal({ meetingId, ...props }) {
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <DialogContent className="max-h-screen max-w-md">
         <DialogHeader>
-          <DialogTitle>Procédures</DialogTitle>
+          <DialogTitle>
+            <FormattedMessage id="sessionAdministrator.procedure_Modal_Title" />
+          </DialogTitle>
           <DialogDescription>
-            Voici la liste des choses à faire pour tenir le CA
+            <FormattedMessage id="sessionAdministrator.procedure_Modal_Description" />
           </DialogDescription>
         </DialogHeader>
         <ProcedureTable
@@ -29,10 +32,12 @@ export default function ProcedureModal({ meetingId, ...props }) {
         />
         <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              <FormattedMessage id="sessionAdministrator.close_Button" />
+            </Button>
           </DialogClose>
           <PrintProceduresButton meetingId={meetingId}>
-            Générer la liste
+            <FormattedMessage id="sessionAdministrator.generate_List_Button" />
           </PrintProceduresButton>
         </DialogFooter>
       </DialogContent>

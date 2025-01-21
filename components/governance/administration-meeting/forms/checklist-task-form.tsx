@@ -10,6 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { useChecklistTaskForm } from "@/lib/governance/administration-meeting/hooks";
+import { FormattedMessage } from "react-intl";
 export default function ChecklistTaskForm({ formId, onSubmit }) {
   const form = useChecklistTaskForm();
   return (
@@ -24,7 +25,9 @@ export default function ChecklistTaskForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de la tâche</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="sessionAdministrator.task_Title_Label" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
