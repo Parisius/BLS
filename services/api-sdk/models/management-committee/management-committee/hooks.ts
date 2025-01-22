@@ -135,7 +135,7 @@ export const useOneManagementCommittee = (id) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateManagementCommittee = (options) => {
+export const useCreateManagementCommittee = (options = {}) => {
   const invalidateCurrentManagementCommittee =
     useCurrentManagementCommitteeInvalidate();
   const getMutationOptions = useCallback(
@@ -146,7 +146,7 @@ export const useCreateManagementCommittee = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateCurrentManagementCommittee],
+    [invalidateCurrentManagementCommittee]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -186,7 +186,7 @@ export const useUpdateManagementCommittee = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingTasks, invalidateOneManagementCommittee, meetingId],
+    [invalidateAllMeetingTasks, invalidateOneManagementCommittee, meetingId]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -225,7 +225,7 @@ export const useAddManagementCommitteeFile = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneManagementCommittee, meetingId],
+    [invalidateOneManagementCommittee, meetingId]
   );
   const mutation = useMutation({
     mutationFn: (args) => {

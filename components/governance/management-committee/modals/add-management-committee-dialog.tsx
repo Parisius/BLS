@@ -17,17 +17,18 @@ import { useManagementCommitteeForm } from "@/lib/governance/management-committe
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { ManagementCommitteeRoutes } from "@/config/routes";
 import AddManagementCommitteeForm from "@/components/governance/management-committee/forms/add-management-committee-form";
+import { FormattedMessage } from "react-intl";
 export default function AddManagementCommitteeDialog(props) {
   const formId = useId();
   const form = useManagementCommitteeForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
   const handleSuccess = useCallback(
     ({ id }) => {
       closeRef.current?.click();
       router.push(ManagementCommitteeRoutes.session(id).index);
     },
-    [router],
+    [router]
   );
   return (
     <Dialog>
@@ -35,9 +36,12 @@ export default function AddManagementCommitteeDialog(props) {
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouvelle session de CODIR</DialogTitle>
+            <DialogTitle>
+              {" "}
+              <FormattedMessage id="managementCommittee.newSessionTitle" />
+            </DialogTitle>
             <DialogDescription>
-              Planifier une nouvelle session du CODIR.
+              <FormattedMessage id="managementCommittee.newSessionDescription" />
             </DialogDescription>
           </DialogHeader>
           <AddManagementCommitteeForm
@@ -47,11 +51,8 @@ export default function AddManagementCommitteeDialog(props) {
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                <FormattedMessage id="managementCommittee.cancel" />
               </Button>
             </DialogClose>
             <Button
@@ -59,7 +60,11 @@ export default function AddManagementCommitteeDialog(props) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Planifier"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="managementCommittee.scheduleButton" />
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

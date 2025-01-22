@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -11,13 +12,17 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddManagementCommitteeDialog from "@/components/governance/management-committee/modals/add-management-committee-dialog";
+import { FormattedMessage } from "react-intl";
 export default function EmptyManagementCommitteeCard({ className }) {
   return (
     <Card className={cn("max-w-96", className)}>
       <CardHeader>
-        <CardTitle>Planifier une nouvelle réunion du CODIR</CardTitle>
+        <CardTitle>
+          {" "}
+          <FormattedMessage id="managementCommittee.planNewMeetingTitle" />
+        </CardTitle>
         <CardDescription>
-          Vous n&apos;avez aucune réunion du CODIR en cours de préparation
+          <FormattedMessage id="managementCommittee.noMeetingsInPreparation" />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
@@ -32,7 +37,7 @@ export default function EmptyManagementCommitteeCard({ className }) {
         <AddManagementCommitteeDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouvelle réunion du CODIR
+            <FormattedMessage id="managementCommittee.newMeetingButton" />
           </Button>
         </AddManagementCommitteeDialog>
       </CardFooter>

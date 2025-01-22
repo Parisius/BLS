@@ -1,0 +1,17 @@
+{
+  "governanceSubmodule": "Governance",
+  "managementCommitteePage": "Management Committee",
+  "viewDirectorsButton": "View directors",
+  "viewArchivesButton": "View archives",
+  "planNewMeetingTitle": "Plan a new Management Committee meeting",
+  "noMeetingsInPreparation": "You have no Management Committee meetings being prepared",
+  "newMeetingButton": "New Management Committee meeting",
+  "planMeetingAlt": "Plan a meeting",
+  "newSessionTitle": "New Management Committee session",
+  "newSessionDescription": "Schedule a new Management Committee session",
+  "scheduleButton": "Schedule",
+  "cancel": "Cancel",
+  "managementCommitteeTitleLabel": "Title",
+  "managementCommitteeTitlePlaceholder": "Title",
+  "meetingDateLabel": "Meeting date"
+}

@@ -1,0 +1,17 @@
+{
+  "governanceSubmodule": "Gouvernance",
+  "managementCommitteePage": "Direction Générale",
+  "viewDirectorsButton": "Voir les directeurs",
+  "viewArchivesButton": "Consulter les archives",
+  "planNewMeetingTitle": "Planifier une nouvelle réunion du CODIR",
+  "noMeetingsInPreparation": "Vous n'avez aucune réunion du CODIR en cours de préparation",
+  "newMeetingButton": "Nouvelle réunion du CODIR",
+  "planMeetingAlt": "Planifier une réunion",
+  "newSessionTitle": "Nouvelle session de CODIR",
+  "newSessionDescription": "Planifier une nouvelle session du CODIR",
+  "scheduleButton": "Planifier",
+  "cancel": "Fermer",
+  "managementCommitteeTitleLabel": "Intitulé du CODIR",
+  "managementCommitteeTitlePlaceholder": "Intitulé du CODIR",
+  "meetingDateLabel": "Date de tenue du CODIR"
+}

@@ -11,8 +11,10 @@ import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { useManagementCommitteeForm } from "@/lib/governance/management-committee/hooks";
+import { FormattedMessage, useIntl } from "react-intl";
 export default function ManagementCommitteeForm({ formId, onSubmit }) {
   const form = useManagementCommitteeForm();
+  const intl = useIntl();
   return (
     <Form {...form}>
       <form
@@ -25,13 +27,18 @@ export default function ManagementCommitteeForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé du CODIR</FormLabel>
+              <FormLabel>
+                {" "}
+                <FormattedMessage id="managementCommittee.managementCommitteeTitleLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Intitulé du CODIR"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.managementCommitteeTitleLabel",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -47,7 +54,9 @@ export default function ManagementCommitteeForm({ formId, onSubmit }) {
           name="meetingDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de tenue du CODIR</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.meetingDateLabel" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

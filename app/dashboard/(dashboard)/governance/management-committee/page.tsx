@@ -1,3 +1,4 @@
+"use client";
 import { FolderSearch, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,6 +9,7 @@ import {
 } from "@/components/governance/management-committee/ui/current-management-committee-view";
 import { ManagementCommitteePageBreadcrumb } from "@/components/governance/management-committee/breadcrumbs";
 import DirectorsModal from "@/components/governance/management-committee/modals/directors-modal";
+import { FormattedMessage } from "react-intl";
 export default function ManagementCommitteePage() {
   return (
     <div className="container flex flex-1 flex-col gap-10 overflow-y-auto py-5">
@@ -15,21 +17,15 @@ export default function ManagementCommitteePage() {
         <ManagementCommitteePageBreadcrumb />
         <div className="flex flex-col items-center gap-2 sm:flex-row">
           <DirectorsModal asChild>
-            <Button
-              variant="secondary"
-              className="gap-2"
-            >
+            <Button variant="secondary" className="gap-2">
               <Users />
-              Voir les directeurs
+              <FormattedMessage id="managementCommittee.viewDirectorsButton" />
             </Button>
           </DirectorsModal>
-          <Button
-            asChild
-            className="gap-2"
-          >
+          <Button asChild className="gap-2">
             <Link href={ManagementCommitteeRoutes.archives}>
               <FolderSearch />
-              Consulter les archives
+              <FormattedMessage id="managementCommittee.viewArchivesButton" />
             </Link>
           </Button>
         </div>
