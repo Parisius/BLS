@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ForwardMeetingTaskDialog from "@/components/governance/administration-meeting/modals/forward-meeting-task-dialog";
 import MeetingTaskForwardsDialog from "@/components/governance/administration-meeting/modals/meeting-task-forwards-dialog";
+import { FormattedMessage } from "react-intl";
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
@@ -88,74 +89,59 @@ export default function AdministrationMeetingTimeline({
                   <TooltipContent>Menu</TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
-                  <CompleteMeetingTaskButton
-                    asChild
-                    taskId={id}
-                  >
+                  <CompleteMeetingTaskButton asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <SquareCheck />
-                      Valider
+                      <FormattedMessage id="sessionAdministrator.validate" />
                     </DropdownMenuItem>
                   </CompleteMeetingTaskButton>
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardMeetingTaskDialog
-                      asChild
-                      taskId={id}
-                    >
+                    <ForwardMeetingTaskDialog asChild taskId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        <FormattedMessage id="sessionAdministrator.forward" />
                       </DropdownMenuItem>
                     </ForwardMeetingTaskDialog>
                   )}
 
                   {forwards && forwards.length > 0 && (
-                    <MeetingTaskForwardsDialog
-                      asChild
-                      forwards={forwards}
-                    >
+                    <MeetingTaskForwardsDialog asChild forwards={forwards}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareStack />
-                        Historique des transferts
+                        <FormattedMessage id="sessionAdministrator.transferHistory" />
                       </DropdownMenuItem>
                     </MeetingTaskForwardsDialog>
                   )}
 
-                  <UpdateMeetingTaskDialog
-                    asChild
-                    taskId={id}
-                  >
+                  <UpdateMeetingTaskDialog asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <Pencil />
-                      Modifier
+                      <FormattedMessage id="sessionAdministrator.edit" />
                     </DropdownMenuItem>
                   </UpdateMeetingTaskDialog>
 
                   <DropdownMenuSeparator />
 
-                  <DeleteMeetingTaskButton
-                    asChild
-                    taskId={id}
-                  >
+                  <DeleteMeetingTaskButton asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2 text-destructive"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <Trash />
-                      Supprimer
+                      <FormattedMessage id="sessionAdministrator.delete" />
                     </DropdownMenuItem>
                   </DeleteMeetingTaskButton>
                 </DropdownMenuContent>
@@ -171,7 +157,10 @@ export default function AdministrationMeetingTimeline({
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  {" "}
+                  <FormattedMessage id="sessionAdministrator.completed" />
+                </p>
               )}
             </TimelineItemContent>
             <TimelineItemContent
@@ -181,16 +170,16 @@ export default function AdministrationMeetingTimeline({
               {formatDate(dueDate)}
             </TimelineItemContent>
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": data.every(
-            ({ completed }) => completed,
+            ({ completed }) => completed
           ),
         })}
       >
-        Terminé !!!
+        <FormattedMessage id="sessionAdministrator.completedHeadline" />
       </TimelineHead>
     </Timeline>
   );

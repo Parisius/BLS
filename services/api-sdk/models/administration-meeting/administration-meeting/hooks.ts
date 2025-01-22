@@ -218,7 +218,7 @@ export const useUpdateAdministrationMeeting = (meetingId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useAddAdministrationMeetingFile = (meetingId, options) => {
+export const useAddAdministrationMeetingFile = (meetingId, options = {}) => {
   const invalidateOneAdministrationMeeting =
     useOneAdministrationMeetingInvalidate();
   const invalidateAllMeetingTasks = useInvalidateAllMeetingTasks(meetingId);

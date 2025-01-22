@@ -85,7 +85,7 @@ export const boardFileTypes = [
     value: "convocation",
     label: defineMessages({
       label: {
-        id: "file.type.convocation",
+        id: "sessionAdministrator.file.type.convocation",
         defaultMessage: "Convocation",
       },
     }).label,
@@ -94,7 +94,7 @@ export const boardFileTypes = [
     value: "agenda",
     label: defineMessages({
       label: {
-        id: "file.type.agenda",
+        id: "sessionAdministrator.file.type.agenda",
         defaultMessage: "Ordre du jour",
       },
     }).label,
@@ -103,7 +103,7 @@ export const boardFileTypes = [
     value: "pv",
     label: defineMessages({
       label: {
-        id: "file.type.pv",
+        id: "sessionAdministrator.file.type.pv",
         defaultMessage: "Procès-verbal",
       },
     }).label,
@@ -112,7 +112,7 @@ export const boardFileTypes = [
     value: "attendance_list",
     label: defineMessages({
       label: {
-        id: "file.type.attendance_list",
+        id: "sessionAdministrator.file.type.attendance_list",
         defaultMessage: "Liste de présence",
       },
     }).label,
@@ -121,7 +121,7 @@ export const boardFileTypes = [
     value: "other",
     label: defineMessages({
       label: {
-        id: "file.type.other",
+        id: "sessionAdministrator.file.type.other",
         defaultMessage: "Autre fichier",
       },
     }).label,

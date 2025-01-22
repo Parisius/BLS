@@ -9,12 +9,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { fileTypes } from "@/services/api-sdk/types/administration-meeting";
+import {
+  boardFileTypes,
+  fileTypes,
+} from "@/services/api-sdk/types/administration-meeting";
 import { useAddAdministrationMeetingFile } from "@/services/api-sdk/models/administration-meeting";
 import { toast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
-export default function AddFilesButton({ meetingId, className }) {
+import { FormattedMessage } from "react-intl";
+export default function AddFilesButton({
+  meetingId,
+  className,
+}: {
+  meetingId: string;
+  className?: string;
+}) {
   const form = useForm();
   const { mutateAsync } = useAddAdministrationMeetingFile(meetingId);
   const [fileType, setFileType] = useState("other");
@@ -35,12 +45,12 @@ export default function AddFilesButton({ meetingId, className }) {
                     "Une erreur est survenue lors de l'ajout du fichier.",
                   className: "bg-destructive text-destructive-foreground",
                 }),
-            },
-          ),
+            }
+          )
         )();
       }
     },
-    [fileType, form, mutateAsync],
+    [fileType, form, mutateAsync]
   );
   return (
     <DropdownMenu>
@@ -54,13 +64,13 @@ export default function AddFilesButton({ meetingId, className }) {
           ) : (
             <>
               <FilePlus />
-              Ajouter un fichier
+              <FormattedMessage id="sessionAdministrator.add_file_btn" />
             </>
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {fileTypes.map(({ value, label }) => (
+        {boardFileTypes.map(({ value, label }) => (
           <DropdownMenuItem
             key={value}
             onClick={() => handleFileTypeSelection(value)}
@@ -69,7 +79,7 @@ export default function AddFilesButton({ meetingId, className }) {
               htmlFor="administration-meeting-file-input"
               className="block cursor-pointer"
             >
-              {label}
+              <FormattedMessage {...label} />
             </label>
           </DropdownMenuItem>
         ))}
