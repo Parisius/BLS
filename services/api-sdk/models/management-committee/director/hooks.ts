@@ -95,7 +95,7 @@ export const useOneDirector = (directorId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateDirector = (options) => {
+export const useCreateDirector = (options = {}) => {
   const invalidateAllDirectors = useInvalidateAllDirectors();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -105,7 +105,7 @@ export const useCreateDirector = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllDirectors],
+    [invalidateAllDirectors]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -133,7 +133,7 @@ export const useCreateDirector = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateDirector = (directorId, options) => {
+export const useUpdateDirector = (directorId, options = {}) => {
   const invalidateOneDirector = useInvalidateOneDirector();
   const invalidateAllDirectors = useInvalidateAllDirectors();
   const getMutationOptions = useCallback(
@@ -145,7 +145,7 @@ export const useUpdateDirector = (directorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [directorId, invalidateAllDirectors, invalidateOneDirector],
+    [directorId, invalidateAllDirectors, invalidateOneDirector]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -172,7 +172,7 @@ export const useUpdateDirector = (directorId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteDirector = (directorId, options) => {
+export const useDeleteDirector = (directorId, options = {}) => {
   const removeOneDirector = useRemoveOneDirectorQuery();
   const invalidateAllDirectors = useInvalidateAllDirectors();
   const getMutationOptions = useCallback(
@@ -184,7 +184,7 @@ export const useDeleteDirector = (directorId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [directorId, invalidateAllDirectors, removeOneDirector],
+    [directorId, invalidateAllDirectors, removeOneDirector]
   );
   const mutation = useMutation({
     mutationFn: () => deleteDirector(directorId),

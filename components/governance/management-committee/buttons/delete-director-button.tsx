@@ -21,27 +21,36 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteDirector } from "@/services/api-sdk/models/management-committee/director";
+import { FormattedMessage, useIntl } from "react-intl";
+
 export default function DeleteDirectorButton({ directorId }) {
+  const intl = useIntl();
   const form = useForm();
   const { mutateAsync } = useDeleteDirector(directorId);
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
         toast({
-          description: "Directeur supprimé avec succès.",
+          description: intl.formatMessage({
+            id: "managementCommittee.deleteSuccess",
+          }),
           className: "bg-primary text-primary-foreground",
         });
         closeRef.current?.click();
       },
       onError: () => {
         toast({
-          description: "Une erreur est survenue lors de la suppression.",
+          description: intl.formatMessage({
+            id: "managementCommittee.deleteError",
+          }),
           className: "bg-destructive text-destructive-foreground",
         });
       },
     });
-  }, [mutateAsync]);
+  }, [mutateAsync, intl]);
+
   return (
     <AlertDialog>
       <Tooltip>
@@ -57,30 +66,35 @@ export default function DeleteDirectorButton({ directorId }) {
             </Button>
           </TooltipTrigger>
         </AlertDialogTrigger>
-        <TooltipContent>Supprimer</TooltipContent>
+        <TooltipContent>
+          <FormattedMessage id="managementCommittee.deleteButton" />
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer ce directeur ?
+              <FormattedMessage id="managementCommittee.deleteConfirmationTitle" />
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              <FormattedMessage id="managementCommittee.deleteConfirmationDescription" />
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              className="sr-only"
-              ref={closeRef}
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="sr-only" ref={closeRef} />
+            <AlertDialogCancel type="button">
+              <FormattedMessage id="managementCommittee.cancel" />
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="managementCommittee.deleteButton" />
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

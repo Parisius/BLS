@@ -1,11 +1,11 @@
 "use client";
-import * as React from "react";
-import {
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import DeleteDirectorButton from "@/components/governance/management-committee/buttons/delete-director-button";
+import AddDirectorDialog from "@/components/governance/management-committee/modals/add-director-dialog";
+import MandatesDialog from "@/components/governance/management-committee/modals/mandates-dialog";
+import { UpdateDirectorDialog } from "@/components/governance/management-committee/modals/update-director-dialog";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -14,22 +14,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn, formatDate, formatDuration } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Pencil, UserPlus, UserSearch, Vote } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import AddDirectorDialog from "@/components/governance/management-committee/modals/add-director-dialog";
-import { useAllDirectors } from "@/services/api-sdk/models/management-committee/director";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { UpdateDirectorDialog } from "@/components/governance/management-committee/modals/update-director-dialog";
-import DeleteDirectorButton from "@/components/governance/management-committee/buttons/delete-director-button";
-import MandatesDialog from "@/components/governance/management-committee/modals/mandates-dialog";
-import TableFilter from "@/components/ui/table-filter";
+import { cn, formatDate, formatDuration } from "@/lib/utils";
+import { useAllDirectors } from "@/services/api-sdk/models/management-committee/director";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Pencil, UserPlus, UserSearch, Vote } from "lucide-react";
+import * as React from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 export const columns = [
   {
     id: "select",
@@ -55,20 +55,28 @@ export const columns = [
   },
   {
     accessorKey: "name",
-    header: "Nom & Prénom (s)",
+    header: () => (
+      <FormattedMessage id="managementCommittee.directorsTable.fullName" />
+    ),
   },
   {
     accessorKey: "nationality",
-    header: "Nationalité",
+    header: () => (
+      <FormattedMessage id="managementCommittee.directorsTable.nationality" />
+    ),
   },
   {
     accessorKey: "birthDate",
-    header: "Date de naissance",
+    header: () => (
+      <FormattedMessage id="managementCommittee.directorsTable.birthDate" />
+    ),
     cell: ({ row }) => formatDate(row.original.birthDate),
   },
   {
     accessorKey: "age",
-    header: "Âge",
+    header: () => (
+      <FormattedMessage id="managementCommittee.directorsTable.age" />
+    ),
     cell: ({ row }) =>
       formatDuration(row.original.birthDate, new Date(), { format: ["years"] }),
     meta: {
@@ -77,21 +85,22 @@ export const columns = [
   },
   {
     accessorKey: "birthPlace",
-    header: "Lieu de naissance",
+    header: () => (
+      <FormattedMessage id="managementCommittee.directorsTable.birthPlace" />
+    ),
   },
   {
     accessorKey: "address",
-    header: "Adresse",
+    header: () => (
+      <FormattedMessage id="managementCommittee.directorsTable.address" />
+    ),
   },
   {
     id: "actions",
     cell: ({ row }) => (
       <div className="text-end">
         <Tooltip>
-          <UpdateDirectorDialog
-            asChild
-            directorId={row.original.id}
-          >
+          <UpdateDirectorDialog asChild directorId={row.original.id}>
             <TooltipTrigger asChild>
               <Button
                 type="button"
@@ -103,7 +112,9 @@ export const columns = [
               </Button>
             </TooltipTrigger>
           </UpdateDirectorDialog>
-          <TooltipContent>Modifier</TooltipContent>
+          <TooltipContent>
+            <FormattedMessage id="managementCommittee.directorsTable.editTooltip" />
+          </TooltipContent>
         </Tooltip>
 
         <Tooltip>
@@ -123,7 +134,10 @@ export const columns = [
               </Button>
             </TooltipTrigger>
           </MandatesDialog>
-          <TooltipContent>Mandats</TooltipContent>
+          <TooltipContent>
+            {" "}
+            <FormattedMessage id="managementCommittee.directorsTable.mandatesTooltip" />
+          </TooltipContent>
         </Tooltip>
 
         <DeleteDirectorButton directorId={row.original.id} />
@@ -136,7 +150,11 @@ export const columns = [
 export default function DirectorsTable({
   containerClassName,
   tableWrapperClassName,
+}: {
+  containerClassName?: string;
+  tableWrapperClassName?: string;
 }) {
+  const intl = useIntl();
   const [globalFilter, setGlobalFilter] = React.useState("");
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilters] = React.useState([]);
@@ -161,19 +179,21 @@ export default function DirectorsTable({
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "managementCommittee.directorsTable.searchPlaceholder",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className="max-w-sm pl-10 focus-visible:ring-0"
+            className="w-full pl-10 focus-visible:ring-0"
           />
           <UserSearch className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
         <AddDirectorDialog asChild>
-          <Button
-            aria-label="Ajouter un directeur"
-            className="gap-2"
-          >
+          <Button aria-label="Ajouter un directeur" className="gap-2">
             <UserPlus />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              {" "}
+              <FormattedMessage id="managementCommittee.directorsTable.addButton" />
+            </span>
           </Button>
         </AddDirectorDialog>
       </div>
@@ -188,13 +208,13 @@ export default function DirectorsTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
-                    {header.column.getCanFilter() ? (
+                    {/* {header.column.getCanFilter() ? (
                       <div className="py-2">
                         <TableFilter column={header.column} />
                       </div>
-                    ) : null}
+                    ) : null} */}
                   </TableHead>
                 ))}
               </TableRow>
@@ -203,11 +223,8 @@ export default function DirectorsTable({
           <TableBody>
             {isLoading && !data && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Chargement...
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="managementCommittee.directorsTable.loading" />
                 </TableCell>
               </TableRow>
             )}
@@ -218,7 +235,7 @@ export default function DirectorsTable({
                   colSpan={columns.length}
                   className="text-center text-destructive"
                 >
-                  Erreur lors du chargement
+                  <FormattedMessage id="managementCommittee.directorsTable.error" />
                 </TableCell>
               </TableRow>
             )}
@@ -236,7 +253,7 @@ export default function DirectorsTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -245,11 +262,8 @@ export default function DirectorsTable({
 
             {!isLoading && data?.length === 0 && (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucun directeur trouvé
+                <TableCell colSpan={columns.length} className="text-center">
+                  <FormattedMessage id="managementCommittee.directorsTable.empty" />
                 </TableCell>
               </TableRow>
             )}

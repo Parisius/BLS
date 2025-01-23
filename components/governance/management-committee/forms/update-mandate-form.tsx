@@ -12,36 +12,44 @@ import {
 import { DateInput } from "@/components/ui/date-input";
 import { useUpdateMandate } from "@/services/api-sdk/models/management-committee";
 import { useUpdateMandateForm } from "@/lib/governance/management-committee/hooks";
+import { FormattedMessage, useIntl } from "react-intl";
+
 export default function UpdateMandateForm({
   formId,
   mandateId,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useUpdateMandateForm();
   const { mutateAsync } = useUpdateMandate(mandateId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (updatedData) => {
           toast({
-            description: "Mandat mis à jour avec succès",
+            description: intl.formatMessage({
+              id: "managementCommittee.updateMandateSuccess",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(updatedData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors de la mise à jour du mandat",
+            description: intl.formatMessage({
+              id: "managementCommittee.updateMandateError",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -54,7 +62,9 @@ export default function UpdateMandateForm({
           name="startDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de début du mandat</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.startDateLabel" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

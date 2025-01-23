@@ -16,41 +16,50 @@ import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
 import CountrySelect from "@/components/ui/country-select";
 import { DateInput } from "@/components/ui/date-input";
+import { useIntl, FormattedMessage } from "react-intl";
+
 export default function AddDirectorForm({
   formId,
   className,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useAddDirectorForm();
   const { mutateAsync } = useCreateDirector();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Directeur ajouté avec succès !",
+            description: intl.formatMessage({
+              id: "managementCommittee.addDirectorSuccess",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors de l'ajout du directeur.",
+            description: intl.formatMessage({
+              id: "managementCommittee.addDirectorError",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset();
     }
   }, [form]);
+
   return (
     <Form {...form}>
       <form
@@ -63,12 +72,16 @@ export default function AddDirectorForm({
           name="name"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nom & Prénom (s)</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.nameLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Nom & Prénom (s)"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.namePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -84,12 +97,16 @@ export default function AddDirectorForm({
           name="nationality"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nationalité</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.nationalityLabel" />
+              </FormLabel>
               <FormControl>
                 <CountrySelect
                   value={field.value}
                   onValueChange={field.onChange}
-                  placeholder="Nationalité"
+                  placeholder={intl.formatMessage({
+                    id: "managementCommittee.nationalityLabel",
+                  })}
                   className="h-12"
                 />
               </FormControl>
@@ -103,7 +120,9 @@ export default function AddDirectorForm({
           name="birthDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de naissance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.birthDateLabel" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -123,12 +142,16 @@ export default function AddDirectorForm({
           name="birthPlace"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lieu de naissance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.birthPlaceLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Lieu de naissance"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.birthPlacePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -144,12 +167,16 @@ export default function AddDirectorForm({
           name="address"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.addressLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Adresse"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.addressPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -165,7 +192,9 @@ export default function AddDirectorForm({
           name="mandateStartDate"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Date de début de mandat</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.mandateStartDateLabel" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

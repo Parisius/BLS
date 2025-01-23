@@ -15,36 +15,44 @@ import { FormProvider } from "react-hook-form";
 import { useAddDirectorForm } from "@/lib/governance/management-committee/hooks";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import AddDirectorForm from "@/components/governance/management-committee/forms/add-director-form";
+import { FormattedMessage } from "react-intl";
+
 export default function AddDirectorDialog(props) {
   const formId = useId();
   const form = useAddDirectorForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Nouveau directeur</DialogTitle>
+            <DialogTitle>
+              <FormattedMessage id="managementCommittee.addDirectorTitle" />
+            </DialogTitle>
             <DialogDescription>
-              Ajouter un nouveau directeur au CODIR.
+              <FormattedMessage id="managementCommittee.addDirectorDescription" />
             </DialogDescription>
           </DialogHeader>
+
           <AddDirectorForm
             formId={formId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
+
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                <FormattedMessage id="managementCommittee.addDirectorCancel" />
               </Button>
             </DialogClose>
             <Button
@@ -52,7 +60,11 @@ export default function AddDirectorDialog(props) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Ajouter"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="managementCommittee.addDirectorSubmit" />
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

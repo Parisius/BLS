@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
 import CountrySelect from "@/components/ui/country-select";
 import { DateInput } from "@/components/ui/date-input";
+import { FormattedMessage, useIntl } from "react-intl";
+
 export default function UpdateDirectorForm({
   formId,
   directorId,
@@ -23,30 +25,36 @@ export default function UpdateDirectorForm({
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useUpdateDirectorForm();
   const { mutateAsync } = useUpdateDirector(directorId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Directeur modifié avec succès !",
+            description: intl.formatMessage({
+              id: "managementCommittee.updateDirectorSuccess",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors de la modification du directeur.",
+            description: intl.formatMessage({
+              id: "managementCommittee.updateDirectorError",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -59,12 +67,16 @@ export default function UpdateDirectorForm({
           name="name"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nom & Prénom (s)</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.nameLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Nom & Prénom (s)"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.namePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -80,12 +92,16 @@ export default function UpdateDirectorForm({
           name="nationality"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nationalité</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.nationalityLabel" />
+              </FormLabel>
               <FormControl>
                 <CountrySelect
                   value={field.value}
                   onValueChange={field.onChange}
-                  placeholder="Nationalité"
+                  placeholder={intl.formatMessage({
+                    id: "managementCommittee.nationalityLabel",
+                  })}
                   className="h-12"
                 />
               </FormControl>
@@ -99,7 +115,9 @@ export default function UpdateDirectorForm({
           name="birthDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date de naissance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.birthDateLabel" />
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -119,12 +137,16 @@ export default function UpdateDirectorForm({
           name="birthPlace"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lieu de naissance</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.birthPlaceLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Lieu de naissance"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.birthPlacePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -140,12 +162,16 @@ export default function UpdateDirectorForm({
           name="address"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="managementCommittee.addressLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Adresse"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.addressPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
