@@ -21,25 +21,34 @@ import { useCallback } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteMeetingChecklistTask } from "@/services/api-sdk/models/management-committee";
+import { useIntl } from "react-intl";
+
 export default function DeleteChecklistTaskButton({ taskId }) {
+  const intl = useIntl();
   const form = useForm();
   const { mutateAsync } = useDeleteMeetingChecklistTask(taskId);
+
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
         toast({
-          description: "Tâche supprimée avec succès !",
+          description: intl.formatMessage({
+            id: "managementCommittee.checklist.deleteSuccessMessage",
+          }),
           className: "bg-primary text-primary-foreground",
         });
       },
       onError: () => {
         toast({
-          description: "Une erreur est survenue lors de la suppression.",
+          description: intl.formatMessage({
+            id: "managementCommittee.checklist.deleteErrorMessage",
+          }),
           className: "bg-destructive text-destructive-foreground",
         });
       },
     });
-  }, [mutateAsync]);
+  }, [mutateAsync, intl]);
+
   return (
     <AlertDialog>
       <Tooltip>
@@ -55,26 +64,44 @@ export default function DeleteChecklistTaskButton({ taskId }) {
             </Button>
           </TooltipTrigger>
         </AlertDialogTrigger>
-        <TooltipContent>Supprimer</TooltipContent>
+        <TooltipContent>
+          {intl.formatMessage({
+            id: "managementCommittee.checklist.deleteTooltip",
+          })}
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer cette tâche ?
+              {intl.formatMessage({
+                id: "managementCommittee.checklist.deleteConfirmationTitle",
+              })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              {intl.formatMessage({
+                id: "managementCommittee.checklist.deleteConfirmationDescription",
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel type="button">
+              {intl.formatMessage({
+                id: "managementCommittee.checklist.cancelButton",
+              })}
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "managementCommittee.checklist.deleteButton",
+                })
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

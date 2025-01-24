@@ -1,22 +1,32 @@
-export const fileTypes = [
+export const fileTypes = (intl) => [
   {
     value: "convocation",
-    label: "Convocation",
+    label: intl.formatMessage({
+      id: "managementCommittee.fileTypes.convocation",
+    }),
   },
   {
     value: "agenda",
-    label: "Ordre du jour",
+    label: intl.formatMessage({
+      id: "managementCommittee.fileTypes.agenda",
+    }),
   },
   {
     value: "pv",
-    label: "Procès-verbal",
+    label: intl.formatMessage({
+      id: "managementCommittee.fileTypes.pv",
+    }),
   },
   {
     value: "attendance_list",
-    label: "Liste de présence",
+    label: intl.formatMessage({
+      id: "managementCommittee.fileTypes.attendance_list",
+    }),
   },
   {
     value: "other",
-    label: "Autre fichier",
+    label: intl.formatMessage({
+      id: "managementCommittee.fileTypes.other",
+    }),
   },
 ];

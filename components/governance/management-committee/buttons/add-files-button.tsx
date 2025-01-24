@@ -14,13 +14,24 @@ import { useAddManagementCommitteeFile } from "@/services/api-sdk/models/managem
 import { toast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
-export default function AddFilesButton({ meetingId, className }) {
+import { useIntl } from "react-intl";
+
+export default function AddFilesButton({
+  meetingId,
+  className,
+}: {
+  meetingId: string;
+  className?: string;
+}) {
+  const intl = useIntl();
   const form = useForm();
   const { mutateAsync } = useAddManagementCommitteeFile(meetingId);
   const [fileType, setFileType] = useState("other");
+
   const handleFileTypeSelection = useCallback((type) => {
     setFileType(type);
   }, []);
+
   const handleSelectedFile = useCallback(
     async (event) => {
       const file = event.target.files?.[0];
@@ -31,17 +42,19 @@ export default function AddFilesButton({ meetingId, className }) {
             {
               onError: () =>
                 toast({
-                  description:
-                    "Une erreur est survenue lors de l'ajout du fichier.",
+                  description: intl.formatMessage({
+                    id: "managementCommittee.files.addFileError",
+                  }),
                   className: "bg-destructive text-destructive-foreground",
                 }),
-            },
-          ),
+            }
+          )
         )();
       }
     },
-    [fileType, form, mutateAsync],
+    [fileType, form, mutateAsync, intl]
   );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -54,13 +67,15 @@ export default function AddFilesButton({ meetingId, className }) {
           ) : (
             <>
               <FilePlus />
-              Ajouter un fichier
+              {intl.formatMessage({
+                id: "managementCommittee.files.addFileButton",
+              })}
             </>
           )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {fileTypes.map(({ value, label }) => (
+        {fileTypes(intl).map(({ value, label }) => (
           <DropdownMenuItem
             key={value}
             onClick={() => handleFileTypeSelection(value)}

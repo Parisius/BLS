@@ -1,3 +1,8 @@
+"use client";
+import PrintManagementCommitteeButton from "@/components/governance/management-committee/buttons/print-management-committee-button";
+import { UpdateManagementCommitteeDialog } from "@/components/governance/management-committee/modals/update-management-committee-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -6,18 +11,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { cn, formatDate } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Pencil, Printer } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { formatStatus } from "@/lib/governance/management-committee";
-import { UpdateManagementCommitteeDialog } from "@/components/governance/management-committee/modals/update-management-committee-dialog";
-import PrintManagementCommitteeButton from "@/components/governance/management-committee/buttons/print-management-committee-button";
+import { formatSt } from "@/lib/governance/management-committee";
+import { cn, formatDate } from "@/lib/utils";
+import { Pencil, Printer } from "lucide-react";
+import { FormattedMessage, useIntl } from "react-intl";
+
 export function ManagementCommitteeDetailsTable({
   id,
   title,
@@ -26,21 +29,31 @@ export function ManagementCommitteeDetailsTable({
   meetingDate,
   nextTask,
 }) {
-  const { label: statusLabel, color } = formatStatus(status);
+  const intl = useIntl();
+  const { label: statusLabel, color } = formatSt(status, intl);
+
   return (
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Intitulé</TableHead>
-          <TableHead>Référence</TableHead>
-          <TableHead className={cn(nextTask && "text-destructive")}>
-            Prochaine tâche
+          <TableHead>
+            <FormattedMessage id="managementCommittee.titleHeader" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="managementCommittee.referenceHeader" />
           </TableHead>
           <TableHead className={cn(nextTask && "text-destructive")}>
-            Prochain délai
+            <FormattedMessage id="managementCommittee.nextTaskHeader" />
           </TableHead>
-          <TableHead>Date de tenue</TableHead>
-          <TableHead>Statut</TableHead>
+          <TableHead className={cn(nextTask && "text-destructive")}>
+            <FormattedMessage id="managementCommittee.nextDeadlineHeader" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="managementCommittee.meetingDateHeader" />
+          </TableHead>
+          <TableHead>
+            <FormattedMessage id="managementCommittee.statusHeader" />
+          </TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -49,37 +62,35 @@ export function ManagementCommitteeDetailsTable({
           <TableCell>{title}</TableCell>
           <TableCell>{reference}</TableCell>
           <TableCell className={cn("max-w-32", nextTask && "text-destructive")}>
-            {nextTask?.title ?? "Aucune tâche"}
+            {nextTask?.title ?? (
+              <FormattedMessage id="managementCommittee.noTask" />
+            )}
           </TableCell>
           <TableCell className={cn(nextTask && "text-destructive")}>
-            {nextTask?.dueDate ? formatDate(nextTask.dueDate) : "Aucun délai"}
+            {nextTask?.dueDate ? (
+              formatDate(nextTask.dueDate)
+            ) : (
+              <FormattedMessage id="managementCommittee.noDeadline" />
+            )}
           </TableCell>
           <TableCell>{formatDate(meetingDate)}</TableCell>
           <TableCell>
-            <Badge
-              style={{ backgroundColor: color }}
-              className="text-nowrap"
-            >
+            <Badge style={{ backgroundColor: color }} className="text-nowrap">
               {statusLabel}
             </Badge>
           </TableCell>
           <TableCell>
             <Tooltip>
-              <UpdateManagementCommitteeDialog
-                asChild
-                meetingId={id}
-              >
+              <UpdateManagementCommitteeDialog asChild meetingId={id}>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full">
                     <Pencil />
                   </Button>
                 </TooltipTrigger>
               </UpdateManagementCommitteeDialog>
-              <TooltipContent>Modifier</TooltipContent>
+              <TooltipContent>
+                <FormattedMessage id="managementCommittee.editTooltip" />
+              </TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -93,7 +104,9 @@ export function ManagementCommitteeDetailsTable({
                   <Printer />
                 </PrintManagementCommitteeButton>
               </TooltipTrigger>
-              <TooltipContent>Imprimer</TooltipContent>
+              <TooltipContent>
+                <FormattedMessage id="managementCommittee.printTooltip" />
+              </TooltipContent>
             </Tooltip>
           </TableCell>
         </TableRow>

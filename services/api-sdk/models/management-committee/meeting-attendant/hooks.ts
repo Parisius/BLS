@@ -127,7 +127,7 @@ export const useCreateMeetingAttendant = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingAttendants],
+    [invalidateAllMeetingAttendants]
   );
   const mutation = useMutation({
     mutationFn: (...args) => createMeetingAttendant(meetingId, ...args),
@@ -150,7 +150,7 @@ export const useCreateMeetingAttendant = (meetingId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateMeetingAttendant = (attendantId, options) => {
+export const useUpdateMeetingAttendant = (attendantId, options = {}) => {
   const invalidateOneMeetingAttendant = useInvalidateOneMeetingAttendant();
   const invalidateAllMeetingAttendants = useInvalidateAllMeetingAttendants();
   const getMutationOptions = useCallback(
@@ -162,11 +162,7 @@ export const useUpdateMeetingAttendant = (attendantId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [
-      invalidateOneMeetingAttendant,
-      attendantId,
-      invalidateAllMeetingAttendants,
-    ],
+    [invalidateOneMeetingAttendant, attendantId, invalidateAllMeetingAttendants]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateMeetingAttendant(attendantId, args),
@@ -200,12 +196,12 @@ export const useUpdateMeetingAttendantsStatus = (meetingId, options) => {
         await Promise.all(
           args[2].attendants.map(async (attendant) => {
             await invalidateOneMeetingAttendant(attendant.id);
-          }),
+          })
         );
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingAttendants, invalidateOneMeetingAttendant],
+    [invalidateAllMeetingAttendants, invalidateOneMeetingAttendant]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateMeetingAttendantsStatus(meetingId, args),
@@ -228,7 +224,7 @@ export const useUpdateMeetingAttendantsStatus = (meetingId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteMeetingAttendant = (attendantId, options) => {
+export const useDeleteMeetingAttendant = (attendantId, options = {}) => {
   const invalidateAllMeetingAttendants = useInvalidateAllMeetingAttendants();
   const removeOneMeetingTask = useRemoveOneMeetingAttendantQuery();
   const getMutationOptions = useCallback(
@@ -240,7 +236,7 @@ export const useDeleteMeetingAttendant = (attendantId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingAttendants, removeOneMeetingTask, attendantId],
+    [invalidateAllMeetingAttendants, removeOneMeetingTask, attendantId]
   );
   const mutation = useMutation({
     mutationFn: () => deleteMeetingAttendant(attendantId),

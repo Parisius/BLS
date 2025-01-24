@@ -1,3 +1,4 @@
+"use client";
 import {
   Select,
   SelectContent,
@@ -16,6 +17,8 @@ import {
 } from "@/components/governance/management-committee/ui/archived-management-committee-list";
 import { SearchInput, SearchProvider } from "@/providers/search-provider";
 import { Portal } from "@/components/ui/portal";
+import { FormattedMessage } from "react-intl";
+
 export default function ArchivedManagementCommitteePage() {
   return (
     <SearchProvider>
@@ -30,7 +33,7 @@ export default function ArchivedManagementCommitteePage() {
           </OpenSessionButtonErrorBoundary>
         </div>
         <h1 className="relative text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-          Choisir une session de CODIR
+          <FormattedMessage id="managementCommittee.chooseSessionTitle" />
         </h1>
         <div className="flex items-end justify-between gap-10 sm:items-center sm:justify-end">
           <div className="flex flex-col items-center gap-2 sm:flex-row">
@@ -38,7 +41,7 @@ export default function ArchivedManagementCommitteePage() {
               id="session-year-label"
               className="text-nowrap text-foreground/75"
             >
-              Année de session
+              <FormattedMessage id="managementCommittee.sessionYearLabel" />
             </span>
             <Select defaultValue="2024">
               <SelectTrigger

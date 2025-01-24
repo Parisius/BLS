@@ -214,7 +214,7 @@ export const useUpdateManagementCommittee = (meetingId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useAddManagementCommitteeFile = (meetingId, options) => {
+export const useAddManagementCommitteeFile = (meetingId, options = {}) => {
   const invalidateOneManagementCommittee =
     useOneManagementCommitteeInvalidate();
   const getMutationOptions = useCallback(

@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import {
   flexRender,
   getCoreRowModel,
@@ -33,6 +34,7 @@ import DeleteProcedureTaskButton from "@/components/governance/management-commit
 import ProcedureTaskCheckbox from "@/components/governance/management-committee/buttons/procedure-task-checkbox";
 import ProcedureAllTasksCheckbox from "@/components/governance/management-committee/buttons/procedure-all-tasks-checkbox";
 import { useAllMeetingProcedureTasks } from "@/services/api-sdk/models/management-committee";
+
 export const columns = [
   {
     id: "select",
@@ -43,7 +45,7 @@ export const columns = [
   },
   {
     accessorKey: "title",
-    header: "Tâches",
+    header: () => <FormattedMessage id="managementCommittee.procedure.tasks" />,
   },
   {
     id: "actions",
@@ -51,10 +53,7 @@ export const columns = [
       <div className="flex items-center sm:opacity-0 sm:transition sm:duration-500 sm:group-hover:opacity-100">
         <Tooltip>
           <UpdateProcedureTaskDialogErrorBoundary>
-            <UpdateProcedureTaskDialog
-              asChild
-              taskId={row.original.id}
-            >
+            <UpdateProcedureTaskDialog asChild taskId={row.original.id}>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -66,9 +65,10 @@ export const columns = [
               </TooltipTrigger>
             </UpdateProcedureTaskDialog>
           </UpdateProcedureTaskDialogErrorBoundary>
-          <TooltipContent>Modifier</TooltipContent>
+          <TooltipContent>
+            <FormattedMessage id="managementCommittee.procedure.editTooltip" />
+          </TooltipContent>
         </Tooltip>
-
         <DeleteProcedureTaskButton taskId={row.original.id} />
       </div>
     ),
@@ -76,11 +76,13 @@ export const columns = [
     enableHiding: false,
   },
 ];
+
 export default function ProcedureTable({
   meetingId,
   containerClassName,
   tableWrapperClassName,
 }) {
+  const intl = useIntl();
   const { data, isLoading, isError } = useAllMeetingProcedureTasks(meetingId);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
@@ -96,33 +98,49 @@ export default function ProcedureTable({
       rowSelection,
     },
   });
+
   if (isError) {
-    throw Error("Failed to fetch procedure tasks");
+    throw Error(
+      intl.formatMessage({
+        id: "managementCommittee.procedure.errorFetchingTasks",
+      })
+    );
   }
+
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div>
+        {intl.formatMessage({ id: "managementCommittee.procedure.loading" })}
+      </div>
+    );
   }
+
   return (
     <div className={cn("space-y-5 overflow-auto", containerClassName)}>
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "managementCommittee.procedure.searchPlaceholder",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
             className="max-w-sm pl-10 focus-visible:ring-0"
           />
           <Search className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
-        <AddProcedureTaskFormDialog
-          asChild
-          meetingId={meetingId}
-        >
+        <AddProcedureTaskFormDialog asChild meetingId={meetingId}>
           <Button
-            aria-label="Ajouter une tâche"
+            aria-label={intl.formatMessage({
+              id: "managementCommittee.procedure.addTaskButton",
+            })}
             className="gap-2"
           >
             <ListTodo />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              {intl.formatMessage({
+                id: "managementCommittee.procedure.addTaskButton",
+              })}
+            </span>
           </Button>
         </AddProcedureTaskFormDialog>
       </div>
@@ -137,7 +155,7 @@ export default function ProcedureTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -159,7 +177,7 @@ export default function ProcedureTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -167,11 +185,10 @@ export default function ProcedureTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucune tâche trouvée
+                <TableCell colSpan={columns.length} className="text-center">
+                  {intl.formatMessage({
+                    id: "managementCommittee.procedure.noTasksFound",
+                  })}
                 </TableCell>
               </TableRow>
             )}

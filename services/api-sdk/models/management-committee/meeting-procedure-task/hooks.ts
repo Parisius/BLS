@@ -107,7 +107,7 @@ export const useOneMeetingProcedureTask = (taskId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateMeetingProcedureTask = (meetingId, options) => {
+export const useCreateMeetingProcedureTask = (meetingId, options = {}) => {
   const invalidateAllMeetingProcedureTasks =
     useAllMeetingProcedureTasksInvalidate(meetingId);
   const getMutationOptions = useCallback(
@@ -118,7 +118,7 @@ export const useCreateMeetingProcedureTask = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingProcedureTasks],
+    [invalidateAllMeetingProcedureTasks]
   );
   const mutation = useMutation({
     mutationFn: (...args) => createMeetingProcedureTask(meetingId, ...args),
@@ -159,7 +159,7 @@ export const useUpdateMeetingProcedureTask = (taskId, options) => {
       invalidateOneMeetingProcedureTask,
       taskId,
       invalidateAllMeetingProcedureTasks,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateMeetingProcedureTask(taskId, args),
@@ -200,7 +200,7 @@ export const useUpdateMeetingProcedureTaskStatus = (taskId, options) => {
       invalidateAllMeetingProcedureTasks,
       invalidateOneMeetingProcedureTask,
       taskId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => updateMeetingProcedureTaskStatus(taskId, args),
@@ -235,12 +235,12 @@ export const useToggleMeetingProcedureTasksStatus = (options) => {
         await Promise.all(
           args[2].map(async (task) => {
             await invalidateOneMeetingProcedureTask(task.id);
-          }),
+          })
         );
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingProcedureTasks, invalidateOneMeetingProcedureTask],
+    [invalidateAllMeetingProcedureTasks, invalidateOneMeetingProcedureTask]
   );
   const mutation = useMutation({
     mutationFn: (args) => toggleMeetingProcedureTasksStatus(args),
@@ -263,7 +263,7 @@ export const useToggleMeetingProcedureTasksStatus = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteMeetingProcedureTask = (taskId, options) => {
+export const useDeleteMeetingProcedureTask = (taskId, options = {}) => {
   const invalidateAllMeetingProcedureTasks =
     useAllMeetingProcedureTasksInvalidate();
   const removeOneMeetingTask = useRemoveOneMeetingProcedureTaskQuery();
@@ -276,7 +276,7 @@ export const useDeleteMeetingProcedureTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingProcedureTasks, removeOneMeetingTask, taskId],
+    [invalidateAllMeetingProcedureTasks, removeOneMeetingTask, taskId]
   );
   const mutation = useMutation({
     mutationFn: () => deleteMeetingProcedureTask(taskId),

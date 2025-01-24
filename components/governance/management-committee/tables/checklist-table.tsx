@@ -1,6 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState } from "react";
+import { FormattedMessage, useIntl } from "react-intl";
 import {
   flexRender,
   getCoreRowModel,
@@ -33,6 +34,7 @@ import DeleteChecklistTaskButton from "@/components/governance/management-commit
 import ChecklistTaskCheckbox from "@/components/governance/management-committee/buttons/checklist-task-checkbox";
 import ChecklistAllTasksCheckbox from "@/components/governance/management-committee/buttons/checklist-all-tasks-checkbox";
 import { useAllMeetingChecklistTasks } from "@/services/api-sdk/models/management-committee";
+
 export const columns = [
   {
     id: "select",
@@ -43,7 +45,7 @@ export const columns = [
   },
   {
     accessorKey: "title",
-    header: "Tâches",
+    header: () => <FormattedMessage id="managementCommittee.checklist.tasks" />,
   },
   {
     id: "actions",
@@ -51,10 +53,7 @@ export const columns = [
       <div className="flex items-center sm:opacity-0 sm:transition sm:duration-500 sm:group-hover:opacity-100">
         <Tooltip>
           <UpdateChecklistTaskDialogErrorBoundary>
-            <UpdateChecklistTaskDialog
-              asChild
-              taskId={row.original.id}
-            >
+            <UpdateChecklistTaskDialog asChild taskId={row.original.id}>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -66,9 +65,10 @@ export const columns = [
               </TooltipTrigger>
             </UpdateChecklistTaskDialog>
           </UpdateChecklistTaskDialogErrorBoundary>
-          <TooltipContent>Modifier</TooltipContent>
+          <TooltipContent>
+            <FormattedMessage id="managementCommittee.checklist.editTooltip" />
+          </TooltipContent>
         </Tooltip>
-
         <DeleteChecklistTaskButton taskId={row.original.id} />
       </div>
     ),
@@ -76,11 +76,13 @@ export const columns = [
     enableHiding: false,
   },
 ];
+
 export default function ChecklistTable({
   meetingId,
   containerClassName,
   tableWrapperClassName,
 }) {
+  const intl = useIntl();
   const { data, isLoading, isError } = useAllMeetingChecklistTasks(meetingId);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
@@ -96,33 +98,49 @@ export default function ChecklistTable({
       rowSelection,
     },
   });
+
   if (isError) {
-    throw Error("Failed to fetch checklist tasks");
+    throw Error(
+      intl.formatMessage({
+        id: "managementCommittee.checklist.errorFetchingTasks",
+      })
+    );
   }
+
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return (
+      <div>
+        {intl.formatMessage({ id: "managementCommittee.checklist.loading" })}
+      </div>
+    );
   }
+
   return (
     <div className={cn("space-y-5 overflow-auto", containerClassName)}>
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Input
-            placeholder="Rechercher..."
+            placeholder={intl.formatMessage({
+              id: "managementCommittee.checklist.searchPlaceholder",
+            })}
             onChange={(event) => table.setGlobalFilter(event.target.value)}
             className="max-w-sm pl-10 focus-visible:ring-0"
           />
           <Search className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
         </div>
-        <AddChecklistTaskFormDialog
-          asChild
-          meetingId={meetingId}
-        >
+        <AddChecklistTaskFormDialog asChild meetingId={meetingId}>
           <Button
-            aria-label="Ajouter une tâche"
+            aria-label={intl.formatMessage({
+              id: "managementCommittee.checklist.addTaskButton",
+            })}
             className="gap-2"
           >
             <ListTodo />
-            <span className="sr-only sm:not-sr-only">Ajouter</span>
+            <span className="sr-only sm:not-sr-only">
+              {intl.formatMessage({
+                id: "managementCommittee.checklist.addTaskButton",
+              })}
+            </span>
           </Button>
         </AddChecklistTaskFormDialog>
       </div>
@@ -137,7 +155,7 @@ export default function ChecklistTable({
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -159,7 +177,7 @@ export default function ChecklistTable({
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -167,11 +185,10 @@ export default function ChecklistTable({
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center"
-                >
-                  Aucune tâche trouvée
+                <TableCell colSpan={columns.length} className="text-center">
+                  {intl.formatMessage({
+                    id: "managementCommittee.checklist.noTasksFound",
+                  })}
                 </TableCell>
               </TableRow>
             )}

@@ -12,15 +12,23 @@ import {
 import { Button } from "@/components/ui/button";
 import ProcedureTable from "@/components/governance/management-committee/tables/procedure-table";
 import PrintProceduresButton from "@/components/governance/management-committee/buttons/print-procedures-button";
+import { useIntl } from "react-intl";
+
 export default function ProcedureModal({ meetingId, ...props }) {
+  const intl = useIntl();
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <DialogContent className="max-h-screen max-w-md">
         <DialogHeader>
-          <DialogTitle>Procédures</DialogTitle>
+          <DialogTitle>
+            {intl.formatMessage({ id: "managementCommittee.procedure.title" })}
+          </DialogTitle>
           <DialogDescription>
-            Voici la liste des choses à faire pour tenir la CODIR
+            {intl.formatMessage({
+              id: "managementCommittee.procedure.description",
+            })}
           </DialogDescription>
         </DialogHeader>
         <ProcedureTable
@@ -29,10 +37,16 @@ export default function ProcedureModal({ meetingId, ...props }) {
         />
         <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({
+                id: "managementCommittee.procedure.closeButton",
+              })}
+            </Button>
           </DialogClose>
           <PrintProceduresButton meetingId={meetingId}>
-            Générer la liste
+            {intl.formatMessage({
+              id: "managementCommittee.procedure.generateListButton",
+            })}
           </PrintProceduresButton>
         </DialogFooter>
       </DialogContent>

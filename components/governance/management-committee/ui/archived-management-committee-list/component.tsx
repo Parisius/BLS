@@ -3,29 +3,39 @@ import { useArchivedManagementCommittees } from "@/services/api-sdk/models/manag
 import ManagementCommitteeCard from "@/components/governance/management-committee/ui/management-committee-card";
 import { useSearchResults } from "@/providers/search-provider";
 import { ArchivedManagementCommitteeListSuspense } from "./suspense";
+import { FormattedMessage, useIntl } from "react-intl";
+
 export function ArchivedManagementCommitteeList() {
+  const intl = useIntl();
   const { data, isError } = useArchivedManagementCommittees();
   const filteredData = useSearchResults(data ?? []);
+
   if (isError) {
-    throw new Error("An error occurred while fetching the data");
+    throw new Error(
+      intl.formatMessage({ id: "managementCommittee.fetchArchivesError" })
+    );
   }
+
   if (!data) {
     return <ArchivedManagementCommitteeListSuspense />;
   }
+
   if (data.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucune session de CODIR archivée n&apos;a été trouvée
+        <FormattedMessage id="managementCommittee.noArchivedSessions" />
       </p>
     );
   }
+
   if (filteredData.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucune session de CODIR archivée ne correspond à votre recherche
+        <FormattedMessage id="managementCommittee.noMatchingArchivedSessions" />
       </p>
     );
   }
+
   return (
     <div className="flex flex-wrap justify-center gap-10 md:gap-20">
       {filteredData.map(({ id, title, reference, meetingDate, status }) => (

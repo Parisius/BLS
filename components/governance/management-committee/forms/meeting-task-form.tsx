@@ -11,8 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Tag, User } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { useTaskForm } from "@/lib/governance/management-committee/hooks";
+import { useIntl } from "react-intl";
+
 export default function MeetingTaskForm({ formId, onSubmit }) {
+  const intl = useIntl();
   const form = useTaskForm();
+
   return (
     <Form {...form}>
       <form
@@ -25,12 +29,18 @@ export default function MeetingTaskForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de la tâche</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.taskTitleLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de la tâche"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.task.taskTitlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -46,7 +56,11 @@ export default function MeetingTaskForm({ formId, onSubmit }) {
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.dueDateLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -64,12 +78,18 @@ export default function MeetingTaskForm({ formId, onSubmit }) {
           name="assignee"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Assigné à</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.assigneeLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Assigné à"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.task.assigneePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -85,12 +105,18 @@ export default function MeetingTaskForm({ formId, onSubmit }) {
           name="supervisor"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Supervisé par</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.supervisorLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Supervisé par"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.task.supervisorPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <User className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

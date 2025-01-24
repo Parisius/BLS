@@ -15,37 +15,50 @@ import { FormProvider } from "react-hook-form";
 import AddProcedureTaskForm from "@/components/governance/management-committee/forms/add-procedure-task-form";
 import { useProcedureTaskForm } from "@/lib/governance/management-committee/hooks";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
+import { useIntl } from "react-intl";
+
 export default function AddProcedureTaskFormDialog({ meetingId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const form = useProcedureTaskForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouvelle tâche</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "managementCommittee.procedure.newTaskTitle",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Ajouter une nouvelle tâche à la procedure
+              {intl.formatMessage({
+                id: "managementCommittee.procedure.newTaskDescription",
+              })}
             </DialogDescription>
           </DialogHeader>
           <AddProcedureTaskForm
             formId={formId}
             meetingId={meetingId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({
+                  id: "managementCommittee.procedure.cancelButton",
+                })}
               </Button>
             </DialogClose>
             <Button
@@ -53,7 +66,13 @@ export default function AddProcedureTaskFormDialog({ meetingId, ...props }) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Ajouter"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "managementCommittee.procedure.addButton",
+                })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

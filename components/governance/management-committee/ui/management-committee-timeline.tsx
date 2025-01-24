@@ -37,27 +37,49 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ForwardMeetingTaskDialog from "@/components/governance/management-committee/modals/forward-meeting-task-dialog";
 import MeetingTaskForwardsDialog from "@/components/governance/management-committee/modals/meeting-task-forwards-dialog";
+import { useIntl } from "react-intl";
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 export default function ManagementCommitteeTimeline({
   meetingId,
   meetingDate,
 }) {
+  const intl = useIntl();
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllMeetingTasks(meetingId);
+
   if (isError) {
-    throw new Error("Failed to fetch meeting tasks");
+    throw new Error(
+      intl.formatMessage({
+        id: "managementCommittee.timeline.errorFetchingTasks",
+      })
+    );
   }
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {intl.formatMessage({ id: "managementCommittee.timeline.loading" })}
+      </div>
+    );
   }
+
   if (!data || data.length === 0) {
-    return <div>No tasks found</div>;
+    return (
+      <div>
+        {intl.formatMessage({
+          id: "managementCommittee.timeline.noTasksFound",
+        })}
+      </div>
+    );
   }
+
   return (
     <Timeline>
       <TimelineSeparator />
@@ -85,77 +107,76 @@ export default function ManagementCommitteeTimeline({
                       </Button>
                     </TooltipTrigger>
                   </DropdownMenuTrigger>
-                  <TooltipContent>Menu</TooltipContent>
+                  <TooltipContent>
+                    {intl.formatMessage({
+                      id: "managementCommittee.timeline.menuTooltip",
+                    })}
+                  </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
-                  <CompleteMeetingTaskButton
-                    asChild
-                    taskId={id}
-                  >
+                  <CompleteMeetingTaskButton asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <SquareCheck />
-                      Valider
+                      {intl.formatMessage({
+                        id: "managementCommittee.timeline.completeTask",
+                      })}
                     </DropdownMenuItem>
                   </CompleteMeetingTaskButton>
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardMeetingTaskDialog
-                      asChild
-                      taskId={id}
-                    >
+                    <ForwardMeetingTaskDialog asChild taskId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        {intl.formatMessage({
+                          id: "managementCommittee.timeline.forwardTask",
+                        })}
                       </DropdownMenuItem>
                     </ForwardMeetingTaskDialog>
                   )}
 
                   {forwards && forwards.length > 0 && (
-                    <MeetingTaskForwardsDialog
-                      asChild
-                      forwards={forwards}
-                    >
+                    <MeetingTaskForwardsDialog asChild forwards={forwards}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareStack />
-                        Historique des transferts
+                        {intl.formatMessage({
+                          id: "managementCommittee.timeline.transferHistory",
+                        })}
                       </DropdownMenuItem>
                     </MeetingTaskForwardsDialog>
                   )}
 
-                  <UpdateMeetingTaskDialog
-                    asChild
-                    taskId={id}
-                  >
+                  <UpdateMeetingTaskDialog asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <Pencil />
-                      Modifier
+                      {intl.formatMessage({
+                        id: "managementCommittee.timeline.editTask",
+                      })}
                     </DropdownMenuItem>
                   </UpdateMeetingTaskDialog>
 
                   <DropdownMenuSeparator />
 
-                  <DeleteMeetingTaskButton
-                    asChild
-                    taskId={id}
-                  >
+                  <DeleteMeetingTaskButton asChild taskId={id}>
                     <DropdownMenuItem
                       className="cursor-pointer gap-2 text-destructive"
                       onSelect={(e) => e.preventDefault()}
                     >
                       <Trash />
-                      Supprimer
+                      {intl.formatMessage({
+                        id: "managementCommittee.timeline.deleteTask",
+                      })}
                     </DropdownMenuItem>
                   </DeleteMeetingTaskButton>
                 </DropdownMenuContent>
@@ -171,7 +192,11 @@ export default function ManagementCommitteeTimeline({
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  {intl.formatMessage({
+                    id: "managementCommittee.timeline.completedLabel",
+                  })}
+                </p>
               )}
             </TimelineItemContent>
             <TimelineItemContent
@@ -181,16 +206,18 @@ export default function ManagementCommitteeTimeline({
               {formatDate(dueDate)}
             </TimelineItemContent>
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": data.every(
-            ({ completed }) => completed,
+            ({ completed }) => completed
           ),
         })}
       >
-        Terminé !!!
+        {intl.formatMessage({
+          id: "managementCommittee.timeline.allTasksCompleted",
+        })}
       </TimelineHead>
     </Timeline>
   );

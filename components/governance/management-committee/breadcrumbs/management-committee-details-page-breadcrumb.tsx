@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { FormattedMessage } from "react-intl";
 export function ManagementCommitteeDetailsPageBreadcrumb({ meetingTitle }) {
   return (
     <Breadcrumb>
@@ -36,12 +37,12 @@ export function ManagementCommitteeDetailsPageBreadcrumb({ meetingTitle }) {
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
                 <Link href={ModulesRoutes.submodules("governance")}>
-                  Gouvernance
+                  <FormattedMessage id="managementCommittee.governanceSubmodule" />
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href={ManagementCommitteeRoutes.index}>
-                  Direction Générale
+                  <FormattedMessage id="managementCommittee.managementCommitteePage" />
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -51,7 +52,7 @@ export function ManagementCommitteeDetailsPageBreadcrumb({ meetingTitle }) {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={ModulesRoutes.submodules("governance")}>
-                Gouvernance
+                <FormattedMessage id="managementCommittee.governanceSubmodule" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -59,7 +60,7 @@ export function ManagementCommitteeDetailsPageBreadcrumb({ meetingTitle }) {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={ManagementCommitteeRoutes.index}>
-                Direction Générale
+                <FormattedMessage id="managementCommittee.managementCommitteePage" />
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>

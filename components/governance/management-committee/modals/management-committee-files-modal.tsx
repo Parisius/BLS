@@ -15,6 +15,8 @@ import mime from "mime";
 import AddFilesButton from "@/components/governance/management-committee/buttons/add-files-button";
 import { useOneManagementCommittee } from "@/services/api-sdk/models/management-committee";
 import { fileTypes } from "@/services/api-sdk/types/management-committee";
+import { useIntl } from "react-intl";
+
 const getIcon = (filename) => {
   const fileType = mime.getType(filename);
   const extension = fileType ? mime.getExtension(fileType) : null;
@@ -36,27 +38,39 @@ const getIcon = (filename) => {
       return "file-unknown-icon.svg";
   }
 };
+
 export default function ManagementCommitteeFilesModal({
   meetingId,
   meetingTitle,
   ...props
 }) {
+  const intl = useIntl();
   const { data, isLoading, isError } = useOneManagementCommittee(meetingId);
+
   if (isError) {
-    throw new Error("An error occurred while fetching the data");
+    throw new Error(
+      intl.formatMessage({ id: "managementCommittee.files.errorFetchingData" })
+    );
   }
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {intl.formatMessage({ id: "managementCommittee.files.loading" })}
+      </div>
+    );
   }
+
   return (
     <Sheet>
       <SheetTrigger {...props} />
-      <SheetContent
-        side="right"
-        className="flex flex-col gap-5"
-      >
+      <SheetContent side="right" className="flex flex-col gap-5">
         <SheetHeader>
-          <SheetTitle>Archives</SheetTitle>
+          <SheetTitle>
+            {intl.formatMessage({
+              id: "managementCommittee.files.archivesTitle",
+            })}
+          </SheetTitle>
           <SheetDescription className="line-clamp-1">
             {meetingTitle}
           </SheetDescription>
@@ -74,15 +88,17 @@ export default function ManagementCommitteeFilesModal({
                 >
                   <span
                     style={{
-                      backgroundImage: `url('/global/images/${getIcon(fileUrl)}')`,
+                      backgroundImage: `url('/global/images/${getIcon(
+                        fileUrl
+                      )}')`,
                     }}
                     className="block h-20 bg-contain bg-center bg-no-repeat"
                   />
                   <span className="line-clamp-2 text-center">
                     {fileType === "other"
                       ? filename
-                      : (fileTypes.find((type) => type.value === fileType)
-                          ?.label ?? filename)}
+                      : fileTypes.find((type) => type.value === fileType)
+                          ?.label ?? filename}
                   </span>
                 </a>
               ))}
@@ -90,12 +106,18 @@ export default function ManagementCommitteeFilesModal({
           </div>
         ) : (
           <div className="flex-1 text-center font-medium italic sm:text-lg">
-            Aucun fichier n&apos;a été ajouté à cette session.
+            {intl.formatMessage({
+              id: "managementCommittee.files.noFilesMessage",
+            })}
           </div>
         )}
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({
+                id: "managementCommittee.files.closeButton",
+              })}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

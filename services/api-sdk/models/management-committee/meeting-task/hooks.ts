@@ -126,7 +126,7 @@ export const useOneMeetingTask = (taskId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateMeetingTask = (meetingId, options) => {
+export const useCreateMeetingTask = (meetingId, options = {}) => {
   const invalidateAllMeetingTasks = useInvalidateAllMeetingTasks(meetingId);
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -136,7 +136,7 @@ export const useCreateMeetingTask = (meetingId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingTasks],
+    [invalidateAllMeetingTasks]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -163,7 +163,7 @@ export const useCreateMeetingTask = (meetingId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateMeetingTask = (taskId, options) => {
+export const useUpdateMeetingTask = (taskId, options = {}) => {
   const invalidateOneMeetingTask = useInvalidateOneMeetingTask();
   const invalidateAllMeetingTasks = useInvalidateAllMeetingTasks();
   const invalidateOneAdministrationMeeting =
@@ -185,7 +185,7 @@ export const useUpdateMeetingTask = (taskId, options) => {
       invalidateOneAdministrationMeeting,
       invalidateOneMeetingTask,
       taskId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -212,7 +212,7 @@ export const useUpdateMeetingTask = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useMarkMeetingTaskAsCompleted = (taskId, options) => {
+export const useMarkMeetingTaskAsCompleted = (taskId, options = {}) => {
   const invalidateOneMeetingTask = useInvalidateOneMeetingTask();
   const invalidateAllMeetingTasks = useInvalidateAllMeetingTasks();
   const invalidateOneAdministrationMeeting =
@@ -234,7 +234,7 @@ export const useMarkMeetingTaskAsCompleted = (taskId, options) => {
       invalidateOneAdministrationMeeting,
       invalidateOneMeetingTask,
       taskId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: () => markMeetingTaskAsCompleted(taskId),
@@ -257,7 +257,7 @@ export const useMarkMeetingTaskAsCompleted = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardMeetingTask = (taskId, options) => {
+export const useForwardMeetingTask = (taskId, options = {}) => {
   const invalidateOneMeetingTask = useInvalidateOneMeetingTask();
   const invalidateAllMeetingTasks = useInvalidateAllMeetingTasks();
   const getMutationOptions = useCallback(
@@ -269,7 +269,7 @@ export const useForwardMeetingTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [taskId, invalidateAllMeetingTasks, invalidateOneMeetingTask],
+    [taskId, invalidateAllMeetingTasks, invalidateOneMeetingTask]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -296,7 +296,7 @@ export const useForwardMeetingTask = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteMeetingTask = (taskId, options) => {
+export const useDeleteMeetingTask = (taskId, options = {}) => {
   const removeOneMeetingTask = useRemoveOneMeetingTaskQuery(taskId);
   const invalidateAllMeetingTasks = useInvalidateAllMeetingTasks();
   const getMutationOptions = useCallback(
@@ -308,7 +308,7 @@ export const useDeleteMeetingTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllMeetingTasks, removeOneMeetingTask],
+    [invalidateAllMeetingTasks, removeOneMeetingTask]
   );
   const mutation = useMutation({
     mutationFn: () => deleteMeetingTask(taskId),

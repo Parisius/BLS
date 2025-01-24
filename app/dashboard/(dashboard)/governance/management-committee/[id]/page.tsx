@@ -30,6 +30,7 @@ import { ManagementCommitteeDetailsTable } from "@/components/governance/managem
 import ProcedureModal from "@/components/governance/management-committee/modals/procedure-modal";
 import AttendantsDialog from "@/components/governance/management-committee/modals/attendants-dialog";
 import ManagementCommitteeDetailsPageLoading from "./loading";
+import { FormattedMessage } from "react-intl";
 export default function Page({ params: { id } }) {
   const { data, isLoading, isError } = useOneManagementCommittee(id);
   if (isError) {
@@ -54,21 +55,15 @@ export default function Page({ params: { id } }) {
           meetingDate={data.meetingDate}
           meetingTitle={data.title}
         >
-          <Button
-            aria-label="Planification du CA"
-            className="gap-2"
-          >
+          <Button aria-label="Planification du CA" className="gap-2">
             <GanttChart />
-            Planifier
+            <FormattedMessage id="managementCommittee.scheduleButton" />
           </Button>
         </ManagementCommitteeTimelineModal>
 
         <DropdownMenu>
           <Tooltip>
-            <DropdownMenuTrigger
-              asChild
-              className="cursor-pointer sm:hidden"
-            >
+            <DropdownMenuTrigger asChild className="cursor-pointer sm:hidden">
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
@@ -83,22 +78,16 @@ export default function Page({ params: { id } }) {
             <TooltipContent>Menu</TooltipContent>
           </Tooltip>
           <DropdownMenuContent>
-            <AttendantsDialog
-              asChild
-              meetingId={id}
-            >
+            <AttendantsDialog asChild meetingId={id}>
               <DropdownMenuItem
                 className="cursor-pointer gap-2 sm:hidden"
                 onSelect={(e) => e.preventDefault()}
               >
                 <Users />
-                Créer la liste de présence
+                <FormattedMessage id="managementCommittee.attendanceList" />
               </DropdownMenuItem>
             </AttendantsDialog>
-            <ChecklistModal
-              asChild
-              meetingId={id}
-            >
+            <ChecklistModal asChild meetingId={id}>
               <DropdownMenuItem
                 className="cursor-pointer gap-2 sm:hidden"
                 onSelect={(e) => e.preventDefault()}
@@ -107,16 +96,13 @@ export default function Page({ params: { id } }) {
                 Checklist
               </DropdownMenuItem>
             </ChecklistModal>
-            <ProcedureModal
-              asChild
-              meetingId={id}
-            >
+            <ProcedureModal asChild meetingId={id}>
               <DropdownMenuItem
                 className="cursor-pointer gap-2 sm:hidden"
                 onSelect={(e) => e.preventDefault()}
               >
                 <LayoutList />
-                Procédures
+                <FormattedMessage id="managementCommittee.procedures" />
               </DropdownMenuItem>
             </ProcedureModal>
             <ManagementCommitteeFilesModal
@@ -136,31 +122,22 @@ export default function Page({ params: { id } }) {
         </DropdownMenu>
 
         <div className="hidden items-center justify-between gap-2 sm:flex">
-          <AttendantsDialog
-            asChild
-            meetingId={id}
-          >
-            <Button
-              variant="secondary"
-              className="gap-2"
-            >
+          <AttendantsDialog asChild meetingId={id}>
+            <Button variant="secondary" className="gap-2">
               <Users />
-              Créer la liste de présence
+              <FormattedMessage id="managementCommittee.attendanceList" />
             </Button>
           </AttendantsDialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button className="gap-2">
                 <BookOpenCheck />
-                Tenir CODIR
+                <FormattedMessage id="managementCommittee.holdMeeting" />
               </Button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
-              <ChecklistModal
-                asChild
-                meetingId={id}
-              >
+              <ChecklistModal asChild meetingId={id}>
                 <DropdownMenuItem
                   className="cursor-pointer gap-2"
                   onSelect={(e) => e.preventDefault()}
@@ -170,16 +147,13 @@ export default function Page({ params: { id } }) {
                 </DropdownMenuItem>
               </ChecklistModal>
 
-              <ProcedureModal
-                asChild
-                meetingId={id}
-              >
+              <ProcedureModal asChild meetingId={id}>
                 <DropdownMenuItem
                   className="cursor-pointer gap-2"
                   onSelect={(e) => e.preventDefault()}
                 >
                   <LayoutList />
-                  Procédures
+                  <FormattedMessage id="managementCommittee.procedures" />
                 </DropdownMenuItem>
               </ProcedureModal>
             </DropdownMenuContent>

@@ -10,8 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { useProcedureTaskForm } from "@/lib/governance/management-committee/hooks";
+import { useIntl } from "react-intl";
+
 export default function ProcedureTaskForm({ formId, onSubmit }) {
+  const intl = useIntl();
   const form = useProcedureTaskForm();
+
   return (
     <Form {...form}>
       <form
@@ -24,12 +28,18 @@ export default function ProcedureTaskForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de la tâche</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.procedure.taskTitleLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de la tâche"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.procedure.taskTitlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

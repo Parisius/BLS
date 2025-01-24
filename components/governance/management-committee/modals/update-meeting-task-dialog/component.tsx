@@ -17,17 +17,27 @@ import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import UpdateMeetingTaskForm from "@/components/governance/management-committee/forms/update-meeting-task-form";
 import { UpdateMeetingTaskDialogSuspense } from "@/components/governance/management-committee/modals/update-meeting-task-dialog/suspense";
 import { useOneMeetingTask } from "@/services/api-sdk/models/management-committee";
+import { useIntl } from "react-intl";
+
 export function UpdateMeetingTaskDialog({ taskId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const { data, isLoading, isError } = useOneMeetingTask(taskId);
   const form = useTaskForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   if (isError) {
-    throw new Error("Failed to fetch meeting task");
+    throw new Error(
+      intl.formatMessage({ id: "managementCommittee.task.errorFetchingTask" })
+    );
   }
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -38,15 +48,22 @@ export function UpdateMeetingTaskDialog({ taskId, ...props }) {
       });
     }
   }, [data, form, isLoading]);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier tâche</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "managementCommittee.task.updateTitle",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Modifier les détails de la tâche.
+              {intl.formatMessage({
+                id: "managementCommittee.task.updateDescription",
+              })}
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -57,15 +74,15 @@ export function UpdateMeetingTaskDialog({ taskId, ...props }) {
                 formId={formId}
                 taskId={taskId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    {intl.formatMessage({
+                      id: "managementCommittee.task.cancelButton",
+                    })}
                   </Button>
                 </DialogClose>
                 <Button
@@ -76,7 +93,9 @@ export function UpdateMeetingTaskDialog({ taskId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    intl.formatMessage({
+                      id: "managementCommittee.task.updateButton",
+                    })
                   )}
                 </Button>
               </DialogFooter>

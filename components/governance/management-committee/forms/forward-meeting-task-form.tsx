@@ -16,36 +16,44 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForwardMeetingTaskForm } from "@/lib/governance/management-committee/hooks";
 import { useForwardMeetingTask } from "@/services/api-sdk/models/management-committee";
 import UserSelect from "@/components/governance/management-committee/inputs/user-select";
+import { useIntl } from "react-intl";
+
 export default function ForwardMeetingTaskForm({
   formId,
   taskId,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useForwardMeetingTaskForm();
   const { mutateAsync } = useForwardMeetingTask(taskId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (updatedData) => {
           toast({
-            description: "Tâche transférée avec succès",
+            description: intl.formatMessage({
+              id: "managementCommittee.task.transferSuccessMessage",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(updatedData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors du transfert de la tâche",
+            description: intl.formatMessage({
+              id: "managementCommittee.task.transferErrorMessage",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -58,12 +66,18 @@ export default function ForwardMeetingTaskForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Objet</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.transferSubjectLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Objet"
+                    placeholder={intl.formatMessage({
+                      id: "managementCommittee.task.transferSubjectPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -79,7 +93,11 @@ export default function ForwardMeetingTaskForm({
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.dueDateLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -97,7 +115,11 @@ export default function ForwardMeetingTaskForm({
           name="receiverId"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Destinataire</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.receiverLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <UserSelect
@@ -119,12 +141,18 @@ export default function ForwardMeetingTaskForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observations</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "managementCommittee.task.observationsLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   disabled={form.formState.isSubmitting}
-                  placeholder="Observations"
+                  placeholder={intl.formatMessage({
+                    id: "managementCommittee.task.observationsPlaceholder",
+                  })}
                   className="resize-none"
                   rows={5}
                 />

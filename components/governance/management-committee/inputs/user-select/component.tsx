@@ -11,44 +11,49 @@ import {
   useCurrentUser,
 } from "@/services/api-sdk/models/user/user";
 import { useMemo } from "react";
+import { useIntl } from "react-intl";
+
 export function UserSelectComponent({ className, ...props }) {
+  const intl = useIntl();
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllUsers();
+
   if (isError) {
-    throw new Error("Failed to load users");
+    throw new Error(
+      intl.formatMessage({ id: "managementCommittee.user.errorLoadingUsers" })
+    );
   }
+
   const users = useMemo(() => {
     if (!currentUser || !data) return [];
     return data?.filter((user) => user.id !== currentUser?.id);
   }, [currentUser, data]);
+
   return (
     <Select {...props}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Sélectionner un destinataire" />
+        <SelectValue
+          placeholder={intl.formatMessage({
+            id: "managementCommittee.user.selectPlaceholder",
+          })}
+        />
       </SelectTrigger>
       <SelectContent>
         {isLoading && (
-          <SelectItem
-            disabled
-            value="__loading__"
-          >
-            Chargement...
+          <SelectItem disabled value="__loading__">
+            {intl.formatMessage({ id: "managementCommittee.user.loading" })}
           </SelectItem>
         )}
         {!data ||
           (data.length === 0 && (
-            <SelectItem
-              disabled
-              value="__empty__"
-            >
-              Aucun destinataire trouvé
+            <SelectItem disabled value="__empty__">
+              {intl.formatMessage({
+                id: "managementCommittee.user.noRecipientsFound",
+              })}
             </SelectItem>
           ))}
         {users?.map((collaborator) => (
-          <SelectItem
-            key={collaborator.id}
-            value={collaborator.id}
-          >
+          <SelectItem key={collaborator.id} value={collaborator.id}>
             {collaborator.lastname} {collaborator.firstname}
           </SelectItem>
         ))}

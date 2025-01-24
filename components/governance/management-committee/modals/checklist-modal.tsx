@@ -1,4 +1,5 @@
 import React from "react";
+import { useIntl } from "react-intl";
 import {
   Dialog,
   DialogClose,
@@ -12,15 +13,22 @@ import {
 import { Button } from "@/components/ui/button";
 import ChecklistTable from "@/components/governance/management-committee/tables/checklist-table";
 import PrintChecklistButton from "@/components/governance/management-committee/buttons/print-checklist-button";
+
 export default function ChecklistModal({ meetingId, ...props }) {
+  const intl = useIntl();
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <DialogContent className="max-h-screen max-w-md">
         <DialogHeader>
-          <DialogTitle>Checklist</DialogTitle>
+          <DialogTitle>
+            {intl.formatMessage({ id: "managementCommittee.checklist.title" })}
+          </DialogTitle>
           <DialogDescription>
-            Voici la liste des choses à faire pour préparer la CODIR
+            {intl.formatMessage({
+              id: "managementCommittee.checklist.description",
+            })}
           </DialogDescription>
         </DialogHeader>
         <ChecklistTable
@@ -29,10 +37,16 @@ export default function ChecklistModal({ meetingId, ...props }) {
         />
         <DialogFooter className="gap-2">
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({
+                id: "managementCommittee.checklist.closeButton",
+              })}
+            </Button>
           </DialogClose>
           <PrintChecklistButton meetingId={meetingId}>
-            Générer la liste
+            {intl.formatMessage({
+              id: "managementCommittee.checklist.generateListButton",
+            })}
           </PrintChecklistButton>
         </DialogFooter>
       </DialogContent>
