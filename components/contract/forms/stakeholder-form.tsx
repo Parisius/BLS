@@ -13,8 +13,12 @@ import { FormProvider } from "react-hook-form";
 import IndividualMemberForm from "@/components/contract/forms/individual-member-form";
 import CorporateMemberForm from "@/components/contract/forms/corporate-member-form";
 import { cn } from "@/lib/utils";
+import { useIntl } from "react-intl";
+
 export default function StakeholderForm({ formId, className, onSubmit }) {
   const form = useStakeholderForm();
+  const intl = useIntl();
+
   return (
     <Form {...form}>
       <div className={cn("space-y-5", className)}>
@@ -34,7 +38,9 @@ export default function StakeholderForm({ formId, className, onSubmit }) {
                       <RadioGroupItem value="individual" />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Personne physique
+                      {intl.formatMessage({
+                        id: "contract.contract.stakeholderForm.individual",
+                      })}
                     </FormLabel>
                   </FormItem>
                   <FormItem className="flex items-center gap-1 space-y-0">
@@ -42,7 +48,9 @@ export default function StakeholderForm({ formId, className, onSubmit }) {
                       <RadioGroupItem value="corporate" />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Personne morale
+                      {intl.formatMessage({
+                        id: "contract.contract.stakeholderForm.corporate",
+                      })}
                     </FormLabel>
                   </FormItem>
                 </RadioGroup>
@@ -54,15 +62,9 @@ export default function StakeholderForm({ formId, className, onSubmit }) {
 
         <FormProvider {...form}>
           {form.watch("type") === "individual" ? (
-            <IndividualMemberForm
-              formId={formId}
-              onSubmit={onSubmit}
-            />
+            <IndividualMemberForm formId={formId} onSubmit={onSubmit} />
           ) : (
-            <CorporateMemberForm
-              formId={formId}
-              onSubmit={onSubmit}
-            />
+            <CorporateMemberForm formId={formId} onSubmit={onSubmit} />
           )}
         </FormProvider>
       </div>

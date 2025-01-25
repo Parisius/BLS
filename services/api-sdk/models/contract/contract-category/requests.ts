@@ -1,6 +1,7 @@
 "use server";
 import { ApiError } from "@/services/api-sdk/errors";
 import { fetchService } from "@/services/api-sdk/init";
+import { log } from "console";
 /**
  * Fetches all contract categories from the server.
  * @returns A promise that resolves to an array of contract categories.
@@ -8,6 +9,8 @@ import { fetchService } from "@/services/api-sdk/init";
  */
 export const getAllContractCategories = async () => {
   const response = await fetchService.get(`/contract_categories`);
+  console.log(response.data);
+
   if (response.ok) {
     const data = await response.json();
     return data.data.map(({ id, value }) => ({
@@ -25,7 +28,7 @@ export const getAllContractCategories = async () => {
  */
 export const getAllContractCategoryTypes = async (category) => {
   const response = await fetchService.get(
-    `/contract_type_categories?contract_category_id=${category}`,
+    `/contract_type_categories?contract_category_id=${category}`
   );
   if (response.ok) {
     const data = await response.json();
@@ -44,7 +47,7 @@ export const getAllContractCategoryTypes = async (category) => {
  */
 export const getAllContractCategorySubTypes = async (categoryType) => {
   const response = await fetchService.get(
-    `/contract_sub_type_categories?contract_type_category_id=${categoryType}`,
+    `/contract_sub_type_categories?contract_type_category_id=${categoryType}`
   );
   if (response.ok) {
     const data = await response.json();

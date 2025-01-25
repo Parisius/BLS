@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,7 +10,10 @@ import {
 import { ModulesRoutes } from "@/config/routes";
 import { Component } from "lucide-react";
 import Link from "next/link";
+import { useIntl } from "react-intl";
 export function HomePageBreadcrumb() {
+  const intl = useIntl();
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -22,7 +26,11 @@ export function HomePageBreadcrumb() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Contrat</BreadcrumbPage>
+          <BreadcrumbPage>
+            {intl.formatMessage({
+              id: "contract.contract.breadcrumb.contract",
+            })}
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

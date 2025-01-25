@@ -5,6 +5,8 @@ import { MoveRight } from "lucide-react";
 import Link from "next/link";
 import { ContractRoutes } from "@/config/routes";
 import { useMemo } from "react";
+import { useIntl } from "react-intl";
+
 export default function ContractCard({
   contractId,
   title,
@@ -12,6 +14,8 @@ export default function ContractCard({
   categoryType,
   categorySubType,
 }) {
+  const intl = useIntl();
+
   const categoryLabel = useMemo(() => {
     if (categoryType) {
       return `${category} - ${categoryType}`;
@@ -21,6 +25,7 @@ export default function ContractCard({
     }
     return category;
   }, [category, categorySubType, categoryType]);
+
   return (
     <Card className="w-72 sm:w-80">
       <CardHeader>
@@ -30,13 +35,10 @@ export default function ContractCard({
         </Badge>
       </CardHeader>
       <CardFooter className="justify-end gap-2">
-        <Button
-          asChild
-          variant="link"
-          className="gap-2 px-0 italic"
-        >
+        <Button asChild variant="link" className="gap-2 px-0 italic">
           <Link href={ContractRoutes.contractPage(contractId).index}>
-            Voir details <MoveRight />
+            {intl.formatMessage({ id: "contract.contract.card.viewDetails" })}{" "}
+            <MoveRight />
           </Link>
         </Button>
       </CardFooter>

@@ -1,3 +1,4 @@
+"use client";
 import { Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ContractsListPageBreadcrumb } from "@/components/contract/breadcrumbs";
@@ -5,7 +6,11 @@ import ContractsList from "@/components/contract/ui/contracts-list";
 import AddContractDialog from "@/components/contract/modals/add-contract-dialog";
 import { SearchInput, SearchProvider } from "@/providers/search-provider";
 import { Portal } from "@/components/ui/portal";
+import { useIntl } from "react-intl";
+
 export default function ContractListPage() {
+  const intl = useIntl();
+
   return (
     <SearchProvider>
       <Portal containerId="search-input-container">
@@ -17,12 +22,18 @@ export default function ContractListPage() {
           <AddContractDialog asChild>
             <Button className="gap-2">
               <Scale />
-              <span className="sr-only sm:not-sr-only">Nouveau contrat</span>
+              <span className="sr-only sm:not-sr-only">
+                {intl.formatMessage({
+                  id: "contract.contract.listPage.newContract",
+                })}
+              </span>
             </Button>
           </AddContractDialog>
         </div>
         <h1 className="relative text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-          Choisir un contrat
+          {intl.formatMessage({
+            id: "contract.contract.listPage.chooseContract",
+          })}
         </h1>
         <ContractsList />
       </div>

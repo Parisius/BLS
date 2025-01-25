@@ -110,7 +110,7 @@ export const useCreateContractModel = (parentId = {}, options = {}) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteContractModel = (modelId, options) => {
+export const useDeleteContractModel = (modelId, options = {}) => {
   const removeContractModelsQuery = useRemoveAllContractModelsQuery();
   const invalidateAllContractModels = useInvalidateAllContractModels();
   const getMutationOptions = useCallback(

@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -16,7 +17,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useIntl } from "react-intl";
 export function ContractDetailsPageBreadcrumb({ contractTitle }) {
+  const intl = useIntl();
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -35,7 +39,11 @@ export function ContractDetailsPageBreadcrumb({ contractTitle }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <Link href={ContractRoutes.contractsList}>Contrats</Link>
+                <Link href={ContractRoutes.contractsList}>
+                  {intl.formatMessage({
+                    id: "contract.contract.breadcrumb.contract",
+                  })}
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -43,7 +51,11 @@ export function ContractDetailsPageBreadcrumb({ contractTitle }) {
         <div className="hidden sm:contents">
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={ContractRoutes.contractsList}>Contrats</Link>
+              <Link href={ContractRoutes.contractsList}>
+                {intl.formatMessage({
+                  id: "contract.contract.breadcrumb.contract",
+                })}
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </div>

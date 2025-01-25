@@ -10,8 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { useContractModelCategoryForm } from "@/lib/contract/hooks";
+import { useIntl } from "react-intl";
+
 export default function ContractModelCategoryForm({ formId, onSubmit }) {
   const form = useContractModelCategoryForm();
+  const intl = useIntl();
+
   return (
     <Form {...form}>
       <form
@@ -24,12 +28,18 @@ export default function ContractModelCategoryForm({ formId, onSubmit }) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.categoryForm.name",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.categoryForm.namePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

@@ -7,44 +7,50 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useAllContractCategorySubTypes } from "@/services/api-sdk/models/contract/contract-category";
+import { useIntl } from "react-intl";
+
 export function CategorySubTypeSelectComponent({
   categoryType,
   className,
   ...props
 }) {
+  const intl = useIntl();
   const { data, isLoading, isError } =
     useAllContractCategorySubTypes(categoryType);
+
   if (isError) {
-    throw new Error("Failed to load category subtypes");
+    throw new Error(
+      intl.formatMessage({
+        id: "contract.contract.errorLoadingCategorySubTypes",
+      })
+    );
   }
+
   return (
     <Select {...props}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Sélectionner un sous-type de catégorie" />
+        <SelectValue
+          placeholder={intl.formatMessage({
+            id: "contract.contract.categorySubTypeSelectPlaceholder",
+          })}
+        />
       </SelectTrigger>
       <SelectContent>
         {isLoading && (
-          <SelectItem
-            disabled
-            value="__loading__"
-          >
-            Chargement...
+          <SelectItem disabled value="__loading__">
+            {intl.formatMessage({ id: "contract.contract.loading" })}
           </SelectItem>
         )}
         {!data ||
           (data.length === 0 && (
-            <SelectItem
-              disabled
-              value="__empty__"
-            >
-              Aucun sous-type de catégorie trouvé
+            <SelectItem disabled value="__empty__">
+              {intl.formatMessage({
+                id: "contract.contract.noCategorySubTypesFound",
+              })}
             </SelectItem>
           ))}
         {data?.map(({ id, label }) => (
-          <SelectItem
-            key={id}
-            value={id}
-          >
+          <SelectItem key={id} value={id}>
             {label}
           </SelectItem>
         ))}

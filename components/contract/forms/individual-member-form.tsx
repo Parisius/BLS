@@ -10,8 +10,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { useStakeholderForm } from "@/lib/contract/hooks";
+import { useIntl } from "react-intl";
+
 export default function IndividualMemberForm({ formId, onSubmit }) {
   const form = useStakeholderForm();
+  const intl = useIntl();
+
   return (
     <Form {...form}>
       <form
@@ -24,12 +28,18 @@ export default function IndividualMemberForm({ formId, onSubmit }) {
           name="name"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nom & Prénom (s)</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.individualMemberForm.name",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Nom & Prénom (s)"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.individualMemberForm.namePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -45,12 +55,18 @@ export default function IndividualMemberForm({ formId, onSubmit }) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.individualMemberForm.email",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Email"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.individualMemberForm.emailPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -66,12 +82,18 @@ export default function IndividualMemberForm({ formId, onSubmit }) {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Téléphone</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.individualMemberForm.phone",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Téléphone"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.individualMemberForm.phonePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -87,12 +109,18 @@ export default function IndividualMemberForm({ formId, onSubmit }) {
           name="cardId"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Numéro de pièce d&apos;identité</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.individualMemberForm.cardId",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Numéro de pièce d'identité"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.individualMemberForm.cardIdPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -108,12 +136,18 @@ export default function IndividualMemberForm({ formId, onSubmit }) {
           name="residence"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lieu de résidence</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.individualMemberForm.residence",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Lieu de résidence"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.individualMemberForm.residencePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -129,12 +163,18 @@ export default function IndividualMemberForm({ formId, onSubmit }) {
           name="zipCode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Code postal</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.individualMemberForm.zipCode",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Code postal"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.individualMemberForm.zipCodePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

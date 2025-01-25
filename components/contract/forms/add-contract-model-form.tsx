@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Newspaper, Tag } from "lucide-react";
 import { FileInput } from "@/components/ui/file-input";
+import { useIntl } from "react-intl"; // Importez useIntl
+
 export default function AddContractModelForm({
   formId,
   parentId,
@@ -22,6 +24,8 @@ export default function AddContractModelForm({
 }) {
   const form = useContractModelForm();
   const { mutateAsync } = useCreateContractModel(parentId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(
@@ -34,29 +38,34 @@ export default function AddContractModelForm({
         {
           onSuccess: (createdData) => {
             toast({
-              description: "Modèle de contrat ajouté avec succès",
+              description: intl.formatMessage({
+                id: "contract.contract.addModelForm.success",
+              }),
               className: "bg-primary text-primary-foreground",
             });
             onSuccess?.(createdData);
           },
           onError: () => {
             toast({
-              description:
-                "Une erreur s'est produite lors de l'ajout du modèle",
+              description: intl.formatMessage({
+                id: "contract.contract.addModelForm.error",
+              }),
               className: "bg-destructive text-destructive-foreground",
             });
             onError?.();
           },
-        },
+        }
       );
     },
-    [mutateAsync, onError, onSuccess, parentId],
+    [mutateAsync, onError, onSuccess, parentId, intl]
   );
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset();
     }
   }, [form]);
+
   return (
     <Form {...form}>
       <form
@@ -69,12 +78,18 @@ export default function AddContractModelForm({
           name="filename"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé du modèle</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.addModelForm.filenameLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé du modèle"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.addModelForm.filenamePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -90,13 +105,19 @@ export default function AddContractModelForm({
           name="file"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Fichier</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.addModelForm.fileLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <FileInput
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Ajouter un fichier"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.addModelForm.filePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Newspaper className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

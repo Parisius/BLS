@@ -17,29 +17,38 @@ import ForwardContractDialog from "@/components/contract/modals/forward-contract
 import { useCurrentUser } from "@/services/api-sdk/models/user/user";
 import CompleteContractDialog from "@/components/contract/modals/complete-contract-dialog";
 import ContractDetailsPageLoading from "./loading";
+import { useIntl } from "react-intl";
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].completed && forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 const canComplete = ({ forwards }, currentUser) =>
   forwards &&
   forwards.length > 0 &&
   !forwards[0].completed &&
   forwards[0].receiver.id === currentUser?.id;
+
 export default function ContractDetailsPage({ params: { id } }) {
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useOneContract(id);
+  const intl = useIntl();
+
   if (isError) {
     throw new Error("An error occurred while fetching the data");
   }
+
   if (isLoading) {
     return <ContractDetailsPageLoading />;
   }
+
   if (!data) {
     notFound();
   }
+
   return (
     <div className="container flex flex-1 flex-col gap-10 overflow-y-auto py-5">
       <ContractDetailsPageBreadcrumb contractTitle={data.title} />
@@ -57,30 +66,30 @@ export default function ContractDetailsPage({ params: { id } }) {
           contractRenewalDate={data.renewalDate}
         >
           <Button
-            aria-label="Planification du contrat"
+            aria-label={intl.formatMessage({
+              id: "contract.contract.detailsPage.schedule",
+            })}
             className="gap-2"
           >
             <GanttChart />
-            Planifier
+            {intl.formatMessage({
+              id: "contract.contract.detailsPage.schedule",
+            })}
           </Button>
         </ContractEventsTimelineModal>
 
         <div className="flex items-center gap-2">
           {canForward(
             { forwards: data.forwards, createdBy: data.createdBy },
-            currentUser,
+            currentUser
           ) && (
-            <ForwardContractDialog
-              asChild
-              contractId={id}
-            >
-              <Button
-                variant="secondary"
-                className="gap-2"
-              >
+            <ForwardContractDialog asChild contractId={id}>
+              <Button variant="secondary" className="gap-2">
                 <Forward />
                 <span className="sr-only sm:not-sr-only">
-                  Transférer le dossier
+                  {intl.formatMessage({
+                    id: "contract.contract.detailsPage.transfer",
+                  })}
                 </span>
               </Button>
             </ForwardContractDialog>
@@ -92,13 +101,13 @@ export default function ContractDetailsPage({ params: { id } }) {
               contractId={id}
               transferId={data.forwards[0].id}
             >
-              <Button
-                variant="secondary"
-                className="gap-2"
-              >
+              <Button variant="secondary" className="gap-2">
                 <CheckCheck />
                 <span className="sr-only sm:not-sr-only">
-                  {data.forwards?.[0].title ?? "Mettre à jour le statut"}
+                  {data.forwards?.[0].title ??
+                    intl.formatMessage({
+                      id: "contract.contract.detailsPage.updateStatus",
+                    })}
                 </span>
               </Button>
             </CompleteContractDialog>
@@ -111,7 +120,11 @@ export default function ContractDetailsPage({ params: { id } }) {
           >
             <Button className="gap-2">
               <Files />
-              <span className="sr-only sm:not-sr-only">Documents</span>
+              <span className="sr-only sm:not-sr-only">
+                {intl.formatMessage({
+                  id: "contract.contract.detailsPage.documents",
+                })}
+              </span>
             </Button>
           </ContractFilesModal>
 
@@ -127,14 +140,20 @@ export default function ContractDetailsPage({ params: { id } }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Parties prenantes"
+                  aria-label={intl.formatMessage({
+                    id: "contract.contract.detailsPage.stakeholders",
+                  })}
                   className="gap-2 rounded-full"
                 >
                   <Users size={30} />
                 </Button>
               </TooltipTrigger>
             </StakeholdersModal>
-            <TooltipContent>Parties prenantes</TooltipContent>
+            <TooltipContent>
+              {intl.formatMessage({
+                id: "contract.contract.detailsPage.stakeholders",
+              })}
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>

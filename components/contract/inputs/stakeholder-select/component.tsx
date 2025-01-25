@@ -12,56 +12,65 @@ import { useAllStakeholders } from "@/services/api-sdk/models/contract/stakehold
 import { Plus } from "lucide-react";
 import AddStakeholderDialog from "@/components/contract/modals/add-stakeholder-dialog";
 import { useMemo } from "react";
+import { useIntl } from "react-intl";
+
 export function StakeholderSelectComponent({ className, ...props }) {
   const { data, isLoading, isError } = useAllStakeholders();
+  const intl = useIntl(); // Utilisez le hook useIntl pour les traductions
+
   if (isError) {
     throw new Error("Failed to load stakeholders");
   }
+
   const individualStakeholders = useMemo(
     () => data?.filter((stakeholder) => stakeholder.type === "individual"),
-    [data],
+    [data]
   );
+
   const corporateStakeholders = useMemo(
     () => data?.filter((stakeholder) => stakeholder.type === "corporate"),
-    [data],
+    [data]
   );
+
   return (
     <Select {...props}>
       <SelectTrigger className={className}>
-        <SelectValue placeholder="Sélectionner un membre" />
+        <SelectValue
+          placeholder={intl.formatMessage({
+            id: "contract.stakeholder.select.placeholder",
+          })}
+        />
       </SelectTrigger>
       <SelectContent>
         {isLoading && (
-          <SelectItem
-            disabled
-            value="__loading__"
-          >
-            Chargement...
+          <SelectItem disabled value="__loading__">
+            {intl.formatMessage({ id: "contract.stakeholder.select.loading" })}
           </SelectItem>
         )}
         {!isLoading && !isError && (
           <AddStakeholderDialog>
-            <SelectItem
-              disabled
-              value="__add__"
-            >
+            <SelectItem disabled value="__add__">
               <span className="inline-flex items-center gap-2">
                 <Plus size={16} />
-                Ajouter un membre
+                {intl.formatMessage({
+                  id: "contract.stakeholder.select.addMember",
+                })}
               </span>
             </SelectItem>
           </AddStakeholderDialog>
         )}
         <SelectGroup>
-          <SelectLabel>Personnes physiques</SelectLabel>
+          <SelectLabel>
+            {intl.formatMessage({
+              id: "contract.stakeholder.select.individuals",
+            })}
+          </SelectLabel>
           {!individualStakeholders ||
             (individualStakeholders.length === 0 && (
-              <SelectItem
-                disabled
-                value="__empty__"
-                className="ml-5"
-              >
-                Aucune personne physique trouvée
+              <SelectItem disabled value="__empty__" className="ml-5">
+                {intl.formatMessage({
+                  id: "contract.stakeholder.select.noIndividuals",
+                })}
               </SelectItem>
             ))}
           {individualStakeholders?.map((stakeholder) => (
@@ -76,15 +85,17 @@ export function StakeholderSelectComponent({ className, ...props }) {
         </SelectGroup>
 
         <SelectGroup>
-          <SelectLabel>Personnes morales</SelectLabel>
+          <SelectLabel>
+            {intl.formatMessage({
+              id: "contract.stakeholder.select.corporates",
+            })}
+          </SelectLabel>
           {!corporateStakeholders ||
             (corporateStakeholders.length === 0 && (
-              <SelectItem
-                disabled
-                value="__empty__"
-                className="ml-5"
-              >
-                Aucune personne morale trouvée
+              <SelectItem disabled value="__empty__" className="ml-5">
+                {intl.formatMessage({
+                  id: "contract.stakeholder.select.noCorporates",
+                })}
               </SelectItem>
             ))}
           {corporateStakeholders?.map((stakeholder) => (

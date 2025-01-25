@@ -72,7 +72,7 @@ export const createStakeholder = async (args) => {
       id_card: args.cardId,
       capital: args.capital,
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to create the corporate item");

@@ -19,41 +19,51 @@ import ContractStakeholderSectionForm from "@/components/contract/forms/contract
 import DocumentsForm from "@/components/ui/documents-form";
 import { useAddContractForm } from "@/lib/contract/hooks";
 import CategorySubTypeSelect from "@/components/contract/inputs/category-subtype-select";
+import { useIntl } from "react-intl";
+
 export default function AddContractForm({
   formId,
   className,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const { form, firstStakeholdersGroup, secondStakeholdersGroup, filesArray } =
     useAddContractForm();
   const { mutateAsync } = useCreateContract();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Contrat initié avec succès !",
+            description: intl.formatMessage({
+              id: "contract.contract.successMessage",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description: "Une erreur est survenue lors de l'initiation.",
+            description: intl.formatMessage({
+              id: "contract.contract.errorMessage",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset();
     }
   }, [form]);
+
   return (
     <Form {...form}>
       <form
@@ -66,13 +76,17 @@ export default function AddContractForm({
           name="title"
           render={({ field }) => (
             <FormItem className="col-span-3">
-              <FormLabel>Intitulé du contrat</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "contract.contract.titleLabel" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Intitulé du contrat"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.titlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -88,7 +102,9 @@ export default function AddContractForm({
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Catégorie de contrat</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "contract.contract.categoryLabel" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <CategorySelect
@@ -110,7 +126,11 @@ export default function AddContractForm({
           name="categoryType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type de catégorie</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.categoryTypeLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <CategoryTypeSelect
@@ -135,7 +155,11 @@ export default function AddContractForm({
           name="categorySubType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sous-type de catégorie</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.categorySubTypeLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <CategorySubTypeSelect
@@ -156,7 +180,9 @@ export default function AddContractForm({
         />
 
         <ContractStakeholderSectionForm
-          label="Partie 1"
+          label={intl.formatMessage({
+            id: "contract.contract.stakeholderSectionLabel1",
+          })}
           fieldName="firstStakeholdersGroup"
           form={form}
           fieldArray={firstStakeholdersGroup}
@@ -164,7 +190,9 @@ export default function AddContractForm({
         />
 
         <ContractStakeholderSectionForm
-          label="Partie 2"
+          label={intl.formatMessage({
+            id: "contract.contract.stakeholderSectionLabel2",
+          })}
           fieldName="secondStakeholdersGroup"
           form={form}
           fieldArray={secondStakeholdersGroup}
@@ -172,7 +200,7 @@ export default function AddContractForm({
         />
 
         <DocumentsForm
-          label="Documents"
+          label={intl.formatMessage({ id: "contract.contract.documentsLabel" })}
           fieldName="files"
           form={form}
           fieldArray={filesArray}

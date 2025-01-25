@@ -15,26 +15,34 @@ import { useCallback } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteContractModel } from "@/services/api-sdk/models/contract/contract-model";
+import { useIntl } from "react-intl";
+
 export default function DeleteContractModelButton({ modelId, ...props }) {
   const form = useForm();
   const { mutateAsync } = useDeleteContractModel(modelId);
+  const intl = useIntl();
+
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
         toast({
-          description: "Le modèle de contrat a été supprimé avec succès.",
+          description: intl.formatMessage({
+            id: "contract.contract.deleteModel.success",
+          }),
           className: "bg-primary text-primary-foreground",
         });
       },
       onError: () => {
         toast({
-          description:
-            "Une erreur s'est produite lors de la suppression du modèle.",
+          description: intl.formatMessage({
+            id: "contract.contract.deleteModel.error",
+          }),
           className: "bg-destructive text-destructive-foreground",
         });
       },
     });
-  }, [mutateAsync]);
+  }, [mutateAsync, intl]);
+
   return (
     <AlertDialog>
       <AlertDialogTrigger {...props} />
@@ -42,20 +50,34 @@ export default function DeleteContractModelButton({ modelId, ...props }) {
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer ce modèle de contrat ?
+              {intl.formatMessage({
+                id: "contract.contract.deleteModel.title",
+              })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              {intl.formatMessage({
+                id: "contract.contract.deleteModel.description",
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel type="button">
+              {intl.formatMessage({
+                id: "contract.contract.deleteModel.cancel",
+              })}
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "contract.contract.deleteModel.delete",
+                })
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

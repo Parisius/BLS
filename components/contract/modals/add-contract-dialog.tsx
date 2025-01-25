@@ -17,40 +17,51 @@ import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { ContractRoutes } from "@/config/routes";
 import AddContractForm from "@/components/contract/forms/add-contract-form";
 import { useAddContractForm } from "@/lib/contract/hooks";
+import { useIntl } from "react-intl";
+
 export default function AddContractDialog(props) {
+  const intl = useIntl();
   const formId = useId();
   const { form } = useAddContractForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+
   const handleSuccess = useCallback(
     ({ id }) => {
       closeRef.current?.click();
       router.push(ContractRoutes.contractPage(id).index);
     },
-    [router],
+    [router]
   );
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Nouveau contrat</DialogTitle>
-            <DialogDescription>Initier un nouveau contrat.</DialogDescription>
+            <DialogTitle>
+              {intl.formatMessage({ id: "contract.contract.newContractTitle" })}
+            </DialogTitle>
+            <DialogDescription>
+              {intl.formatMessage({
+                id: "contract.contract.newContractDescription",
+              })}
+            </DialogDescription>
           </DialogHeader>
           <AddContractForm
             formId={formId}
             className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({ id: "contract.contract.cancelButton" })}
               </Button>
             </DialogClose>
             <Button
@@ -58,7 +69,11 @@ export default function AddContractDialog(props) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Initier"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({ id: "contract.contract.initiateButton" })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

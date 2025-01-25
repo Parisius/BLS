@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { ContractRoutes } from "@/config/routes";
+import { useIntl } from "react-intl";
+
 const getIcon = (filename) => {
   const fileType = mime.getType(filename);
   const extension = fileType ? mime.getExtension(fileType) : null;
@@ -31,28 +33,30 @@ const getIcon = (filename) => {
       return "file-unknown-icon.svg";
   }
 };
+
 export function ContractModelsListComponent({ models, isLoading }) {
+  const intl = useIntl();
+
   if (isLoading) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Chargement...
+        {intl.formatMessage({ id: "contract.contract.modelsList.loading" })}
       </p>
     );
   }
+
   if (models.length === 0) {
     return (
       <p className="text-center text-lg italic text-foreground/75">
-        Aucun élément trouvé
+        {intl.formatMessage({ id: "contract.contract.modelsList.noItems" })}
       </p>
     );
   }
+
   return (
     <div className="flex flex-wrap justify-center gap-10 md:gap-20">
       {models.map(({ id, name, type, fileUrl }) => (
-        <div
-          key={id}
-          className="group flex flex-col items-center"
-        >
+        <div key={id} className="group flex flex-col items-center">
           <div
             style={{
               backgroundImage:
@@ -65,54 +69,82 @@ export function ContractModelsListComponent({ models, isLoading }) {
             <div className="absolute inset-0 rounded-lg from-black/50 opacity-0 transition group-hover:bg-gradient-to-t group-hover:opacity-100" />
             <div className="absolute bottom-0 right-1 flex translate-y-full items-center gap-2 transition-all group-hover:bottom-1 group-hover:translate-y-0">
               {type === "file" && (
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="icon"
-                  className="bg-accent/50"
-                >
-                  <a
-                    key={id}
-                    href={fileUrl}
-                    aria-label="Télécharger"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex flex-col items-center"
-                  >
-                    <Download />
-                  </a>
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="icon"
+                      className="bg-accent/50"
+                    >
+                      <a
+                        key={id}
+                        href={fileUrl}
+                        aria-label={intl.formatMessage({
+                          id: "contract.contract.modelsList.download",
+                        })}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center"
+                      >
+                        <Download />
+                      </a>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {intl.formatMessage({
+                      id: "contract.contract.modelsList.download",
+                    })}
+                  </TooltipContent>
+                </Tooltip>
               )}
 
               {type === "folder" && (
-                <Button
-                  asChild
-                  variant="ghost"
-                  size="icon"
-                  className="bg-accent/50"
-                >
-                  <Link
-                    key={id}
-                    href={ContractRoutes.contractModels(id).index}
-                    aria-label="Ouvrir"
-                  >
-                    <FolderOpen />
-                  </Link>
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="icon"
+                      className="bg-accent/50"
+                    >
+                      <Link
+                        key={id}
+                        href={ContractRoutes.contractModels(id).index}
+                        aria-label={intl.formatMessage({
+                          id: "contract.contract.modelsList.open",
+                        })}
+                      >
+                        <FolderOpen />
+                      </Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {intl.formatMessage({
+                      id: "contract.contract.modelsList.open",
+                    })}
+                  </TooltipContent>
+                </Tooltip>
               )}
 
-              <DeleteContractModelButton
-                asChild
-                modelId={id}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="bg-accent/50 text-destructive"
-                >
-                  <Trash />
-                </Button>
-              </DeleteContractModelButton>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DeleteContractModelButton asChild modelId={id}>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="bg-accent/50 text-destructive"
+                    >
+                      <Trash />
+                    </Button>
+                  </DeleteContractModelButton>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {intl.formatMessage({
+                    id: "contract.contract.modelsList.delete",
+                  })}
+                </TooltipContent>
+              </Tooltip>
             </div>
           </div>
           <Tooltip>

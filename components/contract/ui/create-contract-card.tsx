@@ -11,11 +11,15 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddContractDialog from "@/components/contract/modals/add-contract-dialog";
+import { useIntl } from "react-intl";
+
 export default function CreateContractCard({
   className,
 }: {
   className?: string;
 }) {
+  const intl = useIntl();
+
   return (
     <Card
       className={cn(
@@ -24,8 +28,16 @@ export default function CreateContractCard({
       )}
     >
       <CardHeader>
-        <CardTitle>Initier un contrat</CardTitle>
-        <CardDescription>Initier un nouveau contrat</CardDescription>
+        <CardTitle>
+          {intl.formatMessage({
+            id: "contract.contract.initiateContractTitle",
+          })}
+        </CardTitle>
+        <CardDescription>
+          {intl.formatMessage({
+            id: "contract.contract.initiateContractDescription",
+          })}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
         <Image
@@ -39,7 +51,7 @@ export default function CreateContractCard({
         <AddContractDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouveau contrat
+            {intl.formatMessage({ id: "contract.contract.newContractButton" })}
           </Button>
         </AddContractDialog>
       </CardFooter>
