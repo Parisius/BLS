@@ -11,8 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { useIncidentAuthorForm } from "@/lib/account-incident/hooks";
 import { cn } from "@/lib/utils";
+import { useIntl } from "react-intl";
+
 export default function IncidentAuthorForm({ formId, className, onSubmit }) {
+  const intl = useIntl();
   const form = useIncidentAuthorForm();
+
   return (
     <Form {...form}>
       <form
@@ -25,12 +29,18 @@ export default function IncidentAuthorForm({ formId, className, onSubmit }) {
           name="name"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Nom / Dénomination</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "incident.incident.author.form.nameLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Nom & Prénom (s)"
+                    placeholder={intl.formatMessage({
+                      id: "incident.incident.author.form.namePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -46,12 +56,18 @@ export default function IncidentAuthorForm({ formId, className, onSubmit }) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "incident.incident.author.form.emailLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Email"
+                    placeholder={intl.formatMessage({
+                      id: "incident.incident.author.form.emailPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -67,12 +83,18 @@ export default function IncidentAuthorForm({ formId, className, onSubmit }) {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Téléphone</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "incident.incident.author.form.phoneLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Téléphone"
+                    placeholder={intl.formatMessage({
+                      id: "incident.incident.author.form.phonePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />

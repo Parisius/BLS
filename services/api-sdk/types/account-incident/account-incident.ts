@@ -16,3 +16,30 @@ export const incidentCategories = [
     label: "Traitement des saisies attribution",
   },
 ];
+
+export const getIncidentCategories = (intl) => [
+  {
+    value: "avis-tiers-detenteurs",
+    label: intl.formatMessage({
+      id: "incident.incident.categories.avisTiersDetenteur",
+    }),
+  },
+  {
+    value: "requisition",
+    label: intl.formatMessage({
+      id: "incident.incident.categories.requisition",
+    }),
+  },
+  {
+    value: "saisie-conservatoire",
+    label: intl.formatMessage({
+      id: "incident.incident.categories.saisieConservatoire",
+    }),
+  },
+  {
+    value: "saisie-attribution",
+    label: intl.formatMessage({
+      id: "incident.incident.categories.saisieAttribution",
+    }),
+  },
+];

@@ -19,8 +19,12 @@ import { AccountIncidentDetailsTable } from "@/components/account-incident/table
 import IncidentTasksTimelineModal from "@/components/account-incident/modals/incident-tasks-timeline-modal";
 import AccountIncidentFilesModal from "@/components/account-incident/modals/account-incident-files-modal";
 import AccountIncidentDetailsPageLoading from "./loading";
+import { useIntl } from "react-intl";
+
 export default function AccountIncidentDetailsPage({ params: { id } }) {
   const { data, isLoading, isError } = useOneAccountIncident(id);
+  const intl = useIntl();
+
   if (isError) {
     throw new Error("An error occurred while fetching the data");
   }
@@ -45,32 +49,33 @@ export default function AccountIncidentDetailsPage({ params: { id } }) {
           currentTaskId={data.currentTask?.id}
         >
           <Button
-            aria-label="Planification de l'AG"
+            aria-label={intl.formatMessage({ id: "incident.button.schedule" })}
             className="gap-2"
           >
             <GanttChart />
-            Planifier
+            {intl.formatMessage({ id: "incident.button.schedule" })}
           </Button>
         </IncidentTasksTimelineModal>
 
         <DropdownMenu>
           <Tooltip>
-            <DropdownMenuTrigger
-              asChild
-              className="cursor-pointer sm:hidden"
-            >
+            <DropdownMenuTrigger asChild className="cursor-pointer sm:hidden">
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Menu"
+                  aria-label={intl.formatMessage({
+                    id: "incident.button.menu",
+                  })}
                   className="gap-2 rounded-full"
                 >
                   <EllipsisVertical size={30} />
                 </Button>
               </TooltipTrigger>
             </DropdownMenuTrigger>
-            <TooltipContent>Menu</TooltipContent>
+            <TooltipContent>
+              {intl.formatMessage({ id: "incident.button.menu" })}
+            </TooltipContent>
           </Tooltip>
           <DropdownMenuContent>
             <AccountIncidentFilesModal
@@ -83,7 +88,7 @@ export default function AccountIncidentDetailsPage({ params: { id } }) {
                 onSelect={(e) => e.preventDefault()}
               >
                 <Files />
-                Archives
+                {intl.formatMessage({ id: "incident.button.archives" })}
               </DropdownMenuItem>
             </AccountIncidentFilesModal>
           </DropdownMenuContent>
@@ -100,14 +105,18 @@ export default function AccountIncidentDetailsPage({ params: { id } }) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Archives"
+                  aria-label={intl.formatMessage({
+                    id: "incident.button.archives",
+                  })}
                   className="gap-2 rounded-full"
                 >
                   <Files size={30} />
                 </Button>
               </TooltipTrigger>
             </AccountIncidentFilesModal>
-            <TooltipContent>Archives</TooltipContent>
+            <TooltipContent>
+              {intl.formatMessage({ id: "incident.tooltip.archives" })}
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>

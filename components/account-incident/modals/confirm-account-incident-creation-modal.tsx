@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import {
@@ -12,41 +13,50 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
+import { useIntl } from "react-intl";
+
 export default function ConfirmAccountIncidentCreationModal({
   formId,
   isSubmitting,
   cancelButtonRef,
   ...props
 }) {
+  const intl = useIntl();
+
   return (
     <AlertDialog>
       <Tooltip>
         <AlertDialogTrigger {...props} />
-        <TooltipContent>Complèter</TooltipContent>
+        <TooltipContent>
+          {intl.formatMessage({ id: "incident.incident.confirm.tooltip" })}
+        </TooltipContent>
       </Tooltip>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Êtes-vous sûr des informations saisies ?
+            {intl.formatMessage({ id: "incident.incident.confirm.title" })}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Vous ne pourrez pas modifier les informations après validation.
+            {intl.formatMessage({
+              id: "incident.incident.confirm.description",
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel
-            ref={cancelButtonRef}
-            className="sr-only"
-          />
+          <AlertDialogCancel ref={cancelButtonRef} className="sr-only" />
           <AlertDialogCancel type="button">
-            Vérifier les informations
+            {intl.formatMessage({
+              id: "incident.incident.confirm.verifyButton",
+            })}
           </AlertDialogCancel>
-          <Button
-            type="submit"
-            form={formId}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? <EllipsisLoader /> : "Imputer l'incident"}
+          <Button type="submit" form={formId} disabled={isSubmitting}>
+            {isSubmitting ? (
+              <EllipsisLoader />
+            ) : (
+              intl.formatMessage({
+                id: "incident.incident.confirm.submitButton",
+              })
+            )}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

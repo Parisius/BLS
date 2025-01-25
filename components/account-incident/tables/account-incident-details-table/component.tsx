@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Printer } from "lucide-react";
 import PrintAccountIncidentButton from "@/components/account-incident/buttons/print-account-incident-button";
+import { useIntl } from "react-intl";
+
 export function AccountIncidentDetailsTable({
   incidentId,
   title,
@@ -26,20 +28,36 @@ export function AccountIncidentDetailsTable({
   author,
   currentTask,
 }) {
+  const intl = useIntl();
+
   return (
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Intitulé</TableHead>
-          <TableHead>Référence</TableHead>
-          <TableHead>Catégorie</TableHead>
-          <TableHead>Personne concernée</TableHead>
-          <TableHead>Client(e) ?</TableHead>
-          <TableHead>Date de réception</TableHead>
-          <TableHead className={cn(currentTask && "text-destructive")}>
-            Prochaine tâche
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.title" })}
           </TableHead>
-          <TableHead>Statut</TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.reference" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.category" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.personConcerned" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.isClient" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.dateReceived" })}
+          </TableHead>
+          <TableHead className={cn(currentTask && "text-destructive")}>
+            {intl.formatMessage({ id: "incident.table.nextTask" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "incident.table.status" })}
+          </TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -55,12 +73,15 @@ export function AccountIncidentDetailsTable({
           <TableCell>{author.name}</TableCell>
           <TableCell>
             <Badge className="text-nowrap bg-muted text-muted-foreground">
-              {isClient ? "Oui" : "Non"}
+              {isClient
+                ? intl.formatMessage({ id: "incident.table.yes" })
+                : intl.formatMessage({ id: "incident.table.no" })}
             </Badge>
           </TableCell>
           <TableCell>{formatDate(dateReceived)}</TableCell>
           <TableCell className={cn(currentTask && "text-destructive")}>
-            {currentTask?.title ?? "Aucune tâche"}
+            {currentTask?.title ??
+              intl.formatMessage({ id: "incident.table.noTask" })}
           </TableCell>
           <TableCell>
             <Badge
@@ -69,7 +90,9 @@ export function AccountIncidentDetailsTable({
                 "bg-muted text-muted-foreground hover:bg-muted/90": isCompleted,
               })}
             >
-              {isCompleted ? "Résolu" : "En cours"}
+              {isCompleted
+                ? intl.formatMessage({ id: "incident.incident.resolved" })
+                : intl.formatMessage({ id: "incident.incident.inProgress" })}
             </Badge>
           </TableCell>
           <TableCell>
@@ -84,7 +107,9 @@ export function AccountIncidentDetailsTable({
                   <Printer />
                 </PrintAccountIncidentButton>
               </TooltipTrigger>
-              <TooltipContent>Imprimer</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({ id: "incident.table.print" })}
+              </TooltipContent>
             </Tooltip>
           </TableCell>
         </TableRow>

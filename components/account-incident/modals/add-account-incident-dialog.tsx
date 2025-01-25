@@ -17,12 +17,16 @@ import { AccountIncidentRoutes } from "@/config/routes";
 import { useAccountIncidentForm } from "@/lib/account-incident/hooks";
 import AddAccountIncidentForm from "@/components/account-incident/forms/add-account-incident-form";
 import ConfirmAccountIncidentCreationModal from "@/components/account-incident/modals/confirm-account-incident-creation-modal";
+import { useIntl } from "react-intl";
+
 export default function AddAccountIncidentDialog(props) {
+  const intl = useIntl();
   const formId = useId();
   const form = useAccountIncidentForm();
   const closeRef = useRef<HTMLButtonElement>(null);
   const closeConfirmRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+
   const handleSuccess = useCallback(
     ({ id }) => {
       closeRef.current?.click();
@@ -31,14 +35,21 @@ export default function AddAccountIncidentDialog(props) {
     },
     [router]
   );
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Nouvel incident</DialogTitle>
-            <DialogDescription>Imputer un nouvel incident</DialogDescription>
+            <DialogTitle>
+              {intl.formatMessage({ id: "incident.incident.dialog.title" })}
+            </DialogTitle>
+            <DialogDescription>
+              {intl.formatMessage({
+                id: "incident.incident.dialog.description",
+              })}
+            </DialogDescription>
           </DialogHeader>
           <AddAccountIncidentForm
             formId={formId}
@@ -49,7 +60,9 @@ export default function AddAccountIncidentDialog(props) {
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
               <Button variant="destructive" onClick={() => form.reset()}>
-                Annuler
+                {intl.formatMessage({
+                  id: "incident.incident.dialog.cancelButton",
+                })}
               </Button>
             </DialogClose>
             <ConfirmAccountIncidentCreationModal
@@ -58,7 +71,11 @@ export default function AddAccountIncidentDialog(props) {
               isSubmitting={form.formState.isSubmitting}
               cancelButtonRef={closeConfirmRef}
             >
-              <Button>Imputer</Button>
+              <Button>
+                {intl.formatMessage({
+                  id: "incident.incident.dialog.submitButton",
+                })}
+              </Button>
             </ConfirmAccountIncidentCreationModal>
           </DialogFooter>
         </DialogContent>

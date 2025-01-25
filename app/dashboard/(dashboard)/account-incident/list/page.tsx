@@ -1,3 +1,4 @@
+"use client";
 import { Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AccountIncidentsListPageBreadcrumb } from "@/components/account-incident/breadcrumbs";
@@ -5,7 +6,11 @@ import AccountIncidentsList from "@/components/account-incident/ui/account-incid
 import AddAccountIncidentDialog from "@/components/account-incident/modals/add-account-incident-dialog";
 import { SearchInput, SearchProvider } from "@/providers/search-provider";
 import { Portal } from "@/components/ui/portal";
+import { useIntl } from "react-intl";
+
 export default function AccountIncidentsListPage() {
+  const intl = useIntl();
+
   return (
     <SearchProvider>
       <Portal containerId="search-input-container">
@@ -17,12 +22,16 @@ export default function AccountIncidentsListPage() {
           <AddAccountIncidentDialog asChild>
             <Button className="gap-2">
               <Scale />
-              <span className="sr-only sm:not-sr-only">Nouvel incident</span>
+              <span className="sr-only sm:not-sr-only">
+                {intl.formatMessage({
+                  id: "incident.incident.list.newIncidentButton",
+                })}
+              </span>
             </Button>
           </AddAccountIncidentDialog>
         </div>
         <h1 className="relative text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-          Choisir un incident
+          {intl.formatMessage({ id: "incident.incident.list.pageTitle" })}
         </h1>
         <AccountIncidentsList />
       </div>

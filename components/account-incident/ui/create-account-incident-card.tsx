@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -11,11 +12,15 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddAccountIncidentDialog from "@/components/account-incident/modals/add-account-incident-dialog";
+import { useIntl } from "react-intl";
+
 export default function CreateAccountIncidentCard({
   className,
 }: {
   className?: any;
 }) {
+  const intl = useIntl();
+
   return (
     <Card
       className={cn(
@@ -24,8 +29,12 @@ export default function CreateAccountIncidentCard({
       )}
     >
       <CardHeader>
-        <CardTitle>Imputer un incident</CardTitle>
-        <CardDescription>Imputer un nouvel incident</CardDescription>
+        <CardTitle>
+          {intl.formatMessage({ id: "incident.incident.card.title" })}
+        </CardTitle>
+        <CardDescription>
+          {intl.formatMessage({ id: "incident.incident.card.description" })}
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
         <Image
@@ -39,7 +48,9 @@ export default function CreateAccountIncidentCard({
         <AddAccountIncidentDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouvel incident
+            {intl.formatMessage({
+              id: "incident.incident.card.newIncidentButton",
+            })}
           </Button>
         </AddAccountIncidentDialog>
       </CardFooter>

@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -16,8 +17,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+import { useIntl } from "react-intl";
 
 export function AccountIncidentsDetailsPageBreadcrumb({ incidentTitle }) {
+  const intl = useIntl();
+
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -25,6 +29,9 @@ export function AccountIncidentsDetailsPageBreadcrumb({ incidentTitle }) {
           <BreadcrumbLink asChild>
             <Link href={ModulesRoutes.modules}>
               <Component />
+              <span className="sr-only">
+                {intl.formatMessage({ id: "incident.breadcrumb.modules" })}
+              </span>
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -37,7 +44,9 @@ export function AccountIncidentsDetailsPageBreadcrumb({ incidentTitle }) {
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
                 <Link href={AccountIncidentRoutes.accountIncidentsList}>
-                  Incidents de compte
+                  {intl.formatMessage({
+                    id: "incident.breadcrumb.accountIncidents",
+                  })}
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -47,7 +56,9 @@ export function AccountIncidentsDetailsPageBreadcrumb({ incidentTitle }) {
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
               <Link href={AccountIncidentRoutes.accountIncidentsList}>
-                Incidents de compte
+                {intl.formatMessage({
+                  id: "incident.breadcrumb.accountIncidents",
+                })}
               </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
