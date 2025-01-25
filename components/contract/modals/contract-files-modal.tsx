@@ -18,6 +18,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useIntl } from "react-intl";
+
 const getIcon = (filename) => {
   const fileType = mime.getType(filename);
   const extension = fileType ? mime.getExtension(fileType) : null;
@@ -39,20 +41,22 @@ const getIcon = (filename) => {
       return "file-unknown-icon.svg";
   }
 };
+
 export default function ContractFilesModal({
   contractFilesGroups,
   contractTitle,
   ...props
 }) {
+  const intl = useIntl();
+
   return (
     <Sheet>
       <SheetTrigger {...props} />
-      <SheetContent
-        side="right"
-        className="flex flex-col gap-5"
-      >
+      <SheetContent side="right" className="flex flex-col gap-5">
         <SheetHeader>
-          <SheetTitle>Archives</SheetTitle>
+          <SheetTitle>
+            {intl.formatMessage({ id: "contract.contract.modal.archives" })}
+          </SheetTitle>
           <SheetDescription className="line-clamp-1">
             {contractTitle}
           </SheetDescription>
@@ -84,7 +88,9 @@ export default function ContractFilesModal({
                         >
                           <span
                             style={{
-                              backgroundImage: `url('/global/images/${getIcon(fileUrl)}')`,
+                              backgroundImage: `url('/global/images/${getIcon(
+                                fileUrl
+                              )}')`,
                             }}
                             className="block h-20 bg-contain bg-center bg-no-repeat"
                           />
@@ -96,7 +102,9 @@ export default function ContractFilesModal({
                     </div>
                   ) : (
                     <div className="text-center font-medium italic sm:text-lg">
-                      Aucun fichier n&apos;a été ajouté à cette étape
+                      {intl.formatMessage({
+                        id: "contract.contract.modal.noFilesStep",
+                      })}
                     </div>
                   )}
                 </AccordionContent>
@@ -105,12 +113,16 @@ export default function ContractFilesModal({
           </Accordion>
         ) : (
           <div className="flex-1 text-center font-medium italic sm:text-lg">
-            Aucun fichier n&apos;a été ajouté à ce dossier
+            {intl.formatMessage({
+              id: "contract.contract.modal.noFilesFolder",
+            })}
           </div>
         )}
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({ id: "contract.contract.modal.close" })}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

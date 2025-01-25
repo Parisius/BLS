@@ -15,37 +15,50 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useContractEventForm } from "@/lib/contract/hooks";
 import AddContractEventForm from "@/components/contract/forms/add-contract-event-form";
+import { useIntl } from "react-intl";
+
 export default function AddContractEventDialog({ contractId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const form = useContractEventForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouvel événement</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "contract.contract.events.newEventTitle",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Ajouter un nouvel évènement à la planification de ce contrat
+              {intl.formatMessage({
+                id: "contract.contract.events.newEventDescription",
+              })}
             </DialogDescription>
           </DialogHeader>
           <AddContractEventForm
             formId={formId}
             contractId={contractId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({
+                  id: "contract.contract.events.cancelButton",
+                })}
               </Button>
             </DialogClose>
             <Button
@@ -53,7 +66,11 @@ export default function AddContractEventDialog({ contractId, ...props }) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Ajouter"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({ id: "contract.contract.events.addButton" })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

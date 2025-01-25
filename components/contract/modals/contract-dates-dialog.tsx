@@ -15,27 +15,38 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useContractDatesForm } from "@/lib/contract/hooks/use-contract-dates-form";
 import ContractDatesForm from "@/components/contract/forms/contract-dates-form";
+import { useIntl } from "react-intl"; // Import du hook useIntl
+
 export default function ContractDatesDialog({
   contractId,
   dateType,
   defaultDate,
   ...props
 }) {
+  const intl = useIntl(); // Utilisation du hook useIntl
   const formId = useId();
   const form = useContractDatesForm(dateType);
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Planifier le contrat</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({ id: "contract.contract.dates.title" })}
+            </DialogTitle>
             <DialogDescription>
-              Modifier les dates du contrat.
+              {intl.formatMessage({
+                id: "contract.contract.dates.description",
+              })}
             </DialogDescription>
           </DialogHeader>
           <ContractDatesForm
@@ -44,15 +55,15 @@ export default function ContractDatesDialog({
             defaultDate={defaultDate}
             formId={formId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({
+                  id: "contract.contract.dates.cancelButton",
+                })}
               </Button>
             </DialogClose>
             <Button
@@ -60,7 +71,13 @@ export default function ContractDatesDialog({
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Planifier"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "contract.contract.dates.scheduleButton",
+                })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

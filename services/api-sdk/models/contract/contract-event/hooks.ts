@@ -204,7 +204,7 @@ export const useUpdateContractEvent = (eventId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardContractEvent = (eventId, options) => {
+export const useForwardContractEvent = (eventId, options = {}) => {
   const invalidateOneContractEvent = useInvalidateOneContractEvent();
   const invalidateAllContractEvents = useInvalidateAllContractEvents();
   const getMutationOptions = useCallback(
@@ -243,7 +243,7 @@ export const useForwardContractEvent = (eventId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useMarkContractEventAsCompleted = (eventId, options) => {
+export const useMarkContractEventAsCompleted = (eventId, options = {}) => {
   const invalidateOneContractEvent = useInvalidateOneContractEvent();
   const invalidateAllContractEvents = useInvalidateAllContractEvents();
   const getMutationOptions = useCallback(
@@ -278,7 +278,7 @@ export const useMarkContractEventAsCompleted = (eventId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteContractEvent = (eventId, options) => {
+export const useDeleteContractEvent = (eventId, options = {}) => {
   const removeOneContractEvent = useRemoveOneContractEventQuery();
   const invalidateAllContractEvents = useInvalidateAllContractEvents();
   const getMutationOptions = useCallback(

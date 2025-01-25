@@ -38,12 +38,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ContractEventForwardsDialog from "@/components/contract/modals/contract-event-forwards-dialog";
+import { useIntl } from "react-intl";
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 export default function ContractEventsTimeline({
   contractId,
   signatureDate,
@@ -51,34 +54,43 @@ export default function ContractEventsTimeline({
   expirationDate,
   renewalDate,
 }) {
+  const intl = useIntl();
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllContractEvents(contractId);
+
   if (isError) {
     throw new Error("Failed to fetch contract events");
   }
+
   const allEvents = useMemo(() => {
     const events = [
       {
         id: "signatureDate",
-        title: "Signature du contrat",
+        title: intl.formatMessage({
+          id: "contract.contract.timeline.signature",
+        }),
         dueDate: signatureDate,
         completed: !!signatureDate && signatureDate < new Date(),
       },
       {
         id: "effectiveDate",
-        title: "Prise d'effet du contrat",
+        title: intl.formatMessage({
+          id: "contract.contract.timeline.effective",
+        }),
         dueDate: effectiveDate,
         completed: !!effectiveDate && effectiveDate < new Date(),
       },
       {
         id: "expirationDate",
-        title: "Expiration du contrat",
+        title: intl.formatMessage({
+          id: "contract.contract.timeline.expiration",
+        }),
         dueDate: expirationDate,
         completed: !!expirationDate && expirationDate < new Date(),
       },
       {
         id: "renewalDate",
-        title: "Renouvellement du contrat",
+        title: intl.formatMessage({ id: "contract.contract.timeline.renewal" }),
         dueDate: renewalDate,
         completed: !!renewalDate && renewalDate < new Date(),
       },
@@ -87,6 +99,7 @@ export default function ContractEventsTimeline({
       createdBy: "",
       forwards: [],
     }));
+
     return [...(data ?? []), ...events].sort((a, b) => {
       if (a.dueDate && b.dueDate) {
         return a.dueDate.getTime() - b.dueDate.getTime();
@@ -99,10 +112,18 @@ export default function ContractEventsTimeline({
       }
       return 0;
     });
-  }, [data, signatureDate, effectiveDate, expirationDate, renewalDate]);
+  }, [data, signatureDate, effectiveDate, expirationDate, renewalDate, intl]);
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {intl.formatMessage({
+          id: "contract.stakeholder.select.loading",
+        })}
+      </div>
+    );
   }
+
   return (
     <Timeline>
       <TimelineSeparator />
@@ -139,7 +160,11 @@ export default function ContractEventsTimeline({
                         </Button>
                       </TooltipTrigger>
                     </ContractDatesDialog>
-                    <TooltipContent>Modifier</TooltipContent>
+                    <TooltipContent>
+                      {intl.formatMessage({
+                        id: "contract.contract.timeline.editTooltip",
+                      })}
+                    </TooltipContent>
                   </Tooltip>
                 </div>
               )}
@@ -155,7 +180,11 @@ export default function ContractEventsTimeline({
               >
                 {title}
                 {completed && (
-                  <p className="text-right text-xs italic">(Complété)</p>
+                  <p className="text-right text-xs italic">
+                    {intl.formatMessage({
+                      id: "contract.contract.timeline.completed",
+                    })}
+                  </p>
                 )}
               </TimelineItemContent>
               {dueDate ? (
@@ -172,11 +201,10 @@ export default function ContractEventsTimeline({
                   defaultDate={dueDate}
                   dateType={id}
                 >
-                  <Button
-                    variant="link"
-                    className="text-secondary"
-                  >
-                    Cliquer pour planifier
+                  <Button variant="link" className="text-secondary">
+                    {intl.formatMessage({
+                      id: "contract.contract.timeline.schedule",
+                    })}
                   </Button>
                 </ContractDatesDialog>
               )}
@@ -202,77 +230,76 @@ export default function ContractEventsTimeline({
                         </Button>
                       </TooltipTrigger>
                     </DropdownMenuTrigger>
-                    <TooltipContent>Menu</TooltipContent>
+                    <TooltipContent>
+                      {intl.formatMessage({
+                        id: "contract.contract.timeline.menuTooltip",
+                      })}
+                    </TooltipContent>
                   </Tooltip>
                   <DropdownMenuContent>
-                    <CompleteContractEventButton
-                      asChild
-                      eventId={id}
-                    >
+                    <CompleteContractEventButton asChild eventId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareCheck />
-                        Valider
+                        {intl.formatMessage({
+                          id: "contract.contract.timeline.complete",
+                        })}
                       </DropdownMenuItem>
                     </CompleteContractEventButton>
 
                     {canForward({ forwards, createdBy }, currentUser) && (
-                      <ForwardContractEventDialog
-                        asChild
-                        eventId={id}
-                      >
+                      <ForwardContractEventDialog asChild eventId={id}>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2"
                           onSelect={(e) => e.preventDefault()}
                         >
                           <Forward />
-                          Transférer
+                          {intl.formatMessage({
+                            id: "contract.contract.timeline.forward",
+                          })}
                         </DropdownMenuItem>
                       </ForwardContractEventDialog>
                     )}
 
                     {forwards && forwards.length > 0 && (
-                      <ContractEventForwardsDialog
-                        asChild
-                        forwards={forwards}
-                      >
+                      <ContractEventForwardsDialog asChild forwards={forwards}>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2"
                           onSelect={(e) => e.preventDefault()}
                         >
                           <SquareStack />
-                          Historique des transferts
+                          {intl.formatMessage({
+                            id: "contract.contract.timeline.forwardHistory",
+                          })}
                         </DropdownMenuItem>
                       </ContractEventForwardsDialog>
                     )}
 
-                    <UpdateContractEventDialog
-                      asChild
-                      eventId={id}
-                    >
+                    <UpdateContractEventDialog asChild eventId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Pencil />
-                        Modifier
+                        {intl.formatMessage({
+                          id: "contract.contract.timeline.update",
+                        })}
                       </DropdownMenuItem>
                     </UpdateContractEventDialog>
 
                     <DropdownMenuSeparator />
 
-                    <DeleteContractEventButton
-                      asChild
-                      eventId={id}
-                    >
+                    <DeleteContractEventButton asChild eventId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2 text-destructive"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Trash />
-                        Supprimer
+                        {intl.formatMessage({
+                          id: "contract.contract.timeline.delete",
+                        })}
                       </DropdownMenuItem>
                     </DeleteContractEventButton>
                   </DropdownMenuContent>
@@ -290,7 +317,11 @@ export default function ContractEventsTimeline({
               >
                 {title}
                 {completed && (
-                  <p className="text-right text-xs italic">(Complété)</p>
+                  <p className="text-right text-xs italic">
+                    {intl.formatMessage({
+                      id: "contract.contract.timeline.completed",
+                    })}
+                  </p>
                 )}
               </TimelineItemContent>
               {dueDate && (
@@ -302,16 +333,16 @@ export default function ContractEventsTimeline({
                 </TimelineItemContent>
               )}
             </TimelineItem>
-          ),
+          )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": allEvents.every(
-            (event) => event.completed,
+            (event) => event.completed
           ),
         })}
       >
-        Terminé !!!
+        {intl.formatMessage({ id: "contract.contract.timeline.finished" })}
       </TimelineHead>
     </Timeline>
   );

@@ -12,6 +12,8 @@ import { useContractDatesForm } from "@/lib/contract/hooks/use-contract-dates-fo
 import { useCallback, useMemo } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { usePlanContractDates } from "@/services/api-sdk/models/contract/contract";
+import { useIntl } from "react-intl";
+
 export default function ContractDatesForm({
   contractId,
   defaultDate,
@@ -20,43 +22,61 @@ export default function ContractDatesForm({
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useContractDatesForm(dateType, defaultDate);
   const { mutateAsync } = usePlanContractDates(contractId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: () => {
           toast({
-            description: "Date planifiée avec succès !",
+            description: intl.formatMessage({
+              id: "contract.contract.dates.success",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.();
         },
         onError: () => {
           toast({
-            description: "Une erreur est survenue lors de la planification.",
+            description: intl.formatMessage({
+              id: "contract.contract.dates.error",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   const label = useMemo(() => {
     switch (dateType) {
       case "signatureDate":
-        return "Date de signature du contrat";
+        return intl.formatMessage({
+          id: "contract.contract.dates.signatureDate",
+        });
       case "effectiveDate":
-        return "Date de prise d'effet du contrat";
+        return intl.formatMessage({
+          id: "contract.contract.dates.effectiveDate",
+        });
       case "expirationDate":
-        return "Date d'expiration du contrat";
+        return intl.formatMessage({
+          id: "contract.contract.dates.expirationDate",
+        });
       case "renewalDate":
-        return "Date de renouvellement du contrat";
+        return intl.formatMessage({
+          id: "contract.contract.dates.renewalDate",
+        });
       default:
-        return "Date";
+        return intl.formatMessage({
+          id: "contract.contract.dates.defaultLabel",
+        });
     }
-  }, [dateType]);
+  }, [dateType, intl]);
+
   return (
     <Form {...form}>
       <form

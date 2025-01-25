@@ -186,7 +186,7 @@ export const useCreateContract = (options = {}) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateContract = (contractId, options) => {
+export const useUpdateContract = (contractId, options = {}) => {
   const invalidateOneContract = useInvalidateOneContract();
   const invalidateAllContracts = useInvalidateAllContracts();
   const getMutationOptions = useCallback(
@@ -221,7 +221,7 @@ export const useUpdateContract = (contractId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardContract = (contractId, options) => {
+export const useForwardContract = (contractId, options = {}) => {
   const invalidateOneContract = useInvalidateOneContract();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -347,7 +347,7 @@ export const usePlanContractDates = (contractId, options = {}) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteContract = (contractId, options) => {
+export const useDeleteContract = (contractId, options = {}) => {
   const removeOneContract = useRemoveOneContractQuery();
   const invalidateAllContracts = useInvalidateAllContracts();
   const getMutationOptions = useCallback(

@@ -20,6 +20,8 @@ import DeleteContractButton from "@/components/contract/buttons/delete-contract-
 import ContractForwardsDialog from "@/components/contract/modals/contract-forwards-dialog";
 import PrintContractButton from "@/components/contract/buttons/print-contract-button";
 import { useMemo } from "react";
+import { useIntl } from "react-intl";
+
 export function ContractDetailsTable({
   id,
   title,
@@ -32,6 +34,8 @@ export function ContractDetailsTable({
   categorySubType,
   forwards,
 }) {
+  const intl = useIntl();
+
   const categoryLabel = useMemo(() => {
     if (categoryType) {
       return `${category} - ${categoryType}`;
@@ -41,16 +45,42 @@ export function ContractDetailsTable({
     }
     return category;
   }, [category, categorySubType, categoryType]);
+
   return (
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Intitulé</TableHead>
-          <TableHead>Catégorie</TableHead>
-          <TableHead>Date de signature</TableHead>
-          <TableHead>Date d&apos;entrée en vigueur</TableHead>
-          <TableHead>Date d&apos;expiration</TableHead>
-          <TableHead>Date de renouvellement</TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "contract.contract.detailsTable.title" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "contract.contract.detailsTable.category",
+            })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "contract.contract.detailsTable.signatureDate",
+            })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "contract.contract.detailsTable.effectiveDate",
+            })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "contract.contract.detailsTable.expirationDate",
+            })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "contract.contract.detailsTable.renewalDate",
+            })}
+          </TableHead>
+          <TableHead className="flex justify-center items-center">
+            Actions
+          </TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -74,21 +104,18 @@ export function ContractDetailsTable({
           <TableCell>{renewalDate ? formatDate(renewalDate) : "-"}</TableCell>
           <TableCell className="text-nowrap">
             <Tooltip>
-              <UpdateContractDialog
-                asChild
-                contractId={id}
-              >
+              <UpdateContractDialog asChild contractId={id}>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full">
                     <Pencil />
                   </Button>
                 </TooltipTrigger>
               </UpdateContractDialog>
-              <TooltipContent>Modifier</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({
+                  id: "contract.contract.detailsTable.edit",
+                })}
+              </TooltipContent>
             </Tooltip>
 
             <DeleteContractButton contractId={id} />
@@ -104,15 +131,16 @@ export function ContractDetailsTable({
                   <Printer />
                 </PrintContractButton>
               </TooltipTrigger>
-              <TooltipContent>Imprimer</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({
+                  id: "contract.contract.detailsTable.print",
+                })}
+              </TooltipContent>
             </Tooltip>
 
             {forwards && forwards?.length > 0 && (
               <Tooltip>
-                <ContractForwardsDialog
-                  asChild
-                  forwards={forwards}
-                >
+                <ContractForwardsDialog asChild forwards={forwards}>
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
@@ -123,7 +151,11 @@ export function ContractDetailsTable({
                     </Button>
                   </TooltipTrigger>
                 </ContractForwardsDialog>
-                <TooltipContent>Historique des transferts</TooltipContent>
+                <TooltipContent>
+                  {intl.formatMessage({
+                    id: "contract.contract.detailsTable.transferHistory",
+                  })}
+                </TooltipContent>
               </Tooltip>
             )}
           </TableCell>

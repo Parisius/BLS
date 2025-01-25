@@ -17,17 +17,25 @@ import { useOneContractEvent } from "@/services/api-sdk/models/contract/contract
 import { useContractEventForm } from "@/lib/contract/hooks";
 import UpdateContractEventForm from "@/components/contract/forms/update-contract-event-form";
 import { UpdateContractEventDialogSuspense } from "./suspense";
+import { useIntl } from "react-intl";
+
 export function UpdateContractEventDialog({ eventId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const { data, isLoading, isError } = useOneContractEvent(eventId);
   const form = useContractEventForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   if (isError) {
     throw new Error("Failed to fetch contract event");
   }
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -36,15 +44,22 @@ export function UpdateContractEventDialog({ eventId, ...props }) {
       });
     }
   }, [data, form, isLoading]);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifier événement</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "contract.contract.events.updateTitle",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Modifier les détails de l&apos;événement.
+              {intl.formatMessage({
+                id: "contract.contract.events.updateDescription",
+              })}
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -55,15 +70,15 @@ export function UpdateContractEventDialog({ eventId, ...props }) {
                 formId={formId}
                 eventId={eventId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    {intl.formatMessage({
+                      id: "contract.contract.events.cancelButton",
+                    })}
                   </Button>
                 </DialogClose>
                 <Button
@@ -74,7 +89,9 @@ export function UpdateContractEventDialog({ eventId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    intl.formatMessage({
+                      id: "contract.contract.events.updateButton",
+                    })
                   )}
                 </Button>
               </DialogFooter>

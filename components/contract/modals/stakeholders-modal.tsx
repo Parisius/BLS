@@ -13,6 +13,8 @@ import React from "react";
 import { UserPlus } from "lucide-react";
 import UpdateContractDialog from "@/components/contract/modals/update-contract-dialog";
 import StakeholdersGroupView from "@/components/contract/ui/stakeholders-group-view";
+import { useIntl } from "react-intl";
+
 export default function StakeholdersModal({
   contractId,
   contractTitle,
@@ -20,54 +22,65 @@ export default function StakeholdersModal({
   secondStakeholdersGroup,
   ...props
 }) {
+  const intl = useIntl();
+
   return (
     <Sheet>
       <SheetTrigger {...props} />
       <SheetContent
         side="right"
-        closeClassName="md:hidden"
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>
           <div className="sm:flex sm:items-center sm:justify-between">
-            <SheetTitle>Parties prenantes</SheetTitle>
-            <UpdateContractDialog
-              asChild
-              contractId={contractId}
-            >
+            <SheetTitle>
+              {intl.formatMessage({
+                id: "contract.contract.stakeholders.title",
+              })}
+            </SheetTitle>
+            <UpdateContractDialog asChild contractId={contractId}>
               <Button className="hidden gap-2 sm:inline-flex">
                 <UserPlus />
-                Modifier les parties prenantes
+                {intl.formatMessage({
+                  id: "contract.contract.stakeholders.editButton",
+                })}
               </Button>
             </UpdateContractDialog>
           </div>
           <SheetDescription className="line-clamp-1">
             {contractTitle}
           </SheetDescription>
-          <UpdateContractDialog
-            asChild
-            contractId={contractId}
-          >
+          <UpdateContractDialog asChild contractId={contractId}>
             <Button className="sm gap-2 sm:hidden">
               <UserPlus />
-              Modifier les parties prenantes
+              {intl.formatMessage({
+                id: "contract.contract.stakeholders.editButton",
+              })}
             </Button>
           </UpdateContractDialog>
         </SheetHeader>
         <div className="flex-1 space-y-10 overflow-auto py-2">
           <StakeholdersGroupView
-            label="Partie 1"
+            label={intl.formatMessage({
+              id: "contract.contract.stakeholders.party1",
+            })}
             stakeholdersGroup={firstStakeholdersGroup}
           />
 
           <StakeholdersGroupView
-            label="Partie 2"
+            label={intl.formatMessage({
+              id: "contract.contract.stakeholders.party2",
+            })}
             stakeholdersGroup={secondStakeholdersGroup}
           />
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({
+                id: "contract.contract.stakeholders.close",
+              })}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

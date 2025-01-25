@@ -11,8 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { useContractEventForm } from "@/lib/contract/hooks";
+import { useIntl } from "react-intl";
+
 export default function ContractEventForm({ formId, onSubmit }) {
+  const intl = useIntl();
   const form = useContractEventForm();
+
   return (
     <Form {...form}>
       <form
@@ -25,12 +29,18 @@ export default function ContractEventForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de l&apos;événement</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.events.eventTitle",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de l'événement"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.events.eventTitlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -46,7 +56,9 @@ export default function ContractEventForm({ formId, onSubmit }) {
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "contract.contract.events.dueDate" })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

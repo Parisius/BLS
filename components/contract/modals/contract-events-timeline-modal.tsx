@@ -1,3 +1,4 @@
+"use client";
 import {
   Sheet,
   SheetClose,
@@ -13,6 +14,8 @@ import React from "react";
 import { ListTodo } from "lucide-react";
 import ContractEventsTimeline from "@/components/contract/ui/contract-events-timeline";
 import AddContractEventDialog from "@/components/contract/modals/add-contract-event-dialog";
+import { useIntl } from "react-intl";
+
 export default function ContractEventsTimelineModal({
   contractId,
   contractTitle,
@@ -22,37 +25,38 @@ export default function ContractEventsTimelineModal({
   contractRenewalDate,
   ...props
 }) {
+  const intl = useIntl();
+
   return (
     <Sheet>
       <SheetTrigger {...props} />
       <SheetContent
         side="left"
-        closeClassName="md:hidden"
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>
           <div className="sm:flex sm:items-center sm:justify-between">
-            <SheetTitle>Evénements du contrat</SheetTitle>
-            <AddContractEventDialog
-              asChild
-              contractId={contractId}
-            >
+            <SheetTitle>
+              {intl.formatMessage({ id: "contract.contract.events.title" })}
+            </SheetTitle>
+            <AddContractEventDialog asChild contractId={contractId}>
               <Button className="hidden gap-2 sm:inline-flex">
                 <ListTodo />
-                Ajouter un événement
+                {intl.formatMessage({
+                  id: "contract.contract.events.addEventButton",
+                })}
               </Button>
             </AddContractEventDialog>
           </div>
           <SheetDescription className="line-clamp-1">
             {contractTitle}
           </SheetDescription>
-          <AddContractEventDialog
-            asChild
-            contractId={contractId}
-          >
+          <AddContractEventDialog asChild contractId={contractId}>
             <Button className="sm gap-2 sm:hidden">
               <ListTodo />
-              Ajouter un événement
+              {intl.formatMessage({
+                id: "contract.contract.events.addEventButton",
+              })}
             </Button>
           </AddContractEventDialog>
         </SheetHeader>
@@ -67,7 +71,9 @@ export default function ContractEventsTimelineModal({
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({ id: "contract.contract.events.close" })}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

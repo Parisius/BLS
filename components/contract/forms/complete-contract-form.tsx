@@ -6,6 +6,8 @@ import { Form } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import DocumentsForm from "@/components/ui/documents-form";
 import { useCompleteContractForm } from "@/lib/contract/hooks";
+import { useIntl } from "react-intl";
+
 export default function CompleteContractForm({
   formId,
   contractId,
@@ -16,6 +18,8 @@ export default function CompleteContractForm({
 }) {
   const { form, filesArray } = useCompleteContractForm();
   const { mutateAsync } = useCompleteContract(contractId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(
@@ -23,29 +27,34 @@ export default function CompleteContractForm({
         {
           onSuccess: () => {
             toast({
-              description: "Contrat complété avec succès !",
+              description: intl.formatMessage({
+                id: "contract.contract.success",
+              }),
               className: "bg-primary text-primary-foreground",
             });
             onSuccess?.();
           },
           onError: () => {
             toast({
-              description:
-                "Une erreur est survenue lors de la complétion du contrat",
+              description: intl.formatMessage({
+                id: "contract.contract.error",
+              }),
               className: "bg-destructive text-destructive-foreground",
             });
             onError?.();
           },
-        },
+        }
       );
     },
-    [mutateAsync, onError, onSuccess, transferId],
+    [mutateAsync, onError, onSuccess, transferId, intl]
   );
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset();
     }
   }, [form]);
+
   return (
     <Form {...form}>
       <form
@@ -54,7 +63,7 @@ export default function CompleteContractForm({
         onSubmit={form.handleSubmit(handleSubmit)}
       >
         <DocumentsForm
-          label="Documents"
+          label={intl.formatMessage({ id: "contract.contract.documents" })}
           fieldName="files"
           form={form}
           fieldArray={filesArray}

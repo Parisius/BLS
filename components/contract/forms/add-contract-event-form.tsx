@@ -4,44 +4,49 @@ import { toast } from "@/components/ui/use-toast";
 import { useContractEventForm } from "@/lib/contract/hooks";
 import { useCreateContractEvent } from "@/services/api-sdk/models/contract/contract-event";
 import ContractEventForm from "@/components/contract/forms/contract-event-form";
+import { useIntl } from "react-intl";
+
 export default function AddContractEventForm({
   formId,
   contractId,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useContractEventForm();
   const { mutateAsync } = useCreateContractEvent(contractId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Événement planifié avec succès !",
+            description: intl.formatMessage({
+              id: "contract.contract.events.success",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description: "Une erreur est survenue lors de la planification.",
+            description: intl.formatMessage({
+              id: "contract.contract.events.error",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset();
     }
   }, [form]);
-  return (
-    <ContractEventForm
-      formId={formId}
-      onSubmit={handleSubmit}
-    />
-  );
+
+  return <ContractEventForm formId={formId} onSubmit={handleSubmit} />;
 }

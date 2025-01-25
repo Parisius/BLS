@@ -18,6 +18,8 @@ import CategorySelect from "@/components/contract/inputs/category-select";
 import CategoryTypeSelect from "@/components/contract/inputs/category-type-select";
 import ContractStakeholderSectionForm from "@/components/contract/forms/contract-stakeholder-section-form";
 import CategorySubTypeSelect from "@/components/contract/inputs/category-subtype-select";
+import { useIntl } from "react-intl";
+
 export default function UpdateContractForm({
   formId,
   contractId,
@@ -28,28 +30,34 @@ export default function UpdateContractForm({
   const { form, firstStakeholdersGroup, secondStakeholdersGroup } =
     useUpdateContractForm();
   const { mutateAsync } = useUpdateContract(contractId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Le contrat a été modifié avec succès !",
+            description: intl.formatMessage({
+              id: "contract.contract.updateForm.success",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors de la modification du contrat.",
+            description: intl.formatMessage({
+              id: "contract.contract.updateForm.error",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -62,13 +70,19 @@ export default function UpdateContractForm({
           name="title"
           render={({ field }) => (
             <FormItem className="col-span-3">
-              <FormLabel>Intitulé du contrat</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.updateForm.titleLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Intitulé du contrat"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.updateForm.titlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -84,7 +98,11 @@ export default function UpdateContractForm({
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Catégorie de contrat</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.updateForm.categoryLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <CategorySelect
@@ -106,7 +124,11 @@ export default function UpdateContractForm({
           name="categoryType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type de catégorie</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.updateForm.categoryTypeLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <CategoryTypeSelect
@@ -131,7 +153,11 @@ export default function UpdateContractForm({
           name="categorySubType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Sous-type de catégorie</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.updateForm.categorySubTypeLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <CategorySubTypeSelect
@@ -152,7 +178,9 @@ export default function UpdateContractForm({
         />
 
         <ContractStakeholderSectionForm
-          label="Partie 1"
+          label={intl.formatMessage({
+            id: "contract.contract.updateForm.party1Label",
+          })}
           fieldName="firstStakeholdersGroup"
           form={form}
           fieldArray={firstStakeholdersGroup}
@@ -160,7 +188,9 @@ export default function UpdateContractForm({
         />
 
         <ContractStakeholderSectionForm
-          label="Partie 2"
+          label={intl.formatMessage({
+            id: "contract.contract.updateForm.party2Label",
+          })}
           fieldName="secondStakeholdersGroup"
           form={form}
           fieldArray={secondStakeholdersGroup}

@@ -1,16 +1,25 @@
+"use client";
 import { Tag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import StakeholderNameSpan from "@/components/contract/ui/stakeholder-name-span";
+import { useIntl } from "react-intl";
+
 export default function StakeholdersGroupView({
   label,
   stakeholdersGroup,
   className,
+}: {
+  label: string;
+  stakeholdersGroup: any;
+  className?: string;
 }) {
+  const intl = useIntl();
+
   return (
     <div
       className={cn(
         "relative flex flex-col gap-5 rounded-xl border-2 p-5",
-        className,
+        className
       )}
     >
       {label && (
@@ -19,12 +28,13 @@ export default function StakeholdersGroupView({
         </span>
       )}
       {stakeholdersGroup.map(({ stakeholderId, description }) => (
-        <div
-          key={stakeholderId}
-          className="flex gap-5"
-        >
+        <div key={stakeholderId} className="flex gap-5">
           <div className="flex-1 space-y-2">
-            <span>Membre</span>
+            <span>
+              {intl.formatMessage({
+                id: "contract.contract.stakeholders.member",
+              })}
+            </span>
             <div className="flex items-center gap-2">
               <User className="flex-shrink-0" />
               <StakeholderNameSpan stakeholderId={stakeholderId} />
@@ -32,7 +42,11 @@ export default function StakeholdersGroupView({
           </div>
 
           <div className="flex-1 space-y-2">
-            <span>Description</span>
+            <span>
+              {intl.formatMessage({
+                id: "contract.contract.stakeholders.description",
+              })}
+            </span>
             <div className="flex items-center gap-2">
               <Tag className="flex-shrink-0" />
               <span>{description}</span>

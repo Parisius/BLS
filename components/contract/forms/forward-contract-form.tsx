@@ -16,6 +16,8 @@ import { DateInput } from "@/components/ui/date-input";
 import { Textarea } from "@/components/ui/textarea";
 import UserSelect from "@/components/contract/inputs/user-select";
 import { useForwardContract } from "@/services/api-sdk/models/contract/contract";
+import { useIntl } from "react-intl";
+
 export default function ForwardContractForm({
   formId,
   contractId,
@@ -24,27 +26,34 @@ export default function ForwardContractForm({
 }) {
   const form = useForwardContractForm();
   const { mutateAsync } = useForwardContract(contractId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: () => {
           toast({
-            description: "Contrat transféré avec succès",
+            description: intl.formatMessage({
+              id: "contract.contract.forwardForm.success",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.();
         },
         onError: () => {
           toast({
-            description: "Une erreur est survenue lors du transfert du contrat",
+            description: intl.formatMessage({
+              id: "contract.contract.forwardForm.error",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -57,12 +66,18 @@ export default function ForwardContractForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Objet</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.forwardForm.subjectLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Objet"
+                    placeholder={intl.formatMessage({
+                      id: "contract.contract.forwardForm.subjectPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -78,7 +93,11 @@ export default function ForwardContractForm({
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.forwardForm.dueDateLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -96,7 +115,11 @@ export default function ForwardContractForm({
           name="receiverId"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Destinataire</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.forwardForm.receiverLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <UserSelect
@@ -118,12 +141,18 @@ export default function ForwardContractForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observations</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "contract.contract.forwardForm.observationsLabel",
+                })}
+              </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   disabled={form.formState.isSubmitting}
-                  placeholder="Observations"
+                  placeholder={intl.formatMessage({
+                    id: "contract.contract.forwardForm.observationsPlaceholder",
+                  })}
                   className="resize-none"
                   rows={5}
                 />

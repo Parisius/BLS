@@ -15,28 +15,36 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useMarkContractEventAsCompleted } from "@/services/api-sdk/models/contract/contract-event";
+import { useIntl } from "react-intl";
+
 export default function CompleteContractEventButton({ eventId, ...props }) {
+  const intl = useIntl();
   const form = useForm();
   const { mutateAsync } = useMarkContractEventAsCompleted(eventId);
-  const ref = useRef(null);
+  const ref = useRef<HTMLButtonElement>(null);
+
   const handleComplete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
         ref.current?.click();
         toast({
-          description: "Evénement complété avec succès !",
+          description: intl.formatMessage({
+            id: "contract.contract.events.completeSuccess",
+          }),
           className: "bg-primary text-primary-foreground",
         });
       },
       onError: () => {
         toast({
-          description:
-            "Une erreur est survenue lors de la complétion de l'événement.",
+          description: intl.formatMessage({
+            id: "contract.contract.events.completeError",
+          }),
           className: "bg-destructive text-destructive-foreground",
         });
       },
     });
-  }, [mutateAsync]);
+  }, [mutateAsync, intl]);
+
   return (
     <AlertDialog>
       <AlertDialogTrigger {...props} />
@@ -44,23 +52,31 @@ export default function CompleteContractEventButton({ eventId, ...props }) {
         <form onSubmit={form.handleSubmit(handleComplete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir compléter cet événement ?
+              {intl.formatMessage({
+                id: "contract.contract.events.confirmTitle",
+              })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              {intl.formatMessage({
+                id: "contract.contract.events.confirmDescription",
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              ref={ref}
-              className="sr-only"
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
-            <Button
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Terminer"}
+            <AlertDialogCancel ref={ref} className="sr-only" />
+            <AlertDialogCancel type="button">
+              {intl.formatMessage({
+                id: "contract.contract.events.cancelButton",
+              })}
+            </AlertDialogCancel>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "contract.contract.events.completeButton",
+                })
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

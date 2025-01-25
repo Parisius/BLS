@@ -15,37 +15,50 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useForwardContractEventForm } from "@/lib/contract/hooks";
 import ForwardContractEventForm from "@/components/contract/forms/forward-contract-event-form";
+import { useIntl } from "react-intl";
+
 export default function ForwardContractEventDialog({ eventId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const form = useForwardContractEventForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Transfert d&apos;événement</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "contract.contract.events.forwardTitle",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Transférer l&apos;événement à un collaborateur
+              {intl.formatMessage({
+                id: "contract.contract.events.forwardDescription",
+              })}
             </DialogDescription>
           </DialogHeader>
           <ForwardContractEventForm
             formId={formId}
             eventId={eventId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({
+                  id: "contract.contract.events.cancelButton",
+                })}
               </Button>
             </DialogClose>
             <Button
@@ -53,7 +66,13 @@ export default function ForwardContractEventDialog({ eventId, ...props }) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Transférer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "contract.contract.events.transferButton",
+                })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

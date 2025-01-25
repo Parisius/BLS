@@ -15,6 +15,8 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useCompleteContractForm } from "@/lib/contract/hooks";
 import CompleteContractForm from "@/components/contract/forms/complete-contract-form";
+import { useIntl } from "react-intl";
+
 export default function CompleteContractDialog({
   contractId,
   transferId,
@@ -22,19 +24,30 @@ export default function CompleteContractDialog({
 }) {
   const formId = useId();
   const { form } = useCompleteContractForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const intl = useIntl();
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Terminer le contrat</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "contract.contract.completeDialog.title",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Mettre à jour le statut du contrat.
+              {intl.formatMessage({
+                id: "contract.contract.completeDialog.description",
+              })}
             </DialogDescription>
           </DialogHeader>
           <CompleteContractForm
@@ -43,15 +56,15 @@ export default function CompleteContractDialog({
             transferId={transferId}
             className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({
+                  id: "contract.contract.completeDialog.cancel",
+                })}
               </Button>
             </DialogClose>
             <Button
@@ -59,7 +72,13 @@ export default function CompleteContractDialog({
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Terminer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "contract.contract.completeDialog.complete",
+                })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
