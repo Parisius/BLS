@@ -15,23 +15,31 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useForwardIncidentTaskForm } from "@/lib/account-incident/hooks";
 import ForwardIncidentTaskForm from "@/components/account-incident/forms/forward-incident-task-form";
+import { useIntl } from "react-intl";
+
 export default function ForwardIncidentTaskDialog({ taskId, ...props }) {
   const formId = useId();
   const form = useForwardIncidentTaskForm();
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const intl = useIntl();
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
   const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
-            <DialogTitle>Transfert d&apos;événement</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({ id: "incident.dialog.forwardEvent" })}
+            </DialogTitle>
             <DialogDescription>
-              Transférer l&apos;événement à un collaborateur
+              {intl.formatMessage({ id: "incident.dialog.forwardDescription" })}
             </DialogDescription>
           </DialogHeader>
           <ForwardIncidentTaskForm
@@ -44,7 +52,7 @@ export default function ForwardIncidentTaskDialog({ taskId, ...props }) {
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
               <Button variant="destructive" onClick={() => form.reset()}>
-                Annuler
+                {intl.formatMessage({ id: "incident.button.cancel" })}
               </Button>
             </DialogClose>
             <Button
@@ -52,7 +60,11 @@ export default function ForwardIncidentTaskDialog({ taskId, ...props }) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Transférer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({ id: "incident.button.transfer" })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

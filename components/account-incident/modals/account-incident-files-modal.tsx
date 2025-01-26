@@ -51,7 +51,6 @@ export default function AccountIncidentFilesModal({
   if (isLoading) {
     return (
       <div>
-        {" "}
         {intl.formatMessage({ id: "incident.incident.author.loading" })}
       </div>
     );

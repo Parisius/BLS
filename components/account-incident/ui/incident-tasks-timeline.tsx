@@ -31,12 +31,15 @@ import {
 import { useCurrentUser } from "@/services/api-sdk/models/user/user";
 import ForwardIncidentTaskDialog from "@/components/account-incident/modals/forward-incident-task-dialog";
 import IncidentTaskForwardsDialog from "@/components/account-incident/modals/incident-task-forwards-dialog";
+import { useIntl } from "react-intl";
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 export default function IncidentTasksTimeline({
   incidentId,
   incidentCompleted,
@@ -44,11 +47,17 @@ export default function IncidentTasksTimeline({
 }) {
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllIncidentTasks(incidentId);
+  const intl = useIntl();
+
   if (isError) {
     throw new Error("Failed to fetch incident tasks");
   }
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {intl.formatMessage({ id: "incident.incident.author.loading" })}
+      </div>
+    );
   }
   if (!data || data.length === 0) {
     return <div>No tasks found</div>;
@@ -59,7 +68,7 @@ export default function IncidentTasksTimeline({
       {data.map(
         (
           { id, title, completed, dueDate, form, forwards, createdBy },
-          index,
+          index
         ) => (
           <TimelineItem
             key={id}
@@ -83,7 +92,9 @@ export default function IncidentTasksTimeline({
                       </Button>
                     </TooltipTrigger>
                   </DropdownMenuTrigger>
-                  <TooltipContent>Menu</TooltipContent>
+                  <TooltipContent>
+                    {intl.formatMessage({ id: "incident.timeline.menu" })}
+                  </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
                   {currentTaskId === id && (
@@ -97,37 +108,37 @@ export default function IncidentTasksTimeline({
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareCheck />
-                        Valider
+                        {intl.formatMessage({
+                          id: "incident.timeline.validate",
+                        })}
                       </DropdownMenuItem>
                     </CompleteIncidentTaskDialog>
                   )}
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardIncidentTaskDialog
-                      asChild
-                      taskId={id}
-                    >
+                    <ForwardIncidentTaskDialog asChild taskId={id}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        {intl.formatMessage({
+                          id: "incident.timeline.forward",
+                        })}
                       </DropdownMenuItem>
                     </ForwardIncidentTaskDialog>
                   )}
 
                   {forwards && forwards.length > 0 && (
-                    <IncidentTaskForwardsDialog
-                      asChild
-                      forwards={forwards}
-                    >
+                    <IncidentTaskForwardsDialog asChild forwards={forwards}>
                       <DropdownMenuItem
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareStack />
-                        Historique des transferts
+                        {intl.formatMessage({
+                          id: "incident.timeline.transferHistory",
+                        })}
                       </DropdownMenuItem>
                     </IncidentTaskForwardsDialog>
                   )}
@@ -144,7 +155,9 @@ export default function IncidentTasksTimeline({
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  ({intl.formatMessage({ id: "incident.timeline.completed" })})
+                </p>
               )}
             </TimelineItemContent>
 
@@ -157,14 +170,14 @@ export default function IncidentTasksTimeline({
               </TimelineItemContent>
             )}
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": incidentCompleted,
         })}
       >
-        Terminé !!!
+        {intl.formatMessage({ id: "incident.timeline.finished" })}
       </TimelineHead>
     </Timeline>
   );

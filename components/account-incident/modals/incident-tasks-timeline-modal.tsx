@@ -1,3 +1,4 @@
+"use client";
 import {
   Sheet,
   SheetClose,
@@ -11,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import React from "react";
 import IncidentTasksTimeline from "@/components/account-incident/ui/incident-tasks-timeline";
+import { useIntl } from "react-intl";
+
 export default function IncidentTasksTimelineModal({
   incidentId,
   incidentTitle,
@@ -18,6 +21,8 @@ export default function IncidentTasksTimelineModal({
   currentTaskId,
   ...props
 }) {
+  const intl = useIntl();
+
   return (
     <Sheet>
       <SheetTrigger {...props} />
@@ -26,7 +31,9 @@ export default function IncidentTasksTimelineModal({
         className="flex w-full flex-col gap-5 sm:w-3/4 sm:max-w-xl"
       >
         <SheetHeader>
-          <SheetTitle>Planification de l&apos;incident</SheetTitle>
+          <SheetTitle>
+            {intl.formatMessage({ id: "incident.modal.incidentPlanning" })}
+          </SheetTitle>
           <SheetDescription className="line-clamp-1">
             {incidentTitle}
           </SheetDescription>
@@ -40,7 +47,9 @@ export default function IncidentTasksTimelineModal({
         </div>
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({ id: "incident.button.close" })}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

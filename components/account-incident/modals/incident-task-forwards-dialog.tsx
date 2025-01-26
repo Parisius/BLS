@@ -1,3 +1,4 @@
+"use client";
 import {
   Dialog,
   DialogClose,
@@ -18,14 +19,24 @@ import {
 } from "@/components/ui/card";
 import { formatDate } from "@/lib/utils";
 import { MoveRight } from "lucide-react";
+import { useIntl } from "react-intl";
+
 export default function IncidentTaskForwardsDialog({ forwards, ...props }) {
+  const intl = useIntl();
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <DialogContent className="flex max-h-screen max-w-xl flex-col">
         <DialogHeader>
-          <DialogTitle>Historique des transferts</DialogTitle>
-          <DialogDescription>Historique des transferts</DialogDescription>
+          <DialogTitle>
+            {intl.formatMessage({ id: "incident.dialog.transferHistory" })}
+          </DialogTitle>
+          <DialogDescription>
+            {intl.formatMessage({
+              id: "incident.dialog.transferHistoryDescription",
+            })}
+          </DialogDescription>
         </DialogHeader>
         <div className="flex-1 space-y-5 overflow-auto">
           {forwards?.map(({ id, dueDate, title, sender, receiver }) => (
@@ -38,12 +49,12 @@ export default function IncidentTaskForwardsDialog({ forwards, ...props }) {
                   </span>
                   <MoveRight className="inline" />
                   <span className="text-primary">
-                    {receiver.firstname}
-                    {receiver.lastname}
+                    {receiver.firstname} {receiver.lastname}
                   </span>
                 </CardDescription>
                 <CardDescription className="italic">
-                  Transféré le {formatDate(dueDate)}
+                  {intl.formatMessage({ id: "incident.dialog.transferredOn" })}{" "}
+                  {formatDate(dueDate)}
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -51,7 +62,9 @@ export default function IncidentTaskForwardsDialog({ forwards, ...props }) {
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({ id: "incident.button.close" })}
+            </Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

@@ -16,6 +16,8 @@ import { Tag } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { Textarea } from "@/components/ui/textarea";
 import UserSelect from "@/components/account-incident/inputs/user-select";
+import { useIntl } from "react-intl";
+
 export default function ForwardIncidentTaskForm({
   formId,
   taskId,
@@ -24,28 +26,30 @@ export default function ForwardIncidentTaskForm({
 }) {
   const form = useForwardIncidentTaskForm();
   const { mutateAsync } = useForwardIncidentTask(taskId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (updatedData) => {
           toast({
-            description: "Tâche transférée avec succès",
+            description: intl.formatMessage({ id: "incident.form.success" }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(updatedData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors du transfert de la tâche",
+            description: intl.formatMessage({ id: "incident.form.error" }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess]
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -58,12 +62,16 @@ export default function ForwardIncidentTaskForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Objet</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "incident.form.subject" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Objet"
+                    placeholder={intl.formatMessage({
+                      id: "incident.form.subject",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -79,7 +87,9 @@ export default function ForwardIncidentTaskForm({
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "incident.form.dueDate" })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -97,7 +107,9 @@ export default function ForwardIncidentTaskForm({
           name="receiverId"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Destinataire</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "incident.form.receiver" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <UserSelect
@@ -119,12 +131,16 @@ export default function ForwardIncidentTaskForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observations</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "incident.form.observations" })}
+              </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   disabled={form.formState.isSubmitting}
-                  placeholder="Observations"
+                  placeholder={intl.formatMessage({
+                    id: "incident.form.observations",
+                  })}
                   className="resize-none"
                   rows={5}
                 />

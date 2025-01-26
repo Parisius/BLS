@@ -19,6 +19,8 @@ import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import { useCompleteIncidentTaskForm } from "@/lib/account-incident/hooks";
 import DocumentsSectionForm from "@/components/account-incident/forms/documents-section-form";
+import { useIntl } from "react-intl";
+
 export default function CompleteIncidentTaskForm({
   formId,
   taskId,
@@ -29,6 +31,8 @@ export default function CompleteIncidentTaskForm({
 }) {
   const { form, filesArray } = useCompleteIncidentTaskForm(taskForm.fields);
   const { mutateAsync } = useCompleteIncidentTask(taskId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(
@@ -36,23 +40,24 @@ export default function CompleteIncidentTaskForm({
         {
           onSuccess: (createdData) => {
             toast({
-              description: "Tâche complétée avec succès !",
+              description: intl.formatMessage({ id: "incident.form.success" }),
               className: "bg-primary text-primary-foreground",
             });
             onSuccess?.(createdData);
           },
           onError: () => {
             toast({
-              description: "Une erreur est survenue lors de la complétion.",
+              description: intl.formatMessage({ id: "incident.form.error" }),
               className: "bg-destructive text-destructive-foreground",
             });
             onError?.();
           },
-        },
+        }
       );
     },
-    [mutateAsync, onError, onSuccess, taskForm.code],
+    [mutateAsync, onError, onSuccess, taskForm.code, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -125,7 +130,7 @@ export default function CompleteIncidentTaskForm({
               }
               return (
                 <DocumentsSectionForm
-                  label="Documents"
+                  label={intl.formatMessage({ id: "incident.form.documents" })}
                   fieldName={item.name}
                   form={form}
                   fieldArray={filesArray}

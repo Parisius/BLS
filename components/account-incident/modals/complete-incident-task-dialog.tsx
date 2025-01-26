@@ -14,6 +14,8 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import CompleteIncidentTaskForm from "@/components/account-incident/forms/complete-incident-task-form";
 import { useCompleteIncidentTaskForm } from "@/lib/account-incident/hooks";
+import { useIntl } from "react-intl";
+
 export default function CompleteIncidentTaskDialog({
   taskId,
   taskForm,
@@ -22,9 +24,12 @@ export default function CompleteIncidentTaskDialog({
   const formId = useId();
   const { form } = useCompleteIncidentTaskForm(taskForm.fields);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const intl = useIntl();
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
   const handleError = useCallback(() => {}, []);
 
   return (
@@ -33,7 +38,9 @@ export default function CompleteIncidentTaskDialog({
       <FormProvider {...form}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>{taskForm.title}</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({ id: "incident.dialog.completeTask" })}
+            </DialogTitle>
           </DialogHeader>
           <CompleteIncidentTaskForm
             formId={formId}
@@ -47,7 +54,7 @@ export default function CompleteIncidentTaskDialog({
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
               <Button variant="destructive" onClick={() => form.reset()}>
-                Annuler
+                {intl.formatMessage({ id: "incident.button.cancel" })}
               </Button>
             </DialogClose>
             <Button
@@ -55,7 +62,11 @@ export default function CompleteIncidentTaskDialog({
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Completer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({ id: "incident.button.complete" })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
