@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -18,6 +19,8 @@ import { Pencil, Printer, Users } from "lucide-react";
 import UpdateLitigationDialog from "@/components/litigation/modals/update-litigation-dialog";
 import AssignCollaboratorsDialog from "@/components/litigation/modals/assign-collaborators-dialog";
 import PrintLitigationButton from "@/components/litigation/buttons/print-litigation-button";
+import { useIntl } from "react-intl";
+
 export function LitigationDetailsTable({
   litigationId,
   reference,
@@ -31,24 +34,62 @@ export function LitigationDetailsTable({
   hasProvisions,
   isArchived,
 }) {
+  const intl = useIntl();
+
   return (
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Numéro de dossier</TableHead>
-          <TableHead>Référence</TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "litigation.litigation.details.caseNumber",
+            })}{" "}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "litigation.litigation.details.reference",
+            })}{" "}
+          </TableHead>
           {hasProvisions && (
             <>
-              <TableHead>Provisions constituées</TableHead>
-              <TableHead>Provisions à constituer</TableHead>
-              <TableHead>Provisions totales</TableHead>
-              <TableHead>Provisions reprises</TableHead>
+              <TableHead>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.provisionsConstituted",
+                })}{" "}
+              </TableHead>
+              <TableHead>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.provisionsToConstitute",
+                })}{" "}
+              </TableHead>
+              <TableHead>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.totalProvisions",
+                })}{" "}
+              </TableHead>
+              <TableHead>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.provisionsRecovered",
+                })}{" "}
+              </TableHead>
             </>
           )}
-          <TableHead>Matière</TableHead>
-          <TableHead>Juridiction</TableHead>
-          <TableHead>Lieu de la juridiction</TableHead>
-          <TableHead>Statut</TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "litigation.litigation.details.nature" })}{" "}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "litigation.litigation.details.jurisdiction",
+            })}{" "}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({
+              id: "litigation.litigation.details.jurisdictionLocation",
+            })}{" "}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "litigation.litigation.details.status" })}{" "}
+          </TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -78,47 +119,47 @@ export function LitigationDetailsTable({
           <TableCell>
             {isArchived ? (
               <Badge className="text-nowrap bg-muted text-muted-foreground">
-                Archivé
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.archived",
+                })}{" "}
               </Badge>
             ) : (
-              <Badge className="bg-primary">En cours</Badge>
+              <Badge className="bg-primary">
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.inProgress",
+                })}{" "}
+              </Badge>
             )}
           </TableCell>
           <TableCell className="whitespace-nowrap">
             <Tooltip>
-              <AssignCollaboratorsDialog
-                asChild
-                litigationId={litigationId}
-              >
+              <AssignCollaboratorsDialog asChild litigationId={litigationId}>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full">
                     <Users />
                   </Button>
                 </TooltipTrigger>
               </AssignCollaboratorsDialog>
-              <TooltipContent>Affecter</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.assign",
+                })}{" "}
+              </TooltipContent>
             </Tooltip>
 
             <Tooltip>
-              <UpdateLitigationDialog
-                asChild
-                litigationId={litigationId}
-              >
+              <UpdateLitigationDialog asChild litigationId={litigationId}>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                  >
+                  <Button variant="ghost" size="icon" className="rounded-full">
                     <Pencil />
                   </Button>
                 </TooltipTrigger>
               </UpdateLitigationDialog>
-              <TooltipContent>Modifier</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.edit",
+                })}{" "}
+              </TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -132,7 +173,11 @@ export function LitigationDetailsTable({
                   <Printer />
                 </PrintLitigationButton>
               </TooltipTrigger>
-              <TooltipContent>Imprimer</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({
+                  id: "litigation.litigation.details.print",
+                })}{" "}
+              </TooltipContent>
             </Tooltip>
           </TableCell>
         </TableRow>

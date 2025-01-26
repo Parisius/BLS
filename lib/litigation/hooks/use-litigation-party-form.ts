@@ -26,7 +26,7 @@ const validationSchema = z.object({
     required_error: "Le type est requis",
   }),
 });
-export const useLitigationPartyForm = (options) => {
+export const useLitigationPartyForm = (options = {}) => {
   const formContext = useFormContext();
   const form = useForm({
     resolver: zodResolver(validationSchema),

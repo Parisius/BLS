@@ -17,17 +17,24 @@ import { useOneLitigation } from "@/services/api-sdk/models/litigation/litigatio
 import { useAssignCollaboratorsForm } from "@/lib/litigation/hooks";
 import AssignCollaboratorsForm from "@/components/litigation/forms/assign-collaborators-form";
 import { AssignCollaboratorsDialogSuspense } from "./suspense";
+import { useIntl } from "react-intl";
 export function AssignCollaboratorsDialogComponent({ litigationId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const { data, isLoading, isError } = useOneLitigation(litigationId);
   const { form } = useAssignCollaboratorsForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   if (isError) {
     throw new Error("Failed to fetch litigation");
   }
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -36,15 +43,22 @@ export function AssignCollaboratorsDialogComponent({ litigationId, ...props }) {
       });
     }
   }, [data, form, isLoading]);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Assigner des collaborateurs / avocats</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({
+                id: "litigation.litigation.assignCollaboratorsTitle",
+              })}
+            </DialogTitle>
             <DialogDescription>
-              Assigner des collaborateurs et des avocats à ce dossier.
+              {intl.formatMessage({
+                id: "litigation.litigation.assignCollaboratorsDescription",
+              })}
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -56,15 +70,15 @@ export function AssignCollaboratorsDialogComponent({ litigationId, ...props }) {
                 litigationId={litigationId}
                 className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    {intl.formatMessage({
+                      id: "litigation.litigation.cancelButton",
+                    })}
                   </Button>
                 </DialogClose>
                 <Button
@@ -75,7 +89,9 @@ export function AssignCollaboratorsDialogComponent({ litigationId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Assigner"
+                    intl.formatMessage({
+                      id: "litigation.litigation.assignButton",
+                    })
                   )}
                 </Button>
               </DialogFooter>

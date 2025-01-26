@@ -17,40 +17,48 @@ import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { LitigationRoutes } from "@/config/routes";
 import { useLitigationForm } from "@/lib/litigation/hooks";
 import AddLitigationForm from "@/components/litigation/forms/add-litigation-form";
+import { FormattedMessage } from "react-intl";
+
 export default function AddLitigationDialog(props) {
   const formId = useId();
   const { form } = useLitigationForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
+
   const handleSuccess = useCallback(
     ({ id }) => {
       closeRef.current?.click();
       router.push(LitigationRoutes.litigationPage(id).index);
     },
-    [router],
+    [router]
   );
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-4xl">
           <DialogHeader>
-            <DialogTitle>Nouveau dossier</DialogTitle>
-            <DialogDescription>Initier un nouveau dossier.</DialogDescription>
+            <DialogTitle>
+              <FormattedMessage id="litigation.litigation.addLitigationDialog.title" />
+            </DialogTitle>
+            <DialogDescription>
+              <FormattedMessage id="litigation.litigation.addLitigationDialog.description" />
+            </DialogDescription>
           </DialogHeader>
           <AddLitigationForm
             formId={formId}
             className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                <FormattedMessage id="litigation.litigation.addLitigationDialog.cancelButton" />
               </Button>
             </DialogClose>
             <Button
@@ -58,7 +66,11 @@ export default function AddLitigationDialog(props) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Initier"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                <FormattedMessage id="litigation.litigation.addLitigationDialog.submitButton" />
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

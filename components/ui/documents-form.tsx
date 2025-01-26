@@ -55,19 +55,13 @@ export default function DocumentsForm({
             name={`${fieldName}.${index}.file`}
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>
-                  {intl.formatMessage({
-                    id: "contract.contract.documents.file",
-                  })}
-                </FormLabel>
+                <FormLabel>Documents</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <FileInput
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder={intl.formatMessage({
-                        id: "contract.contract.documents.addFile",
-                      })}
+                      placeholder="Document"
                       className="h-12 pl-10"
                     />
                     <Newspaper className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -83,18 +77,12 @@ export default function DocumentsForm({
             name={`${fieldName}.${index}.filename`}
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>
-                  {intl.formatMessage({
-                    id: "contract.contract.documents.documentName",
-                  })}
-                </FormLabel>
+                <FormLabel>Document Label</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder={intl.formatMessage({
-                        id: "contract.contract.documents.documentName",
-                      })}
+                      placeholder="Document"
                       className="h-12 pl-10"
                     />
                     <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -124,7 +112,7 @@ export default function DocumentsForm({
         onClick={handleAddRow}
       >
         <Plus />
-        {intl.formatMessage({ id: "contract.contract.documents.addDocument" })}
+        Document
       </Button>
     </div>
   );

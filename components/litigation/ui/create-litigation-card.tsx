@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardContent,
@@ -11,18 +12,26 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddLitigationDialog from "@/components/litigation/modals/add-litigation-dialog";
-export default function CreateLitigationCard({ className }) {
+import { FormattedMessage } from "react-intl";
+
+export default function CreateLitigationCard({
+  className,
+}: {
+  className?: string;
+}) {
   return (
     <Card
       className={cn(
         "max-w-96 self-center sm:min-w-96 sm:max-w-[50%]",
-        className,
+        className
       )}
     >
       <CardHeader>
-        <CardTitle>Initier un dossier</CardTitle>
+        <CardTitle>
+          <FormattedMessage id="litigation.litigation.createLitigationCard.title" />
+        </CardTitle>
         <CardDescription>
-          Vous pouvez initier un nouveau dossier de contentieux
+          <FormattedMessage id="litigation.litigation.createLitigationCard.description" />
         </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
@@ -37,7 +46,7 @@ export default function CreateLitigationCard({ className }) {
         <AddLitigationDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouveau dossier
+            <FormattedMessage id="litigation.litigation.createLitigationCard.button" />
           </Button>
         </AddLitigationDialog>
       </CardFooter>

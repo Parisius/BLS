@@ -14,6 +14,8 @@ import { FormProvider, useForm } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import CompleteLitigationTaskForm from "@/components/litigation/forms/complete-litigation-task-form";
 import CompleteLitigationTaskButton from "@/components/litigation/buttons/complete-litigation-task-button";
+import { useIntl } from "react-intl";
+
 export default function CompleteLitigationTaskDialog({
   taskId,
   stepForm,
@@ -21,10 +23,15 @@ export default function CompleteLitigationTaskDialog({
 }) {
   const formId = useId();
   const form = useForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const intl = useIntl();
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return stepForm ? (
     <Dialog>
       <DialogTrigger {...props} />
@@ -39,15 +46,15 @@ export default function CompleteLitigationTaskDialog({
             stepForm={stepForm}
             className="-mx-6 -my-3 max-h-[70vh] overflow-y-auto px-6 py-3"
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({
+                  id: "litigation.litigation.tasks.cancel",
+                })}
               </Button>
             </DialogClose>
             <Button
@@ -55,16 +62,19 @@ export default function CompleteLitigationTaskDialog({
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Completer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "litigation.litigation.tasks.complete",
+                })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
       </FormProvider>
     </Dialog>
   ) : (
-    <CompleteLitigationTaskButton
-      taskId={taskId}
-      {...props}
-    />
+    <CompleteLitigationTaskButton taskId={taskId} {...props} />
   );
 }

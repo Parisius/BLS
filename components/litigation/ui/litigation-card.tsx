@@ -1,3 +1,4 @@
+"use client";
 import {
   Card,
   CardDescription,
@@ -9,6 +10,8 @@ import Link from "next/link";
 import { LitigationRoutes } from "@/config/routes";
 import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
+import { FormattedMessage } from "react-intl";
+
 export default function LitigationCard({
   litigationId,
   title,
@@ -26,34 +29,39 @@ export default function LitigationCard({
           <CardTitle className="line-clamp-2 flex-1">{title}</CardTitle>
           {isArchived && (
             <Badge className="line-clamp-1 w-fit bg-muted text-muted-foreground hover:bg-muted/90">
-              Archivé
+              <FormattedMessage id="litigation.litigation.card.archived" />
             </Badge>
           )}
         </div>
         <CardDescription>
-          <span className="font-bold">Numéro de dossier:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="litigation.litigation.card.caseNumber" />
+          </span>{" "}
           <span className="italic">{caseNumber}</span>
         </CardDescription>
         <CardDescription>
-          <span className="font-bold">Référence:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="litigation.litigation.card.reference" />
+          </span>{" "}
           <span className="italic">{reference}</span>
         </CardDescription>
         <CardDescription>
-          <span className="font-bold">Matière:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="litigation.litigation.card.nature" />
+          </span>{" "}
           <span className="italic">{nature}</span>
         </CardDescription>
         <CardDescription>
-          <span className="font-bold">Jurisdiction:</span>{" "}
+          <span className="font-bold">
+            <FormattedMessage id="litigation.litigation.card.jurisdiction" />
+          </span>{" "}
           <span className="italic">{jurisdiction}</span>
         </CardDescription>
         <div className="flex justify-end gap-2">
-          <Button
-            asChild
-            variant="link"
-            className="gap-2 px-0 italic"
-          >
+          <Button asChild variant="link" className="gap-2 px-0 italic">
             <Link href={LitigationRoutes.litigationPage(litigationId).index}>
-              Voir details <MoveRight />
+              <FormattedMessage id="litigation.litigation.card.viewDetails" />
+              <MoveRight />
             </Link>
           </Button>
         </div>

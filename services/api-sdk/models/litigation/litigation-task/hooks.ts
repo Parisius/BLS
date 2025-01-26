@@ -124,7 +124,7 @@ export const useOneLitigationTask = (taskId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateLitigationTask = (litigationId, options) => {
+export const useCreateLitigationTask = (litigationId, options = {}) => {
   const invalidateAllLitigationTasks = useInvalidateAllLitigationTasks();
   const invalidateOneLitigation = useInvalidateOneLitigation();
   const getMutationOptions = useCallback(
@@ -136,7 +136,7 @@ export const useCreateLitigationTask = (litigationId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllLitigationTasks, invalidateOneLitigation, litigationId],
+    [invalidateAllLitigationTasks, invalidateOneLitigation, litigationId]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -163,7 +163,7 @@ export const useCreateLitigationTask = (litigationId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateLitigationTask = (taskId, options) => {
+export const useUpdateLitigationTask = (taskId, options = {}) => {
   const invalidateOneLitigationTask = useInvalidateOneLitigationTask();
   const invalidateAllLitigationTasks = useInvalidateAllLitigationTasks();
   const getMutationOptions = useCallback(
@@ -175,7 +175,7 @@ export const useUpdateLitigationTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [taskId, invalidateAllLitigationTasks, invalidateOneLitigationTask],
+    [taskId, invalidateAllLitigationTasks, invalidateOneLitigationTask]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -202,7 +202,7 @@ export const useUpdateLitigationTask = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation object.
  */
-export const useCompleteLitigationTask = (taskId, options) => {
+export const useCompleteLitigationTask = (taskId, options = {}) => {
   const invalidateAllLitigationTasks = useInvalidateAllLitigationTasks();
   const invalidateOneLitigationTask = useInvalidateOneLitigationTask();
   const invalidateOneLitigation = useInvalidateOneLitigation();
@@ -223,7 +223,7 @@ export const useCompleteLitigationTask = (taskId, options) => {
       invalidateOneLitigation,
       invalidateOneLitigationTask,
       taskId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => {
@@ -273,7 +273,7 @@ export const useCompleteLitigationTask = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardLitigationTask = (taskId, options) => {
+export const useForwardLitigationTask = (taskId, options = {}) => {
   const invalidateOneLitigationTask = useInvalidateOneLitigationTask();
   const invalidateAllLitigationTasks = useInvalidateAllLitigationTasks();
   const getMutationOptions = useCallback(
@@ -285,7 +285,7 @@ export const useForwardLitigationTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [taskId, invalidateAllLitigationTasks, invalidateOneLitigationTask],
+    [taskId, invalidateAllLitigationTasks, invalidateOneLitigationTask]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -312,7 +312,7 @@ export const useForwardLitigationTask = (taskId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteLitigationTask = (taskId, options) => {
+export const useDeleteLitigationTask = (taskId, options = {}) => {
   const removeOneLitigationTask = useRemoveOneLitigationTaskQuery();
   const invalidateAllLitigationTasks = useInvalidateAllLitigationTasks();
   const getMutationOptions = useCallback(
@@ -324,7 +324,7 @@ export const useDeleteLitigationTask = (taskId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [taskId, invalidateAllLitigationTasks, removeOneLitigationTask],
+    [taskId, invalidateAllLitigationTasks, removeOneLitigationTask]
   );
   const mutation = useMutation({
     mutationFn: () => deleteLitigationTask(taskId),

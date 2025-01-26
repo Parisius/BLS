@@ -225,7 +225,11 @@ export const createLitigation = async (args) => {
     args.filesData.append(`parties[${index}][category]`, party.category);
     args.filesData.append(`parties[${index}][type]`, party.type);
   });
+  console.log(args);
+
   const response = await fetchService.post("/litigation", args.filesData);
+  console.log(response);
+
   if (!response.ok) {
     throw new ApiError("Failed to create the litigation");
   }
@@ -297,7 +301,7 @@ export const updateLitigation = async (litigationId, args) => {
   });
   const response = await fetchService.post(
     `/litigation/modify/${litigationId}`,
-    formData,
+    formData
   );
   if (!response.ok) {
     throw new ApiError("Failed to update the litigation");
@@ -360,7 +364,7 @@ export const addLitigationProvisions = async (litigationId, args) => {
       added_amount: args.addedAmount,
       remaining_amount: args.remainingAmount,
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to add the litigation provisions");
@@ -415,7 +419,7 @@ export const addLitigationProvisions = async (litigationId, args) => {
  */
 export const archiveLitigation = async (litigationId) => {
   const response = await fetchService.put(
-    `/litigation/archive/${litigationId}`,
+    `/litigation/archive/${litigationId}`
   );
   if (!response.ok) {
     throw new ApiError("Failed to archive the litigation");
@@ -434,7 +438,7 @@ export const assignCollaborators = async (litigationId, args) => {
       users: args.users,
       lawyers: args.lawyers,
     }),
-    { headers: { "Content-Type": "application/json" } },
+    { headers: { "Content-Type": "application/json" } }
   );
   if (!response.ok) {
     throw new ApiError("Failed to assign collaborators to the litigation");
@@ -447,7 +451,7 @@ export const assignCollaborators = async (litigationId, args) => {
  */
 export const printLitigation = async (litigationId) => {
   const response = await fetchService.get(
-    `/litigation/generate-pdf/${litigationId}`,
+    `/litigation/generate-pdf/${litigationId}`
   );
   if (!response.ok) {
     throw new ApiError("Failed to print the litigation");

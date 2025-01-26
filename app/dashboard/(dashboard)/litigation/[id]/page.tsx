@@ -20,17 +20,23 @@ import {
 } from "@/services/api-sdk/types/litigation/litigation";
 import LitigationTasksTimelineModal from "@/components/litigation/modals/litigation-tasks-timeline-modal";
 import LitigationDetailsPageLoading from "./loading";
+import { FormattedMessage } from "react-intl";
+
 export default function Page({ params: { id } }) {
   const { data, isLoading, isError } = useOneLitigation(id);
+
   if (isError) {
     throw new Error("An error occurred while fetching the data");
   }
+
   if (isLoading) {
     return <LitigationDetailsPageLoading />;
   }
+
   if (!data) {
     notFound();
   }
+
   return (
     <div className="container flex flex-1 flex-col gap-10 overflow-y-auto py-5">
       <LitigationDetailsPageBreadcrumb litigationTitle={data.title} />
@@ -50,7 +56,7 @@ export default function Page({ params: { id } }) {
               className="gap-2"
             >
               <GanttChart />
-              Planifier
+              <FormattedMessage id="litigation.litigation.details.schedule" />{" "}
             </Button>
           </LitigationTasksTimelineModal>
 
@@ -65,7 +71,7 @@ export default function Page({ params: { id } }) {
               <Button className="gap-2">
                 <Banknote />
                 <span className="sr-only sm:not-sr-only">
-                  Mettre à jour les provisions
+                  <FormattedMessage id="litigation.litigation.details.updateProvisions" />{" "}
                 </span>
               </Button>
             </AddLitigationProvisionsDialog>
@@ -81,7 +87,9 @@ export default function Page({ params: { id } }) {
           >
             <Button className="gap-2">
               <Files />
-              <span className="sr-only sm:not-sr-only">Documents</span>
+              <span className="sr-only sm:not-sr-only">
+                <FormattedMessage id="litigation.litigation.details.documents" />{" "}
+              </span>
             </Button>
           </LitigationFilesModal>
           <Tooltip>
@@ -94,7 +102,7 @@ export default function Page({ params: { id } }) {
                 name: party.name,
                 category:
                   partyCategories.find(
-                    (category) => category.value === party.category,
+                    (category) => category.value === party.category
                   )?.label ?? party.category,
                 type:
                   partyTypes.find((type) => type.value === party.type)?.label ??
@@ -112,7 +120,9 @@ export default function Page({ params: { id } }) {
                 </Button>
               </TooltipTrigger>
             </PartiesModal>
-            <TooltipContent>Parties</TooltipContent>
+            <TooltipContent>
+              <FormattedMessage id="litigation.litigation.details.parties" />{" "}
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>

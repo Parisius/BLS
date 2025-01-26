@@ -4,41 +4,50 @@ import { toast } from "@/components/ui/use-toast";
 import { useLitigationPartyForm } from "@/lib/litigation/hooks";
 import { useCreateLitigationParty } from "@/services/api-sdk/models/litigation/litigation-party";
 import LitigationPartyForm from "@/components/litigation/forms/litigation-party-form";
+import { useIntl } from "react-intl";
+
 export default function AddLitigationPartyForm({
   formId,
   className,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useLitigationPartyForm();
   const { mutateAsync } = useCreateLitigationParty();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "La partie a été ajoutée avec succès.",
+            description: intl.formatMessage({
+              id: "litigation.addLitigationPartyForm.success",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors de l'ajout de la partie.",
+            description: intl.formatMessage({
+              id: "litigation.addLitigationPartyForm.error",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   useEffect(() => {
     if (form.formState.isSubmitSuccessful) {
       form.reset();
     }
   }, [form]);
+
   return (
     <LitigationPartyForm
       formId={formId}

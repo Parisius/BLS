@@ -16,8 +16,12 @@ import DocumentsForm from "@/components/ui/documents-form";
 import LitigationNatureSelect from "@/components/litigation/inputs/litigation-nature-select";
 import JurisdictionSelect from "@/components/litigation/inputs/jurisdiction-select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormattedMessage, useIntl } from "react-intl"; // Import FormattedMessage
+
 export default function LitigationForm({ formId, className, onSubmit }) {
+  const intl = useIntl();
   const { form, filesArray, partiesArray } = useLitigationForm();
+
   return (
     <Form {...form}>
       <form
@@ -25,12 +29,15 @@ export default function LitigationForm({ formId, className, onSubmit }) {
         className={cn("grid grid-cols-2 gap-x-5 gap-y-10", className)}
         onSubmit={form.handleSubmit(onSubmit ?? (() => {}))}
       >
+        {/* Nature Field */}
         <FormField
           control={form.control}
           name="natureId"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Matière</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="litigation.litigation.litigationForm.natureLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <LitigationNatureSelect
@@ -47,17 +54,22 @@ export default function LitigationForm({ formId, className, onSubmit }) {
           )}
         />
 
+        {/* Title Field */}
         <FormField
           control={form.control}
           name="title"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Intitulé de l&apos;affaire</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="litigation.litigation.litigationForm.titleLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de l'affaire"
+                    placeholder={intl.formatMessage({
+                      id: "litigation.litigation.litigationForm.titleLabel",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -68,17 +80,22 @@ export default function LitigationForm({ formId, className, onSubmit }) {
           )}
         />
 
+        {/* Case Number Field */}
         <FormField
           control={form.control}
           name="caseNumber"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Numéro de dossier</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="litigation.litigation.litigationForm.caseNumberLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Numéro de dossier"
+                    placeholder={intl.formatMessage({
+                      id: "litigation.litigation.litigationForm.caseNumberLabel",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -89,12 +106,15 @@ export default function LitigationForm({ formId, className, onSubmit }) {
           )}
         />
 
+        {/* Jurisdiction Field */}
         <FormField
           control={form.control}
           name="jurisdictionId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Juridiction</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="litigation.litigation.litigationForm.jurisdictionLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <JurisdictionSelect
@@ -111,17 +131,22 @@ export default function LitigationForm({ formId, className, onSubmit }) {
           )}
         />
 
+        {/* Jurisdiction Location Field */}
         <FormField
           control={form.control}
           name="jurisdictionLocation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Lieu de la juridiction</FormLabel>
+              <FormLabel>
+                <FormattedMessage id="litigation.litigation.litigationForm.jurisdictionLocationLabel" />
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Lieu de la juridiction"
+                    placeholder={intl.formatMessage({
+                      id: "litigation.litigation.litigationForm.jurisdictionLocationLabel",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -132,12 +157,15 @@ export default function LitigationForm({ formId, className, onSubmit }) {
           )}
         />
 
+        {/* Has Provisions Field */}
         <FormField
           control={form.control}
           name="hasProvisions"
           render={({ field }) => (
             <FormItem className="flex items-center gap-2 space-y-0">
-              <FormLabel className="text-md">A provisionner ?</FormLabel>
+              <FormLabel className="text-md">
+                <FormattedMessage id="litigation.litigation.litigationForm.hasProvisionsLabel" />
+              </FormLabel>
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -150,15 +178,21 @@ export default function LitigationForm({ formId, className, onSubmit }) {
           )}
         />
 
+        {/* Parties Section */}
         <LitigationPartiesSectionForm
-          label="Parties"
+          label={intl.formatMessage({
+            id: "litigation.litigation.litigationForm.partiesLabel",
+          })}
           fieldName="parties"
           form={form}
           fieldArray={partiesArray}
         />
 
+        {/* Documents Section */}
         <DocumentsForm
-          label="Documents"
+          label={
+            <FormattedMessage id="litigation.litigation.litigationForm.documentsLabel" />
+          }
           fieldName="files"
           form={form}
           fieldArray={filesArray}

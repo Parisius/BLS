@@ -15,27 +15,35 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useDeleteLitigationTask } from "@/services/api-sdk/models/litigation";
+import { useIntl } from "react-intl";
+
 export default function DeleteLitigationTaskButton({ taskId, ...props }) {
   const form = useForm();
   const { mutateAsync } = useDeleteLitigationTask(taskId);
   const ref = useRef(null);
+  const intl = useIntl();
+
   const handleDelete = useCallback(async () => {
     await mutateAsync({
       onSuccess: () => {
         toast({
-          description: "Tâche supprimée avec succès !",
+          description: intl.formatMessage({
+            id: "litigation.litigation.delete.tasks.success",
+          }),
           className: "bg-primary text-primary-foreground",
         });
       },
       onError: () => {
         toast({
-          description:
-            "Une erreur est survenue lors de la suppression de la tâche.",
+          description: intl.formatMessage({
+            id: "litigation.litigation.delete.tasks.error",
+          }),
           className: "bg-destructive text-destructive-foreground",
         });
       },
     });
-  }, [mutateAsync]);
+  }, [mutateAsync, intl]);
+
   return (
     <AlertDialog>
       <AlertDialogTrigger {...props} />
@@ -43,24 +51,35 @@ export default function DeleteLitigationTaskButton({ taskId, ...props }) {
         <form onSubmit={form.handleSubmit(handleDelete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir supprimer cette tâche ?
+              {intl.formatMessage({
+                id: "litigation.litigation.delete.tasks.confirmTitle",
+              })}{" "}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              {intl.formatMessage({
+                id: "litigation.tasks.confirmDescription",
+              })}{" "}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              ref={ref}
-              className="sr-only"
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
+            <AlertDialogCancel ref={ref} className="sr-only" />
+            <AlertDialogCancel type="button">
+              {intl.formatMessage({
+                id: "litigation.litigation.delete.tasks.cancel",
+              })}{" "}
+            </AlertDialogCancel>
             <Button
               variant="destructive"
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Supprimer"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({
+                  id: "litigation.litigation.delete.tasks.delete",
+                })
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

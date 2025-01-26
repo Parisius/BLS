@@ -1,12 +1,24 @@
 "use client";
 import { Tag, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-export default function PartiesGroupView({ label, partiesGroup, className }) {
+import { useIntl } from "react-intl";
+
+export default function PartiesGroupView({
+  label,
+  partiesGroup,
+  className,
+}: {
+  label?: string;
+  partiesGroup?: any;
+  className?: string;
+}) {
+  const intl = useIntl();
+
   return (
     <div
       className={cn(
         "relative flex flex-col gap-5 rounded-xl border-2 p-5",
-        className,
+        className
       )}
     >
       {label && (
@@ -15,12 +27,13 @@ export default function PartiesGroupView({ label, partiesGroup, className }) {
         </span>
       )}
       {partiesGroup.map(({ id, name, category, type }) => (
-        <div
-          key={id}
-          className="flex gap-5"
-        >
+        <div key={id} className="flex gap-5">
           <div className="flex-1 space-y-2">
-            <span>Partie</span>
+            <span>
+              {intl.formatMessage({
+                id: "litigation.litigation.parties.party",
+              })}
+            </span>{" "}
             <div className="flex items-center gap-2">
               <User className="flex-shrink-0" />
               <span>{name}</span>
@@ -28,7 +41,11 @@ export default function PartiesGroupView({ label, partiesGroup, className }) {
           </div>
 
           <div className="flex-1 space-y-2">
-            <span>Catégorie</span>
+            <span>
+              {intl.formatMessage({
+                id: "litigation.litigation.parties.category",
+              })}
+            </span>{" "}
             <div className="flex items-center gap-2">
               <Tag className="flex-shrink-0" />
               <span>{category}</span>
@@ -36,7 +53,9 @@ export default function PartiesGroupView({ label, partiesGroup, className }) {
           </div>
 
           <div className="flex-1 space-y-2">
-            <span>Type</span>
+            <span>
+              {intl.formatMessage({ id: "litigation.litigation.parties.type" })}
+            </span>{" "}
             <div className="flex items-center gap-2">
               <Tag className="flex-shrink-0" />
               <span>{type}</span>

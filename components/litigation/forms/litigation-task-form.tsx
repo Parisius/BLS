@@ -11,8 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { useLitigationTaskForm } from "@/lib/litigation/hooks";
+import { useIntl } from "react-intl";
+
 export default function LitigationTaskForm({ formId, onSubmit }) {
   const form = useLitigationTaskForm();
+  const intl = useIntl();
+
   return (
     <Form {...form}>
       <form
@@ -25,12 +29,18 @@ export default function LitigationTaskForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de la tâche</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "litigation.litigation.tasks.taskTitle",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de la tâche"
+                    placeholder={intl.formatMessage({
+                      id: "litigation.litigation.tasks.taskTitlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -46,7 +56,11 @@ export default function LitigationTaskForm({ formId, onSubmit }) {
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "litigation.litigation.tasks.dueDate",
+                })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

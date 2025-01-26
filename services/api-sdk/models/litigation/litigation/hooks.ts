@@ -163,7 +163,7 @@ export const useOneLitigation = (litigationId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateLitigation = (options) => {
+export const useCreateLitigation = (options = {}) => {
   const invalidateAllLitigation = useInvalidateAllLitigation();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -173,7 +173,7 @@ export const useCreateLitigation = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllLitigation],
+    [invalidateAllLitigation]
   );
   const mutation = useMutation({
     mutationFn: ({ files, ...args }) => {
@@ -206,7 +206,7 @@ export const useCreateLitigation = (options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateLitigation = (litigationId, options) => {
+export const useUpdateLitigation = (litigationId, options = {}) => {
   const invalidateAllLitigation = useInvalidateAllLitigation();
   const invalidateOneLitigation = useInvalidateOneLitigation();
   const getMutationOptions = useCallback(
@@ -218,7 +218,7 @@ export const useUpdateLitigation = (litigationId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllLitigation, invalidateOneLitigation, litigationId],
+    [invalidateAllLitigation, invalidateOneLitigation, litigationId]
   );
   const mutation = useMutation({
     mutationFn: ({ files, ...args }) => {
@@ -261,7 +261,7 @@ export const useAddLitigationProvisions = (litigationId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneLitigation, litigationId],
+    [invalidateOneLitigation, litigationId]
   );
   const mutation = useMutation({
     mutationFn: (args) => addLitigationProvisions(litigationId, args),
@@ -296,7 +296,7 @@ export const useArchiveLitigation = (litigationId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllLitigation, invalidateOneLitigation, litigationId],
+    [invalidateAllLitigation, invalidateOneLitigation, litigationId]
   );
   const mutation = useMutation({
     mutationFn: () => archiveLitigation(litigationId),
@@ -319,7 +319,7 @@ export const useArchiveLitigation = (litigationId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useAssignCollaborators = (litigationId, options) => {
+export const useAssignCollaborators = (litigationId, options = {}) => {
   const invalidateOneLitigation = useInvalidateOneLitigation();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -329,7 +329,7 @@ export const useAssignCollaborators = (litigationId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateOneLitigation, litigationId],
+    [invalidateOneLitigation, litigationId]
   );
   const mutation = useMutation({
     mutationFn: (args) => assignCollaborators(litigationId, args),

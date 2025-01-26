@@ -7,6 +7,8 @@ import LawyersSectionForm from "@/components/litigation/forms/lawyers-section-fo
 import { useAssignCollaborators } from "@/services/api-sdk/models/litigation/litigation";
 import { useCallback } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { useIntl } from "react-intl";
+
 export default function AssignCollaboratorsForm({
   formId,
   litigationId,
@@ -16,6 +18,8 @@ export default function AssignCollaboratorsForm({
 }) {
   const { form, usersArray, lawyersArray } = useAssignCollaboratorsForm();
   const { mutateAsync } = useAssignCollaborators(litigationId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(
@@ -26,23 +30,28 @@ export default function AssignCollaboratorsForm({
         {
           onSuccess: () => {
             toast({
-              description: "Les collaborateurs ont été assignés avec succès.",
+              description: intl.formatMessage({
+                id: "litigation.litigation.assignCollaboratorsSuccess",
+              }),
               className: "bg-primary text-primary-foreground",
             });
             onSuccess?.();
           },
           onError: () => {
             toast({
-              description: "Une erreur est survenue lors de l'assignation.",
+              description: intl.formatMessage({
+                id: "litigation.litigation.assignCollaboratorsError",
+              }),
               className: "bg-destructive text-destructive-foreground",
             });
             onError?.();
           },
-        },
+        }
       );
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -51,14 +60,14 @@ export default function AssignCollaboratorsForm({
         onSubmit={form.handleSubmit(handleSubmit)}
       >
         <UsersSectionForm
-          label="Collaborateurs"
+          label={intl.formatMessage({ id: "litigation.collaboratorsLabel" })}
           fieldName="users"
           form={form}
           fieldArray={usersArray}
         />
 
         <LawyersSectionForm
-          label="Avocats"
+          label={intl.formatMessage({ id: "litigation.lawyersLabel" })}
           fieldName="lawyers"
           form={form}
           fieldArray={lawyersArray}

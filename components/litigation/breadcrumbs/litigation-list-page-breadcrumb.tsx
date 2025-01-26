@@ -1,3 +1,6 @@
+"use client";
+import React from "react";
+import { FormattedMessage } from "react-intl";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -16,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
+
 export function LitigationListPageBreadcrumb() {
   return (
     <Breadcrumb>
@@ -35,7 +39,9 @@ export function LitigationListPageBreadcrumb() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <Link href={LitigationRoutes.index}>Contentieux</Link>
+                <Link href={LitigationRoutes.index}>
+                  <FormattedMessage id="litigation.litigation.breadcrumb.litigation" />
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -43,13 +49,17 @@ export function LitigationListPageBreadcrumb() {
         <div className="hidden sm:contents">
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={LitigationRoutes.index}>Contentieux</Link>
+              <Link href={LitigationRoutes.index}>
+                <FormattedMessage id="litigation.litigation.breadcrumb.litigation" />
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </div>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Liste des contentieux</BreadcrumbPage>
+          <BreadcrumbPage>
+            <FormattedMessage id="litigation.litigation.breadcrumb.litigationList" />
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

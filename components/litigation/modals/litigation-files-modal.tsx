@@ -12,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import React from "react";
 import mime from "mime";
+import { useIntl } from "react-intl";
+
 const getIcon = (filename) => {
   const fileType = mime.getType(filename);
   const extension = fileType ? mime.getExtension(fileType) : null;
@@ -33,20 +35,22 @@ const getIcon = (filename) => {
       return "file-unknown-icon.svg";
   }
 };
+
 export default function LitigationFilesModal({
   litigationFiles,
   litigationTitle,
   ...props
 }) {
+  const intl = useIntl();
+
   return (
     <Sheet>
       <SheetTrigger {...props} />
-      <SheetContent
-        side="right"
-        className="flex flex-col gap-5"
-      >
+      <SheetContent side="right" className="flex flex-col gap-5">
         <SheetHeader>
-          <SheetTitle>Archives</SheetTitle>
+          <SheetTitle>
+            {intl.formatMessage({ id: "litigation.litigation.files.archives" })}{" "}
+          </SheetTitle>
           <SheetDescription className="line-clamp-1">
             {litigationTitle}
           </SheetDescription>
@@ -63,7 +67,9 @@ export default function LitigationFilesModal({
                 >
                   <span
                     style={{
-                      backgroundImage: `url('/global/images/${getIcon(fileUrl)}')`,
+                      backgroundImage: `url('/global/images/${getIcon(
+                        fileUrl
+                      )}')`,
                     }}
                     className="block h-20 bg-contain bg-center bg-no-repeat"
                   />
@@ -74,12 +80,15 @@ export default function LitigationFilesModal({
           </div>
         ) : (
           <div className="flex-1 text-center font-medium italic sm:text-lg">
-            Aucun fichier n&apos;a été ajouté à ce dossier
+            {intl.formatMessage({ id: "litigation.litigation.files.noFiles" })}
           </div>
         )}
         <SheetFooter>
           <SheetClose asChild>
-            <Button variant="destructive">Fermer</Button>
+            <Button variant="destructive">
+              {intl.formatMessage({ id: "litigation.litigation.files.close" })}
+              {/* Fermer */}
+            </Button>
           </SheetClose>
         </SheetFooter>
       </SheetContent>

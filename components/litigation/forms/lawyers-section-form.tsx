@@ -11,29 +11,41 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useCallback } from "react";
 import LawyerSelect from "@/components/litigation/inputs/lawyer-select";
+import { useIntl } from "react-intl";
+
 export default function LawyersSectionForm({
   label,
   fieldName,
   form,
   fieldArray,
   className,
+}: {
+  label?: string;
+  fieldName?: string;
+  form: any;
+  fieldArray?: any;
+  className?: string;
 }) {
+  const intl = useIntl();
+
   const handleRemoveRow = useCallback(
     (index) => {
       if (fieldArray.fields.length > 1) {
         fieldArray.remove(index);
       }
     },
-    [fieldArray],
+    [fieldArray]
   );
+
   const handleAddRow = useCallback(() => {
     fieldArray.append({});
   }, [fieldArray]);
+
   return (
     <div
       className={cn(
         "relative col-span-2 flex flex-col gap-5 rounded-xl border-2 p-5",
-        className,
+        className
       )}
     >
       {label && (
@@ -42,16 +54,17 @@ export default function LawyersSectionForm({
         </span>
       )}
       {fieldArray.fields.map((item, index) => (
-        <div
-          key={item.id}
-          className="flex gap-5"
-        >
+        <div key={item.id} className="flex gap-5">
           <FormField
             control={form.control}
             name={`${fieldName}.${index}.id`}
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Avocat</FormLabel>
+                <FormLabel>
+                  {intl.formatMessage({
+                    id: "litigation.litigation.lawyerLabel",
+                  })}{" "}
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <LawyerSelect
@@ -88,7 +101,9 @@ export default function LawyersSectionForm({
         onClick={handleAddRow}
       >
         <Plus />
-        Ajouter un avocat
+        {intl.formatMessage({
+          id: "litigation.litigation.addLawyerButton",
+        })}{" "}
       </Button>
     </div>
   );

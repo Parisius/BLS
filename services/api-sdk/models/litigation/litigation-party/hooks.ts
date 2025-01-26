@@ -40,7 +40,7 @@ export const useAllLitigationParties = () =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateLitigationParty = (options) => {
+export const useCreateLitigationParty = (options = {}) => {
   const invalidateAllLitigationParties = useInvalidateAllLitigationParties();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -50,7 +50,7 @@ export const useCreateLitigationParty = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllLitigationParties],
+    [invalidateAllLitigationParties]
   );
   const mutation = useMutation({
     mutationFn: (args) => createLitigationParty(args),

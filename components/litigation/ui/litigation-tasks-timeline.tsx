@@ -36,24 +36,44 @@ import ForwardLitigationTaskDialog from "@/components/litigation/modals/forward-
 import LitigationTaskForwardsDialog from "@/components/litigation/modals/litigation-task-forwards-dialog";
 import { UpdateLitigationTaskDialog } from "@/components/litigation/modals/update-litigation-task-dialog";
 import DeleteLitigationTaskButton from "@/components/litigation/buttons/delete-litigation-task-button";
+import { useIntl } from "react-intl"; // Import useIntl
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 export default function LitigationTasksTimeline({ litigationId, nextStepId }) {
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllLitigationTasks(litigationId);
+  const intl = useIntl();
+
   if (isError) {
     throw new Error("Failed to fetch litigation tasks");
   }
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        {intl.formatMessage({
+          id: "litigation.loading",
+        })}
+      </div>
+    );
   }
+
   if (!data || data.length === 0) {
-    return <div>No tasks found</div>;
+    return (
+      <div>
+        {intl.formatMessage({
+          id: "litigation.litigation.taskNotFound",
+        })}
+      </div>
+    );
   }
+
   return (
     <Timeline>
       <TimelineSeparator />
@@ -70,7 +90,7 @@ export default function LitigationTasksTimeline({ litigationId, nextStepId }) {
             createdBy,
             forwards,
           },
-          index,
+          index
         ) => (
           <TimelineItem
             key={id}
@@ -94,7 +114,11 @@ export default function LitigationTasksTimeline({ litigationId, nextStepId }) {
                       </Button>
                     </TooltipTrigger>
                   </DropdownMenuTrigger>
-                  <TooltipContent>Menu</TooltipContent>
+                  <TooltipContent>
+                    {intl.formatMessage({
+                      id: "litigation.litigation.tasks.menu",
+                    })}
+                  </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
                   <CompleteLitigationTaskDialog
@@ -108,69 +132,67 @@ export default function LitigationTasksTimeline({ litigationId, nextStepId }) {
                       onSelect={(e) => e.preventDefault()}
                     >
                       <SquareCheck />
-                      Valider
+                      {intl.formatMessage({
+                        id: "litigation.litigation.tasks.validate",
+                      })}{" "}
                     </DropdownMenuItem>
                   </CompleteLitigationTaskDialog>
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardLitigationTaskDialog
-                      asChild
-                      taskId={id}
-                    >
+                    <ForwardLitigationTaskDialog asChild taskId={id}>
                       <DropdownMenuItem
                         disabled={nextStepId !== id}
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        {intl.formatMessage({
+                          id: "litigation.litigation.tasks.forward",
+                        })}{" "}
                       </DropdownMenuItem>
                     </ForwardLitigationTaskDialog>
                   )}
 
                   {forwards && forwards.length > 0 && (
-                    <LitigationTaskForwardsDialog
-                      asChild
-                      forwards={forwards}
-                    >
+                    <LitigationTaskForwardsDialog asChild forwards={forwards}>
                       <DropdownMenuItem
                         disabled={!(nextStepId === id && form)}
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareStack />
-                        Historique des transferts
+                        {intl.formatMessage({
+                          id: "litigation.litigation.tasks.transferHistory",
+                        })}{" "}
                       </DropdownMenuItem>
                     </LitigationTaskForwardsDialog>
                   )}
 
                   {type === "task" && (
                     <>
-                      <UpdateLitigationTaskDialog
-                        asChild
-                        taskId={id}
-                      >
+                      <UpdateLitigationTaskDialog asChild taskId={id}>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2"
                           onSelect={(e) => e.preventDefault()}
                         >
                           <Pencil />
-                          Modifier
+                          {intl.formatMessage({
+                            id: "litigation.litigation.tasks.edit",
+                          })}{" "}
                         </DropdownMenuItem>
                       </UpdateLitigationTaskDialog>
 
                       <DropdownMenuSeparator />
 
-                      <DeleteLitigationTaskButton
-                        asChild
-                        taskId={id}
-                      >
+                      <DeleteLitigationTaskButton asChild taskId={id}>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2 text-destructive"
                           onSelect={(e) => e.preventDefault()}
                         >
                           <Trash />
-                          Supprimer
+                          {intl.formatMessage({
+                            id: "litigation.litigation.tasks.delete",
+                          })}{" "}
                         </DropdownMenuItem>
                       </DeleteLitigationTaskButton>
                     </>
@@ -188,7 +210,11 @@ export default function LitigationTasksTimeline({ litigationId, nextStepId }) {
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  {intl.formatMessage({
+                    id: "litigation.litigation.tasks.completed",
+                  })}{" "}
+                </p>
               )}
             </TimelineItemContent>
 
@@ -210,16 +236,16 @@ export default function LitigationTasksTimeline({ litigationId, nextStepId }) {
               </TimelineItemContent>
             )}
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": data.every(
-            (step) => step.completed,
+            (step) => step.completed
           ),
         })}
       >
-        Terminé !!!
+        {intl.formatMessage({ id: "litigation.litigation.tasks.finished" })}{" "}
       </TimelineHead>
     </Timeline>
   );

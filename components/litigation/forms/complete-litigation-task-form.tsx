@@ -20,6 +20,8 @@ import {
 import { useCompleteLitigationTaskForm } from "@/lib/litigation/hooks";
 import { useCompleteLitigationTask } from "@/services/api-sdk/models/litigation";
 import DocumentsSectionForm from "@/components/litigation/forms/documents-section-form";
+import { useIntl } from "react-intl";
+
 export default function CompleteLitigationTaskForm({
   formId,
   taskId,
@@ -30,27 +32,34 @@ export default function CompleteLitigationTaskForm({
 }) {
   const { form, filesArray } = useCompleteLitigationTaskForm(stepForm.fields);
   const { mutateAsync } = useCompleteLitigationTask(taskId);
+  const intl = useIntl();
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Tâche complétée avec succès.",
+            description: intl.formatMessage({
+              id: "litigation.litigation.tasks.success",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description: "Une erreur est survenue lors de la complétion.",
+            description: intl.formatMessage({
+              id: "litigation.litigation.tasks.error",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -137,7 +146,9 @@ export default function CompleteLitigationTaskForm({
               }
               return (
                 <DocumentsSectionForm
-                  label="Documents"
+                  label={intl.formatMessage({
+                    id: "litigation.tasks.documents",
+                  })}
                   fieldName={item.name}
                   form={form}
                   fieldArray={filesArray}

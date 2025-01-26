@@ -1,3 +1,4 @@
+"use client";
 import { Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LitigationListPageBreadcrumb } from "@/components/litigation/breadcrumbs";
@@ -5,6 +6,7 @@ import AddLitigationDialog from "@/components/litigation/modals/add-litigation-d
 import LitigationList from "@/components/litigation/ui/litigation-list";
 import { SearchInput, SearchProvider } from "@/providers/search-provider";
 import { Portal } from "@/components/ui/portal";
+import { FormattedMessage } from "react-intl";
 export default function LitigationListPage() {
   return (
     <SearchProvider>
@@ -17,12 +19,14 @@ export default function LitigationListPage() {
           <AddLitigationDialog asChild>
             <Button className="gap-2">
               <Scale />
-              <span className="sr-only sm:not-sr-only">Nouveau dossier</span>
+              <span className="sr-only sm:not-sr-only">
+                <FormattedMessage id="litigation.litigation.button.newFile" />
+              </span>
             </Button>
           </AddLitigationDialog>
         </div>
         <h1 className="relative text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-          Choisir un dossier de contentieux
+          <FormattedMessage id="litigation.litigation.title.chooseFile" />
         </h1>
         <LitigationList />
       </div>

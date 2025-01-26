@@ -20,28 +20,43 @@ import {
 } from "@/components/ui/select";
 import { partyTypes } from "@/services/api-sdk/types/litigation/litigation-party";
 import { useMemo } from "react";
+import { useIntl } from "react-intl"; // Import useIntl
+
 export default function LitigationPartyForm({ formId, className, onSubmit }) {
+  const intl = useIntl(); // Récupérer l'objet intl
   const form = useLitigationPartyForm();
+
+  // Traduire les libellés dynamiques
   const nameLabel = useMemo(() => {
     switch (form.watch("type")) {
       case "legal":
-        return "Dénomination";
+        return intl.formatMessage({
+          id: "litigation.litigationPartyForm.legalName",
+        });
       case "individual":
-        return "Nom et Prénoms";
+        return intl.formatMessage({
+          id: "litigation.litigationPartyForm.individualName",
+        });
       default:
         return undefined;
     }
-  }, [form]);
+  }, [form, intl]);
+
   const addressLabel = useMemo(() => {
     switch (form.watch("type")) {
       case "legal":
-        return "Siège social";
+        return intl.formatMessage({
+          id: "litigation.litigationPartyForm.legalAddress",
+        });
       case "individual":
-        return "Adresse";
+        return intl.formatMessage({
+          id: "litigation.litigationPartyForm.individualAddress",
+        });
       default:
         return undefined;
     }
-  }, [form]);
+  }, [form, intl]);
+
   return (
     <Form {...form}>
       <form
@@ -54,22 +69,24 @@ export default function LitigationPartyForm({ formId, className, onSubmit }) {
           name="type"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Type</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "litigation.litigationPartyForm.type",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
-                  <Select
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger className="h-12 pl-10">
-                      <SelectValue placeholder="Sélectionner un type" />
+                      <SelectValue
+                        placeholder={intl.formatMessage({
+                          id: "litigation.litigationPartyForm.selectType",
+                        })}
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {partyTypes.map((category) => (
-                        <SelectItem
-                          value={category.value}
-                          key={category.value}
-                        >
+                        <SelectItem value={category.value} key={category.value}>
                           {category.label}
                         </SelectItem>
                       ))}
@@ -130,12 +147,18 @@ export default function LitigationPartyForm({ formId, className, onSubmit }) {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Téléphone</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "litigation.litigationPartyForm.phone",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Téléphone"
+                    placeholder={intl.formatMessage({
+                      id: "litigation.litigationPartyForm.phone",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -151,12 +174,18 @@ export default function LitigationPartyForm({ formId, className, onSubmit }) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({
+                  id: "litigation.litigationPartyForm.email",
+                })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Email"
+                    placeholder={intl.formatMessage({
+                      id: "litigation.litigationPartyForm.email",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
