@@ -16,36 +16,44 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForwardRecoveryStepForm } from "@/lib/recovery/hooks";
 import { useForwardRecoveryStep } from "@/services/api-sdk/models/recovery";
 import UserSelect from "@/components/recovery/inputs/user-select";
+import { useIntl } from "react-intl";
+
 export default function ForwardRecoveryStepForm({
   formId,
   eventId,
   onSuccess,
   onError,
 }) {
+  const intl = useIntl();
   const form = useForwardRecoveryStepForm();
   const { mutateAsync } = useForwardRecoveryStep(eventId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (updatedData) => {
           toast({
-            description: "Tâche transférée avec succès",
+            description: intl.formatMessage({
+              id: "recovery.taskTransferredSuccess",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(updatedData);
         },
         onError: () => {
           toast({
-            description:
-              "Une erreur est survenue lors du transfert de la tâche",
+            description: intl.formatMessage({
+              id: "recovery.taskTransferError",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -58,12 +66,16 @@ export default function ForwardRecoveryStepForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Objet</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.subject" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Objet"
+                    placeholder={intl.formatMessage({
+                      id: "recovery.subjectPlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -79,7 +91,9 @@ export default function ForwardRecoveryStepForm({
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.dueDate" })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}
@@ -97,7 +111,9 @@ export default function ForwardRecoveryStepForm({
           name="receiverId"
           render={({ field }) => (
             <FormItem className="flex-1">
-              <FormLabel>Destinataire</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.recipient" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <UserSelect
@@ -119,12 +135,16 @@ export default function ForwardRecoveryStepForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observations</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.observations" })}
+              </FormLabel>
               <FormControl>
                 <Textarea
                   {...field}
                   disabled={form.formState.isSubmitting}
-                  placeholder="Observations"
+                  placeholder={intl.formatMessage({
+                    id: "recovery.observationsPlaceholder",
+                  })}
                   className="resize-none"
                   rows={5}
                 />

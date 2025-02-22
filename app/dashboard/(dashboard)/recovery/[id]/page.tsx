@@ -19,17 +19,24 @@ import RecoveryStepsTimelineModal from "@/components/recovery/modals/recovery-st
 import RecoveryFilesModal from "@/components/recovery/modals/recovery-files-modal";
 import { RecoveryDetailsTable } from "@/components/recovery/tables/recovery-details-table";
 import RecoveryDetailsPageLoading from "./loading";
+import { useIntl } from "react-intl";
+
 export default function RecoveryDetailsPage({ params: { id } }) {
+  const intl = useIntl();
   const { data, isLoading, isError } = useOneRecovery(id);
+
   if (isError) {
-    throw new Error("An error occurred while fetching the data");
+    throw new Error(intl.formatMessage({ id: "recovery.fetchError" }));
   }
+
   if (isLoading) {
     return <RecoveryDetailsPageLoading />;
   }
+
   if (!data) {
     notFound();
   }
+
   return (
     <div className="container flex flex-1 flex-col gap-10 overflow-y-auto py-5">
       <RecoveryDetailsPageBreadcrumb recoveryTitle={data.title} />
@@ -45,32 +52,31 @@ export default function RecoveryDetailsPage({ params: { id } }) {
             nextStepId={data.nextStep?.id}
           >
             <Button
-              aria-label="Planification du recouvrement"
+              aria-label={intl.formatMessage({ id: "recovery.planRecovery" })}
               className="gap-2"
             >
               <GanttChart />
-              Planifier
+              {intl.formatMessage({ id: "recovery.planRecovery" })}
             </Button>
           </RecoveryStepsTimelineModal>
 
           <DropdownMenu>
             <Tooltip>
-              <DropdownMenuTrigger
-                asChild
-                className="cursor-pointer sm:hidden"
-              >
+              <DropdownMenuTrigger asChild className="cursor-pointer sm:hidden">
                 <TooltipTrigger asChild>
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="Menu"
+                    aria-label={intl.formatMessage({ id: "recovery.menu" })}
                     className="gap-2 rounded-full"
                   >
                     <EllipsisVertical size={30} />
                   </Button>
                 </TooltipTrigger>
               </DropdownMenuTrigger>
-              <TooltipContent>Menu</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({ id: "recovery.menu" })}
+              </TooltipContent>
             </Tooltip>
             <DropdownMenuContent>
               <RecoveryFilesModal
@@ -83,7 +89,7 @@ export default function RecoveryDetailsPage({ params: { id } }) {
                   onSelect={(e) => e.preventDefault()}
                 >
                   <Files />
-                  Archives
+                  {intl.formatMessage({ id: "recovery.archives" })}
                 </DropdownMenuItem>
               </RecoveryFilesModal>
             </DropdownMenuContent>
@@ -100,14 +106,16 @@ export default function RecoveryDetailsPage({ params: { id } }) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    aria-label="Archives"
+                    aria-label={intl.formatMessage({ id: "archives" })}
                     className="gap-2 rounded-full"
                   >
                     <Files size={30} />
                   </Button>
                 </TooltipTrigger>
               </RecoveryFilesModal>
-              <TooltipContent>Archives</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({ id: "recovery.archives" })}
+              </TooltipContent>
             </Tooltip>
           </div>
         </div>

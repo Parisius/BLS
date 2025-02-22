@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -18,6 +19,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Printer } from "lucide-react";
 import PrintRecoveryButton from "@/components/recovery/buttons/print-recovery-button";
+import { useIntl } from "react-intl";
+
 export function RecoveryDetailsTable({
   recoveryId,
   title,
@@ -29,20 +32,40 @@ export function RecoveryDetailsTable({
   nextStep,
   isArchived,
 }) {
+  const intl = useIntl();
+
   return (
     <Table className="border">
       <TableHeader>
         <TableRow>
-          <TableHead>Intitulé</TableHead>
-          <TableHead>Référence</TableHead>
-          {guaranteeId && <TableHead>Garantie</TableHead>}
-          {contractId && <TableHead>Contrat</TableHead>}
-          <TableHead>Etape actuelle</TableHead>
-          <TableHead className={cn(nextStep && "text-destructive")}>
-            Prochaine étape
+          <TableHead>
+            {intl.formatMessage({ id: "recovery.table.title" })}
           </TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Statut</TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "recovery.table.reference" })}
+          </TableHead>
+          {guaranteeId && (
+            <TableHead>
+              {intl.formatMessage({ id: "recovery.table.guarantee" })}
+            </TableHead>
+          )}
+          {contractId && (
+            <TableHead>
+              {intl.formatMessage({ id: "recovery.table.contract" })}
+            </TableHead>
+          )}
+          <TableHead>
+            {intl.formatMessage({ id: "recovery.table.currentStep" })}
+          </TableHead>
+          <TableHead className={cn(nextStep && "text-destructive")}>
+            {intl.formatMessage({ id: "recovery.table.nextStep" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "recovery.table.type" })}
+          </TableHead>
+          <TableHead>
+            {intl.formatMessage({ id: "recovery.table.status" })}
+          </TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
@@ -52,26 +75,19 @@ export function RecoveryDetailsTable({
           <TableCell>{reference}</TableCell>
           {guaranteeId && (
             <TableCell>
-              <Button
-                asChild
-                variant="link"
-                className="gap-1 px-0 italic"
-              >
+              <Button asChild variant="link" className="gap-1 px-0 italic">
                 <Link href={MortgageRoutes.mortgagePage(guaranteeId).index}>
-                  Voir la garantie
+                  $ {intl.formatMessage({ id: "recovery.table.viewGuarantee" })}
                 </Link>
               </Button>
             </TableCell>
           )}
           {contractId && (
             <TableCell>
-              <Button
-                asChild
-                variant="link"
-                className="gap-1 px-0 italic"
-              >
+              <Button asChild variant="link" className="gap-1 px-0 italic">
                 <Link href={ContractRoutes.contractPage(contractId).index}>
-                  Voir le contrat
+                  {/* Utilisez useIntl pour formater le texte du bouton */}
+                  {intl.formatMessage({ id: "recovery.table.viewContract" })}
                 </Link>
               </Button>
             </TableCell>
@@ -82,12 +98,18 @@ export function RecoveryDetailsTable({
           </TableCell>
           <TableCell>
             <Badge className="text-nowrap bg-muted text-muted-foreground">
-              {type.includes("friendly") ? "Amiable" : "Forcée"}
+              {/* Utilisez useIntl pour formater le texte du badge */}
+              {type.includes("friendly")
+                ? intl.formatMessage({ id: "recovery.table.friendly" })
+                : intl.formatMessage({ id: "recovery.table.forced" })}
             </Badge>
           </TableCell>
           <TableCell>
             <Badge className="text-nowrap bg-muted text-muted-foreground">
-              {isArchived ? "Archivé" : "En cours"}
+              {/* Utilisez useIntl pour formater le texte du badge */}
+              {isArchived
+                ? intl.formatMessage({ id: "recovery.table.archived" })
+                : intl.formatMessage({ id: "recovery.table.inProgress" })}
             </Badge>
           </TableCell>
           <TableCell>
@@ -102,7 +124,9 @@ export function RecoveryDetailsTable({
                   <Printer />
                 </PrintRecoveryButton>
               </TooltipTrigger>
-              <TooltipContent>Imprimer</TooltipContent>
+              <TooltipContent>
+                {intl.formatMessage({ id: "recovery.table.print" })}
+              </TooltipContent>
             </Tooltip>
           </TableCell>
         </TableRow>

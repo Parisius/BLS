@@ -125,7 +125,7 @@ export const useOneRecoveryStep = (stepId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateRecoveryStep = (recoveryId, options) => {
+export const useCreateRecoveryStep = (recoveryId, options = {}) => {
   const invalidateAllRecoverySteps = useInvalidateAllRecoverySteps();
   const invalidateOneRecovery = useInvalidateOneRecovery();
   const getMutationOptions = useCallback(
@@ -137,7 +137,7 @@ export const useCreateRecoveryStep = (recoveryId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllRecoverySteps, invalidateOneRecovery, recoveryId],
+    [invalidateAllRecoverySteps, invalidateOneRecovery, recoveryId]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -164,7 +164,7 @@ export const useCreateRecoveryStep = (recoveryId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useUpdateRecoveryStep = (stepId, options) => {
+export const useUpdateRecoveryStep = (stepId, options = {}) => {
   const invalidateOneRecoveryStep = useInvalidateOneRecoveryStep();
   const invalidateAllRecoverySteps = useInvalidateAllRecoverySteps();
   const getMutationOptions = useCallback(
@@ -176,7 +176,7 @@ export const useUpdateRecoveryStep = (stepId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [stepId, invalidateAllRecoverySteps, invalidateOneRecoveryStep],
+    [stepId, invalidateAllRecoverySteps, invalidateOneRecoveryStep]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -203,7 +203,7 @@ export const useUpdateRecoveryStep = (stepId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation object.
  */
-export const useCompleteRecoveryStep = (stepId, options) => {
+export const useCompleteRecoveryStep = (stepId, options = {}) => {
   const invalidateAllRecoverySteps = useInvalidateAllRecoverySteps();
   const invalidateOneRecoveryStep = useInvalidateOneRecoveryStep();
   const invalidateOneRecovery = useInvalidateOneRecovery();
@@ -224,7 +224,7 @@ export const useCompleteRecoveryStep = (stepId, options) => {
       invalidateOneRecovery,
       invalidateOneRecoveryStep,
       stepId,
-    ],
+    ]
   );
   const mutation = useMutation({
     mutationFn: (args) => {
@@ -274,7 +274,7 @@ export const useCompleteRecoveryStep = (stepId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useForwardRecoveryStep = (stepId, options) => {
+export const useForwardRecoveryStep = (stepId, options = {}) => {
   const invalidateOneRecoveryStep = useInvalidateOneRecoveryStep();
   const invalidateAllRecoverySteps = useInvalidateAllRecoverySteps();
   const getMutationOptions = useCallback(
@@ -286,7 +286,7 @@ export const useForwardRecoveryStep = (stepId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [stepId, invalidateAllRecoverySteps, invalidateOneRecoveryStep],
+    [stepId, invalidateAllRecoverySteps, invalidateOneRecoveryStep]
   );
   const mutation = useMutation({
     mutationFn: (args) =>
@@ -313,7 +313,7 @@ export const useForwardRecoveryStep = (stepId, options) => {
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useDeleteRecoveryStep = (stepId, options) => {
+export const useDeleteRecoveryStep = (stepId, options = {}) => {
   const removeOneRecoveryStep = useRemoveOneRecoveryStepQuery();
   const invalidateAllRecoverySteps = useInvalidateAllRecoverySteps();
   const getMutationOptions = useCallback(
@@ -325,7 +325,7 @@ export const useDeleteRecoveryStep = (stepId, options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [stepId, invalidateAllRecoverySteps, removeOneRecoveryStep],
+    [stepId, invalidateAllRecoverySteps, removeOneRecoveryStep]
   );
   const mutation = useMutation({
     mutationFn: () => deleteRecoveryStep(stepId),

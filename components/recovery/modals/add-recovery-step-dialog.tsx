@@ -15,37 +15,44 @@ import { FormProvider } from "react-hook-form";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { useRecoveryStepForm } from "@/lib/recovery/hooks";
 import AddRecoveryStepForm from "@/components/recovery/forms/add-recovery-step-form";
+import { useIntl } from "react-intl";
+
 export default function AddRecoveryStepDialog({ recoveryId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const form = useRecoveryStepForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouvelle tâche</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({ id: "recovery.newTask" })}
+            </DialogTitle>
             <DialogDescription>
-              Ajouter une nouvelle tâche à la planification de cette session
+              {intl.formatMessage({ id: "recovery.addTaskDescription" })}
             </DialogDescription>
           </DialogHeader>
           <AddRecoveryStepForm
             formId={formId}
             recoveryId={recoveryId}
             onSuccess={handleSuccess}
+            onError={handleError}
           />
           <DialogFooter className="gap-2">
             <DialogClose ref={closeRef} />
             <DialogClose asChild>
-              <Button
-                variant="muted"
-                onClick={() => form.reset()}
-              >
-                Annuler
+              <Button variant="destructive" onClick={() => form.reset()}>
+                {intl.formatMessage({ id: "recovery.cancel" })}
               </Button>
             </DialogClose>
             <Button
@@ -53,7 +60,11 @@ export default function AddRecoveryStepDialog({ recoveryId, ...props }) {
               form={formId}
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Ajouter"}
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({ id: "recovery.add" })
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

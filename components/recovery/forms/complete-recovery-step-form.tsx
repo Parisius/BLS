@@ -20,6 +20,8 @@ import {
 import { useCompleteRecoveryStepForm } from "@/lib/recovery/hooks";
 import { useCompleteRecoveryStep } from "@/services/api-sdk/models/recovery";
 import DocumentsSectionForm from "@/components/recovery/forms/documents-section-form";
+import { useIntl } from "react-intl";
+
 export default function CompleteRecoveryStepForm({
   formId,
   stepId,
@@ -28,29 +30,36 @@ export default function CompleteRecoveryStepForm({
   onError,
   onSuccess,
 }) {
+  const intl = useIntl();
   const { form, filesArray } = useCompleteRecoveryStepForm(stepForm.fields);
   const { mutateAsync } = useCompleteRecoveryStep(stepId);
+
   const handleSubmit = useCallback(
     async (data) => {
       await mutateAsync(data, {
         onSuccess: (createdData) => {
           toast({
-            description: "Etape complétée avec succès.",
+            description: intl.formatMessage({
+              id: "recovery.stepCompletedSuccess",
+            }),
             className: "bg-primary text-primary-foreground",
           });
           onSuccess?.(createdData);
         },
         onError: () => {
           toast({
-            description: "Une erreur est survenue lors de la complétion.",
+            description: intl.formatMessage({
+              id: "recovery.stepCompletionError",
+            }),
             className: "bg-destructive text-destructive-foreground",
           });
           onError?.();
         },
       });
     },
-    [mutateAsync, onError, onSuccess],
+    [mutateAsync, onError, onSuccess, intl]
   );
+
   return (
     <Form {...form}>
       <form
@@ -137,7 +146,7 @@ export default function CompleteRecoveryStepForm({
               }
               return (
                 <DocumentsSectionForm
-                  label="Documents"
+                  label={intl.formatMessage({ id: "recovery.documents" })}
                   fieldName={item.name}
                   form={form}
                   fieldArray={filesArray}

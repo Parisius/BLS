@@ -15,28 +15,34 @@ import { useCallback, useRef } from "react";
 import EllipsisLoader from "@/components/ui/ellipsis-loader";
 import { toast } from "@/components/ui/use-toast";
 import { useCompleteRecoveryStep } from "@/services/api-sdk/models/recovery";
+import { useIntl } from "react-intl";
+
 export default function CompleteRecoveryStepButton({ stepId, ...props }) {
+  const intl = useIntl();
   const form = useForm();
   const { mutateAsync } = useCompleteRecoveryStep(stepId);
-  const ref = useRef(null);
+  const ref = useRef<HTMLButtonElement>(null);
+
   const handleComplete = useCallback(async () => {
     await mutateAsync(undefined, {
       onSuccess: () => {
         toast({
-          description: "Etape complétée avec succès !",
+          description: intl.formatMessage({
+            id: "recovery.completeStepSuccess",
+          }),
           className: "bg-primary text-primary-foreground",
         });
         ref.current?.click();
       },
       onError: () => {
         toast({
-          description:
-            "Une erreur est survenue lors de la complétion de l'étape.",
+          description: intl.formatMessage({ id: "recovery.completeStepError" }),
           className: "bg-destructive text-destructive-foreground",
         });
       },
     });
-  }, [mutateAsync]);
+  }, [mutateAsync, intl]);
+
   return (
     <AlertDialog>
       <AlertDialogTrigger {...props} />
@@ -44,23 +50,25 @@ export default function CompleteRecoveryStepButton({ stepId, ...props }) {
         <form onSubmit={form.handleSubmit(handleComplete)}>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Êtes-vous sûr de vouloir compléter cette étape ?
+              {intl.formatMessage({ id: "recovery.confirmCompleteStepTitle" })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Cette action est irréversible.
+              {intl.formatMessage({
+                id: "recovery.confirmCompleteStepDescription",
+              })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel
-              ref={ref}
-              className="sr-only"
-            />
-            <AlertDialogCancel type="button">Cancel</AlertDialogCancel>
-            <Button
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
-              {form.formState.isSubmitting ? <EllipsisLoader /> : "Terminer"}
+            <AlertDialogCancel ref={ref} className="sr-only" />
+            <AlertDialogCancel type="button">
+              {intl.formatMessage({ id: "recovery.cancel" })}
+            </AlertDialogCancel>
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? (
+                <EllipsisLoader />
+              ) : (
+                intl.formatMessage({ id: "recovery.finish" })
+              )}
             </Button>
           </AlertDialogFooter>
         </form>

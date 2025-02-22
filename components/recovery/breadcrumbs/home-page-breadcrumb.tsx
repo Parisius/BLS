@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +10,8 @@ import {
 import { ModulesRoutes } from "@/config/routes";
 import { Component } from "lucide-react";
 import Link from "next/link";
+import { FormattedMessage } from "react-intl";
+
 export function HomePageBreadcrumb() {
   return (
     <Breadcrumb>
@@ -22,7 +25,9 @@ export function HomePageBreadcrumb() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Recouvrement</BreadcrumbPage>
+          <BreadcrumbPage>
+            <FormattedMessage id="recovery.recovery" />
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

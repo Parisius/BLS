@@ -11,8 +11,12 @@ import { Input } from "@/components/ui/input";
 import { Tag } from "lucide-react";
 import { DateInput } from "@/components/ui/date-input";
 import { useRecoveryStepForm } from "@/lib/recovery/hooks";
+import { useIntl } from "react-intl";
+
 export default function RecoveryStepForm({ formId, onSubmit }) {
+  const intl = useIntl();
   const form = useRecoveryStepForm();
+
   return (
     <Form {...form}>
       <form
@@ -25,12 +29,16 @@ export default function RecoveryStepForm({ formId, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé de la tâche</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.taskTitle" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
-                    placeholder="Intitulé de la tâche"
+                    placeholder={intl.formatMessage({
+                      id: "recovery.taskTitlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -46,7 +54,9 @@ export default function RecoveryStepForm({ formId, onSubmit }) {
           name="dueDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date d&apos;échéance</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.dueDate" })}
+              </FormLabel>
               <FormControl>
                 <DateInput
                   value={field.value}

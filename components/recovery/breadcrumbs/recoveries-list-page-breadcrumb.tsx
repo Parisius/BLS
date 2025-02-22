@@ -1,3 +1,4 @@
+"use client";
 import {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -17,6 +18,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { RecoveryRoutes } from "@/config/routes/recovery";
+import { FormattedMessage } from "react-intl";
+
 export function RecoveriesListPageBreadcrumb() {
   return (
     <Breadcrumb>
@@ -36,7 +39,9 @@ export function RecoveriesListPageBreadcrumb() {
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <Link href={RecoveryRoutes.index}>Recouvrement</Link>
+                <Link href={RecoveryRoutes.index}>
+                  <FormattedMessage id="recovery.recovery" />
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -44,13 +49,17 @@ export function RecoveriesListPageBreadcrumb() {
         <div className="hidden sm:contents">
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href={RecoveryRoutes.index}>Recouvrement</Link>
+              <Link href={RecoveryRoutes.index}>
+                <FormattedMessage id="recovery.recovery" />
+              </Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
         </div>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>Liste des Recouvrements</BreadcrumbPage>
+          <BreadcrumbPage>
+            <FormattedMessage id="recovery.recoveriesList" />
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

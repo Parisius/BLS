@@ -36,24 +36,32 @@ import { UpdateRecoveryStepDialog } from "@/components/recovery/modals/update-re
 import DeleteRecoveryStepButton from "@/components/recovery/buttons/delete-recovery-step-button";
 import ForwardRecoveryStepDialog from "@/components/recovery/modals/forward-recovery-step-dialog";
 import RecoveryStepForwardsDialog from "@/components/recovery/modals/recovery-step-forwards-dialog";
+import { useIntl } from "react-intl";
+
 const canForward = ({ forwards, createdBy }, currentUser) => {
   if (forwards && forwards.length > 0) {
     return forwards[0].receiver.id === currentUser?.id;
   }
   return createdBy === currentUser?.id;
 };
+
 export default function RecoveryStepsTimeline({ recoveryId, nextStepId }) {
+  const intl = useIntl();
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useAllRecoverySteps(recoveryId);
+
   if (isError) {
-    throw new Error("Failed to fetch recovery steps");
+    throw new Error(intl.formatMessage({ id: "recovery.fetchError" }));
   }
+
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{intl.formatMessage({ id: "recovery.loading" })}</div>;
   }
+
   if (!data || data.length === 0) {
-    return <div>No steps found</div>;
+    return <div>{intl.formatMessage({ id: "recovery.noStepsFound" })}</div>;
   }
+
   return (
     <Timeline>
       <TimelineSeparator />
@@ -70,7 +78,7 @@ export default function RecoveryStepsTimeline({ recoveryId, nextStepId }) {
             createdBy,
             forwards,
           },
-          index,
+          index
         ) => (
           <TimelineItem
             key={id}
@@ -94,7 +102,9 @@ export default function RecoveryStepsTimeline({ recoveryId, nextStepId }) {
                       </Button>
                     </TooltipTrigger>
                   </DropdownMenuTrigger>
-                  <TooltipContent>Menu</TooltipContent>
+                  <TooltipContent>
+                    {intl.formatMessage({ id: "recovery.menu" })}
+                  </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent>
                   <CompleteRecoveryStepDialog
@@ -108,69 +118,57 @@ export default function RecoveryStepsTimeline({ recoveryId, nextStepId }) {
                       onSelect={(e) => e.preventDefault()}
                     >
                       <SquareCheck />
-                      Valider
+                      {intl.formatMessage({ id: "recovery.validate" })}
                     </DropdownMenuItem>
                   </CompleteRecoveryStepDialog>
 
                   {canForward({ forwards, createdBy }, currentUser) && (
-                    <ForwardRecoveryStepDialog
-                      asChild
-                      eventId={id}
-                    >
+                    <ForwardRecoveryStepDialog asChild eventId={id}>
                       <DropdownMenuItem
                         disabled={nextStepId !== id}
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <Forward />
-                        Transférer
+                        {intl.formatMessage({ id: "recovery.transfer" })}
                       </DropdownMenuItem>
                     </ForwardRecoveryStepDialog>
                   )}
 
                   {forwards && forwards.length > 0 && (
-                    <RecoveryStepForwardsDialog
-                      asChild
-                      forwards={forwards}
-                    >
+                    <RecoveryStepForwardsDialog asChild forwards={forwards}>
                       <DropdownMenuItem
                         disabled={!(nextStepId === id && form)}
                         className="cursor-pointer gap-2"
                         onSelect={(e) => e.preventDefault()}
                       >
                         <SquareStack />
-                        Historique des transferts
+                        {intl.formatMessage({ id: "recovery.transferHistory" })}
                       </DropdownMenuItem>
                     </RecoveryStepForwardsDialog>
                   )}
 
                   {type === "task" && (
                     <>
-                      <UpdateRecoveryStepDialog
-                        asChild
-                        stepId={id}
-                      >
+                      <UpdateRecoveryStepDialog asChild stepId={id}>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2"
                           onSelect={(e) => e.preventDefault()}
                         >
                           <Pencil />
-                          Modifier
+                          {intl.formatMessage({ id: "recovery.edit" })}
                         </DropdownMenuItem>
                       </UpdateRecoveryStepDialog>
 
                       <DropdownMenuSeparator />
 
-                      <DeleteRecoveryStepButton
-                        asChild
-                        stepId={id}
-                      >
+                      <DeleteRecoveryStepButton asChild stepId={id}>
                         <DropdownMenuItem
                           className="cursor-pointer gap-2 text-destructive"
                           onSelect={(e) => e.preventDefault()}
                         >
                           <Trash />
-                          Supprimer
+                          {intl.formatMessage({ id: "recovery.delete" })}
                         </DropdownMenuItem>
                       </DeleteRecoveryStepButton>
                     </>
@@ -188,7 +186,9 @@ export default function RecoveryStepsTimeline({ recoveryId, nextStepId }) {
             <TimelineItemContent position={index % 2 === 0 ? "left" : "right"}>
               {title}
               {completed && (
-                <p className="text-right text-xs italic">(Complété)</p>
+                <p className="text-right text-xs italic">
+                  {intl.formatMessage({ id: "recovery.completed" })}
+                </p>
               )}
             </TimelineItemContent>
 
@@ -210,16 +210,16 @@ export default function RecoveryStepsTimeline({ recoveryId, nextStepId }) {
               </TimelineItemContent>
             )}
           </TimelineItem>
-        ),
+        )
       )}
       <TimelineHead
         className={cn({
           "bg-secondary text-secondary-foreground": data.every(
-            (step) => step.completed,
+            (step) => step.completed
           ),
         })}
       >
-        Terminé !!!
+        {intl.formatMessage({ id: "recovery.finished" })}
       </TimelineHead>
     </Timeline>
   );

@@ -11,17 +11,23 @@ import { Button } from "@/components/ui/button";
 import { FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AddRecoveryDialog from "@/components/recovery/modals/add-recovery-dialog";
+import { FormattedMessage } from "react-intl"; // Importez FormattedMessage
+
 export default function CreateRecoveryCard({ className }) {
   return (
     <Card
       className={cn(
         "max-w-96 self-center sm:min-w-96 sm:max-w-[50%]",
-        className,
+        className
       )}
     >
       <CardHeader>
-        <CardTitle>Initier un recouvrement</CardTitle>
-        <CardDescription>Initier un nouveau recouvrement</CardDescription>
+        <CardTitle>
+          <FormattedMessage id="recovery.initiateRecovery" />
+        </CardTitle>
+        <CardDescription>
+          <FormattedMessage id="recovery.initiateNewRecovery" />
+        </CardDescription>
       </CardHeader>
       <CardContent className="flex justify-center">
         <Image
@@ -35,7 +41,7 @@ export default function CreateRecoveryCard({ className }) {
         <AddRecoveryDialog asChild>
           <Button className="gap-2">
             <FolderPlus />
-            Nouveau recouvrement
+            <FormattedMessage id="recovery.newRecovery" />
           </Button>
         </AddRecoveryDialog>
       </CardFooter>

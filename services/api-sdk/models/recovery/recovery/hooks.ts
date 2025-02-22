@@ -91,7 +91,7 @@ export const useOneRecovery = (recoveryId) =>
  * @param options - The options for the mutation.
  * @returns The mutation result.
  */
-export const useCreateRecovery = (options) => {
+export const useCreateRecovery = (options = {}) => {
   const invalidateAllRecoveries = useInvalidateAllRecoveries();
   const getMutationOptions = useCallback(
     (mutateOptions) => ({
@@ -101,7 +101,7 @@ export const useCreateRecovery = (options) => {
         return mutateOptions?.onSettled?.(...args);
       },
     }),
-    [invalidateAllRecoveries],
+    [invalidateAllRecoveries]
   );
   const mutation = useMutation({
     mutationFn: (args) => createRecovery(args),

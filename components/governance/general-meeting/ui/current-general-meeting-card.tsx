@@ -25,9 +25,9 @@ export default function CurrentGeneralMeetingCard({
   nextTask,
   className,
 }) {
-  const { label: statusLabel, color } = formatStatus(status);
-  const { label: meetingTypeLabel } = formatMeetingType(meetingType);
   const intl = useIntl();
+  const { label: statusLabel, color } = formatStatus(status, intl);
+  const { label: meetingTypeLabel } = formatMeetingType(meetingType, intl);
 
   return (
     <Card className={cn("w-full", className)}>

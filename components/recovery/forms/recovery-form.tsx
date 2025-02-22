@@ -18,11 +18,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { recoveryTypes } from "@/services/api-sdk/types/recovery/recovery";
+import { useRecoveryTypes } from "@/services/api-sdk/types/recovery/recovery";
 import ContractSelect from "@/components/recovery/inputs/contract-select";
 import GuaranteeSelect from "@/components/recovery/inputs/guarantee-select";
+import { useIntl } from "react-intl";
+
 export default function RecoveryForm({ formId, className, onSubmit }) {
+  const intl = useIntl();
   const form = useRecoveryForm();
+  const recoveryTypes = useRecoveryTypes();
+
   return (
     <Form {...form}>
       <form
@@ -35,21 +40,19 @@ export default function RecoveryForm({ formId, className, onSubmit }) {
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type</FormLabel>
+              <FormLabel>{intl.formatMessage({ id: "type" })}</FormLabel>
               <FormControl>
-                <Select
-                  value={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <SelectTrigger className="h-12">
-                    <SelectValue placeholder="Type" />
+                    <SelectValue
+                      placeholder={intl.formatMessage({
+                        id: "recovery.typePlaceholder",
+                      })}
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {recoveryTypes.map((type) => (
-                      <SelectItem
-                        key={type.value}
-                        value={type.value}
-                      >
+                      <SelectItem key={type.value} value={type.value}>
                         {type.label}
                       </SelectItem>
                     ))}
@@ -66,13 +69,17 @@ export default function RecoveryForm({ formId, className, onSubmit }) {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Intitulé</FormLabel>
+              <FormLabel>
+                {intl.formatMessage({ id: "recovery.title" })}
+              </FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
                     {...field}
                     disabled={form.formState.isSubmitting}
-                    placeholder="Intitulé"
+                    placeholder={intl.formatMessage({
+                      id: "recovery.titlePlaceholder",
+                    })}
                     className="h-12 pl-10"
                   />
                   <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -89,7 +96,9 @@ export default function RecoveryForm({ formId, className, onSubmit }) {
             name="guaranteeId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Garantie</FormLabel>
+                <FormLabel>
+                  {intl.formatMessage({ id: "recovery.guarantee" })}
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <GuaranteeSelect
@@ -113,7 +122,9 @@ export default function RecoveryForm({ formId, className, onSubmit }) {
             name="contractId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Contrat</FormLabel>
+                <FormLabel>
+                  {intl.formatMessage({ id: "recovery.contract" })}
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <ContractSelect

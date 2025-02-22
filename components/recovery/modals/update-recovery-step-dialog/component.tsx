@@ -17,17 +17,25 @@ import UpdateRecoveryStepForm from "@/components/recovery/forms/update-recovery-
 import { useOneRecoveryStep } from "@/services/api-sdk/models/recovery";
 import { useRecoveryStepForm } from "@/lib/recovery/hooks";
 import { UpdateRecoveryStepDialogSuspense } from "./suspense";
+import { useIntl } from "react-intl";
+
 export function UpdateRecoveryStepDialog({ stepId, ...props }) {
+  const intl = useIntl();
   const formId = useId();
   const { data, isLoading, isError } = useOneRecoveryStep(stepId);
   const form = useRecoveryStepForm();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+
   if (isError) {
-    throw new Error("Failed to fetch recovery step");
+    throw new Error(intl.formatMessage({ id: "recovery.fetchError" }));
   }
+
   const handleSuccess = useCallback(() => {
     closeRef.current?.click();
   }, []);
+
+  const handleError = useCallback(() => {}, []);
+
   useEffect(() => {
     if (data && !form.formState.isDirty) {
       form.reset({
@@ -36,15 +44,18 @@ export function UpdateRecoveryStepDialog({ stepId, ...props }) {
       });
     }
   }, [data, form, isLoading]);
+
   return (
     <Dialog>
       <DialogTrigger {...props} />
       <FormProvider {...form}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Modifier tâche</DialogTitle>
+            <DialogTitle>
+              {intl.formatMessage({ id: "recovery.editTask" })}
+            </DialogTitle>
             <DialogDescription>
-              Modifier les détails de la tâche
+              {intl.formatMessage({ id: "recovery.editTaskDescription" })}
             </DialogDescription>
           </DialogHeader>
           {isLoading ? (
@@ -55,15 +66,13 @@ export function UpdateRecoveryStepDialog({ stepId, ...props }) {
                 formId={formId}
                 stepId={stepId}
                 onSuccess={handleSuccess}
+                onError={handleError}
               />
               <DialogFooter className="gap-2">
                 <DialogClose ref={closeRef} />
                 <DialogClose asChild>
-                  <Button
-                    variant="muted"
-                    onClick={() => form.reset()}
-                  >
-                    Annuler
+                  <Button variant="destructive" onClick={() => form.reset()}>
+                    {intl.formatMessage({ id: "recovery.cancel" })}
                   </Button>
                 </DialogClose>
                 <Button
@@ -74,7 +83,7 @@ export function UpdateRecoveryStepDialog({ stepId, ...props }) {
                   {form.formState.isSubmitting ? (
                     <EllipsisLoader />
                   ) : (
-                    "Modifier"
+                    intl.formatMessage({ id: "recovery.edit" })
                   )}
                 </Button>
               </DialogFooter>

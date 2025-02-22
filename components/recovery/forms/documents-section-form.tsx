@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useCallback } from "react";
 import { FileInput } from "@/components/ui/file-input";
+import { useIntl } from "react-intl";
+
 export default function DocumentsSectionForm({
   label,
   fieldName,
@@ -19,15 +21,19 @@ export default function DocumentsSectionForm({
   fieldArray,
   className,
 }) {
+  const intl = useIntl();
+
   const handleRemoveRow = useCallback(
     (index) => {
       fieldArray.remove(index);
     },
-    [fieldArray],
+    [fieldArray]
   );
+
   const handleAddRow = useCallback(() => {
     fieldArray.append({ file: null, name: "" });
   }, [fieldArray]);
+
   return (
     <div className={cn("relative flex flex-col gap-5", className)}>
       {label && (
@@ -36,22 +42,23 @@ export default function DocumentsSectionForm({
         </span>
       )}
       {fieldArray.fields.map((item, index) => (
-        <div
-          key={item.id}
-          className="flex gap-5"
-        >
+        <div key={item.id} className="flex gap-5">
           <FormField
             control={form.control}
             name={`${fieldName}.${index}.file`}
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Fichier</FormLabel>
+                <FormLabel>
+                  {intl.formatMessage({ id: "recovery.file" })}
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <FileInput
                       {...field}
                       disabled={form.formState.isSubmitting}
-                      placeholder="Ajouter un fichier"
+                      placeholder={intl.formatMessage({
+                        id: "recovery.addFilePlaceholder",
+                      })}
                       className="h-12 pl-10"
                     />
                     <Newspaper className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -67,12 +74,16 @@ export default function DocumentsSectionForm({
             name={`${fieldName}.${index}.name`}
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>Nom du document</FormLabel>
+                <FormLabel>
+                  {intl.formatMessage({ id: "recovery.documentName" })}
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
                       {...field}
-                      placeholder="Nom du document"
+                      placeholder={intl.formatMessage({
+                        id: "recovery.documentNamePlaceholder",
+                      })}
                       className="h-12 pl-10"
                     />
                     <Tag className="absolute bottom-1/2 left-3 translate-y-1/2 text-foreground/50" />
@@ -100,7 +111,7 @@ export default function DocumentsSectionForm({
         onClick={handleAddRow}
       >
         <Plus />
-        Ajouter un document
+        {intl.formatMessage({ id: "recovery.addDocument" })}
       </Button>
     </div>
   );
