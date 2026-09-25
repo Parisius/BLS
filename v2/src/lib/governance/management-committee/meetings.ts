@@ -1,0 +1,76 @@
+"use server";
+
+import { apiClient, unwrap } from "@/lib/api/client";
+import { toBackendDate } from "@/lib/shared/date-utils";
+import type { components } from "@/lib/api/schema";
+
+type MeetingResponse = components["schemas"]["ManagementCommittee"];
+
+export type MeetingStatus = "pending" | "closed";
+
+export interface Meeting {
+  id: string;
+  title: string;
+  reference?: string;
+  meetingDate?: string;
+  status: MeetingStatus;
+  nextTask?: { id: string; title: string; dueDate: string };
+  filesGroups: { stepName: string; files: { filename: string; fileUrl: string }[] }[];
+}
+
+function mapMeeting(item: MeetingResponse): Meeting {
+  return {
+    id: item.id!,
+    title: item.libelle ?? "",
+    reference: item.reference,
+    meetingDate: item.session_date,
+    status: (item.status as MeetingStatus) ?? "pending",
+    nextTask: item.next_task as never,
+    filesGroups: (item.files as {
+      step_name?: string;
+      files?: { filename?: string; file_url?: string }[];
+    }[] ?? []).map((group) => ({
+      stepName: group.step_name ?? "",
+      files: (group.files ?? []).map((file) => ({
+        filename: file.filename ?? "",
+        fileUrl: file.file_url ?? "",
+      })),
+    })),
+  };
+}
+
+export async function getAllMeetings(status: MeetingStatus) {
+  const data = unwrap(await apiClient.GET("/management_committees", { params: { query: { status } } }));
+  return data.map(mapMeeting);
+}
+
+export async function getOneMeeting(meetingId: string) {
+  const data = unwrap(
+    await apiClient.GET("/management_committees/{meetingId}", { params: { path: { meetingId } } }),
+  );
+  return mapMeeting(data);
+}
+
+export interface MeetingFormArgs {
+  title: string;
+  meetingDate: string;
+}
+
+export async function createMeeting(args: MeetingFormArgs) {
+  const data = unwrap(
+    await apiClient.POST("/management_committees", {
+      body: { libelle: args.title, session_date: toBackendDate(args.meetingDate) },
+    }),
+  );
+  return mapMeeting(data);
+}
+
+export async function updateMeeting(meetingId: string, args: MeetingFormArgs) {
+  const data = unwrap(
+    await apiClient.PUT("/management_committees/{meetingId}", {
+      params: { path: { meetingId } },
+      body: { libelle: args.title, session_date: toBackendDate(args.meetingDate) },
+    }),
+  );
+  return mapMeeting(data);
+}
