@@ -325,68 +325,16 @@ export interface paths {
          * @description Frontend SDK function(s): updateOtherDocument
          */
         put: operations["putBanksDocumentid"];
-        post?: never;
+        /**
+         * Updates a bank item with a multipart body (POST + _method=PUT, since PHP does not parse multipart PUT bodies).
+         * @description Frontend SDK function(s): updateOtherDocument
+         */
+        post: operations["postBanksDocumentidUpdate"];
         /**
          * Deletes a document.
          * @description Frontend SDK function(s): deleteOtherDocument
          */
         delete: operations["deleteBanksDocumentid"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/banks/{linkItemId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Fetches one link item from the server.
-         * @description Frontend SDK function(s): getOneLinkItem
-         */
-        get: operations["getBanksLinkitemid"];
-        /**
-         * Updates a link item.
-         * @description Frontend SDK function(s): updateLinkItem
-         */
-        put: operations["putBanksLinkitemid"];
-        post?: never;
-        /**
-         * Deletes a link item.
-         * @description Frontend SDK function(s): deleteLinkItem
-         */
-        delete: operations["deleteBanksLinkitemid"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/banks/{textItemId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Fetches one text item from the server.
-         * @description Frontend SDK function(s): getOneTextItem
-         */
-        get: operations["getBanksTextitemid"];
-        /**
-         * Updates a text item.
-         * @description Frontend SDK function(s): updateTextItem
-         */
-        put: operations["putBanksTextitemid"];
-        post?: never;
-        /**
-         * Deletes a text item.
-         * @description Frontend SDK function(s): deleteTextItem
-         */
-        delete: operations["deleteBanksTextitemid"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4119,6 +4067,13 @@ export interface components {
                 }[];
             }[];
         };
+        BankItem: {
+            id?: string;
+            title?: string;
+            file_url?: string;
+            link?: string;
+            type?: string;
+        };
     };
     responses: never;
     parameters: never;
@@ -5212,9 +5167,8 @@ export interface operations {
     };
     getBanks: {
         parameters: {
-            query?: {
-                /** @description Filter/parameter 'type' */
-                type?: string;
+            query: {
+                type: string;
             };
             header?: never;
             path?: never;
@@ -5229,7 +5183,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Bank"][];
+                        data?: components["schemas"]["BankItem"][];
                     };
                 };
             };
@@ -5265,10 +5219,8 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": {
-                    link?: string;
-                    title?: string;
-                    type?: string;
+                "multipart/form-data": {
+                    [key: string]: unknown;
                 };
             };
         };
@@ -5280,7 +5232,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Bank"];
+                        data?: components["schemas"]["BankItem"];
                     };
                 };
             };
@@ -5326,7 +5278,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Bank"];
+                        data?: components["schemas"]["BankItem"];
                     };
                 };
             };
@@ -5363,7 +5315,13 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    [key: string]: unknown;
+                };
+            };
+        };
         responses: {
             /** @description Successful response */
             200: {
@@ -5372,7 +5330,59 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Bank"];
+                        data?: components["schemas"]["BankItem"];
+                    };
+                };
+            };
+            /** @description Missing or invalid bearer token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postBanksDocumentidUpdate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Document identifier */
+                documentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    [key: string]: unknown;
+                };
+            };
+        };
+        responses: {
+            /** @description Successful response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["BankItem"];
                     };
                 };
             };
@@ -5406,289 +5416,6 @@ export interface operations {
             path: {
                 /** @description Document identifier */
                 documentId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["Bank"];
-                    };
-                };
-            };
-            /** @description Missing or invalid bearer token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getBanksLinkitemid: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Link item identifier */
-                linkItemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["Bank"];
-                    };
-                };
-            };
-            /** @description Missing or invalid bearer token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    putBanksLinkitemid: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Link item identifier */
-                linkItemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": {
-                    link?: string;
-                    title?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["Bank"];
-                    };
-                };
-            };
-            /** @description Missing or invalid bearer token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteBanksLinkitemid: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Link item identifier */
-                linkItemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["Bank"];
-                    };
-                };
-            };
-            /** @description Missing or invalid bearer token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getBanksTextitemid: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Text item identifier */
-                textItemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["Bank"];
-                    };
-                };
-            };
-            /** @description Missing or invalid bearer token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    putBanksTextitemid: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Text item identifier */
-                textItemId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data?: components["schemas"]["Bank"];
-                    };
-                };
-            };
-            /** @description Missing or invalid bearer token */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Resource not found */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteBanksTextitemid: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Text item identifier */
-                textItemId: string;
             };
             cookie?: never;
         };

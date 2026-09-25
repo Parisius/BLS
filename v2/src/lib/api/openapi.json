@@ -3073,6 +3073,26 @@
             }
           }
         }
+      },
+      "BankItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "file_url": {
+            "type": "string"
+          },
+          "link": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
       }
     }
   },
@@ -4401,11 +4421,10 @@
           {
             "name": "type",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Filter/parameter 'type'"
+            }
           }
         ],
         "responses": {
@@ -4419,7 +4438,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Bank"
+                        "$ref": "#/components/schemas/BankItem"
                       }
                     }
                   }
@@ -4460,7 +4479,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Bank"
+                      "$ref": "#/components/schemas/BankItem"
                     }
                   }
                 }
@@ -4485,20 +4504,10 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "link": {
-                    "type": "string"
-                  },
-                  "title": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string"
-                  }
-                }
+                "additionalProperties": true
               }
             }
           }
@@ -4533,7 +4542,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Bank"
+                      "$ref": "#/components/schemas/BankItem"
                     }
                   }
                 }
@@ -4583,7 +4592,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Bank"
+                      "$ref": "#/components/schemas/BankItem"
                     }
                   }
                 }
@@ -4604,7 +4613,18 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
       },
       "delete": {
         "tags": [
@@ -4655,75 +4675,23 @@
             "bearerAuth": []
           }
         ]
-      }
-    },
-    "/banks/{linkItemId}": {
-      "get": {
-        "tags": [
-          "Documents Bank"
-        ],
-        "summary": "Fetches one link item from the server.",
-        "description": "Frontend SDK function(s): getOneLinkItem",
-        "operationId": "getBanksLinkitemid",
-        "parameters": [
-          {
-            "name": "linkItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Link item identifier"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Bank"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid bearer token"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "422": {
-            "description": "Validation error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
       },
-      "put": {
+      "post": {
         "tags": [
           "Documents Bank"
         ],
-        "summary": "Updates a link item.",
-        "description": "Frontend SDK function(s): updateLinkItem",
-        "operationId": "putBanksLinkitemid",
+        "summary": "Updates a bank item with a multipart body (POST + _method=PUT, since PHP does not parse multipart PUT bodies).",
+        "description": "Frontend SDK function(s): updateOtherDocument",
+        "operationId": "postBanksDocumentidUpdate",
         "parameters": [
           {
-            "name": "linkItemId",
+            "name": "documentId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "Link item identifier"
+            "description": "Document identifier"
           }
         ],
         "responses": {
@@ -4735,7 +4703,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Bank"
+                      "$ref": "#/components/schemas/BankItem"
                     }
                   }
                 }
@@ -4760,223 +4728,14 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "link": {
-                    "type": "string"
-                  },
-                  "title": {
-                    "type": "string"
-                  }
-                }
+                "additionalProperties": true
               }
             }
           }
         }
-      },
-      "delete": {
-        "tags": [
-          "Documents Bank"
-        ],
-        "summary": "Deletes a link item.",
-        "description": "Frontend SDK function(s): deleteLinkItem",
-        "operationId": "deleteBanksLinkitemid",
-        "parameters": [
-          {
-            "name": "linkItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Link item identifier"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Bank"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid bearer token"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "422": {
-            "description": "Validation error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      }
-    },
-    "/banks/{textItemId}": {
-      "get": {
-        "tags": [
-          "Documents Bank"
-        ],
-        "summary": "Fetches one text item from the server.",
-        "description": "Frontend SDK function(s): getOneTextItem",
-        "operationId": "getBanksTextitemid",
-        "parameters": [
-          {
-            "name": "textItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Text item identifier"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Bank"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid bearer token"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "422": {
-            "description": "Validation error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "Documents Bank"
-        ],
-        "summary": "Updates a text item.",
-        "description": "Frontend SDK function(s): updateTextItem",
-        "operationId": "putBanksTextitemid",
-        "parameters": [
-          {
-            "name": "textItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Text item identifier"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Bank"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid bearer token"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "422": {
-            "description": "Validation error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Documents Bank"
-        ],
-        "summary": "Deletes a text item.",
-        "description": "Frontend SDK function(s): deleteTextItem",
-        "operationId": "deleteBanksTextitemid",
-        "parameters": [
-          {
-            "name": "textItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Text item identifier"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Bank"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Missing or invalid bearer token"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "422": {
-            "description": "Validation error"
-          }
-        },
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ]
       }
     },
     "/ca_administrators": {

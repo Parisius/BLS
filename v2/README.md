@@ -141,14 +141,11 @@ pnpm install
 pnpm dev
 ```
 
-## Ported so far
+## Ported
 
-Administration, Contracts and all four Governance sub-modules (Shareholding,
-General Meeting, Administration Meeting / CA, Management Committee / CODIR),
-Account Incidents, Recovery, Safety (mortgage, movable and personal safeties), Litigation, Audit, Evaluation and Legal Monitoring.
+Every module of the original app: Administration, Contracts, Governance (Shareholding, General Meeting,
+Administration Meeting / CA, Management Committee / CODIR), Account Incidents, Recovery, Safety (mortgage,
+movable and personal safeties), Litigation, Audit, Evaluation, Legal Monitoring and the Documents Bank.
 
-## Not yet ported
-
-Documents Bank. The module
-hub (`/dashboard/modules`) renders tiles for all of them for visual parity,
-but only the ported modules' tiles lead anywhere real yet.
+Not ported yet: the original's cross-module alerts (`ActiveNotificationsDialogs`, backed by `/notifications`), which
+pop up pending alerts on each module's pages. Everything else in the original app has a v2 counterpart.
