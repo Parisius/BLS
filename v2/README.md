@@ -147,5 +147,5 @@ Every module of the original app: Administration, Contracts, Governance (Shareho
 Administration Meeting / CA, Management Committee / CODIR), Account Incidents, Recovery, Safety (mortgage,
 movable and personal safeties), Litigation, Audit, Evaluation, Legal Monitoring and the Documents Bank.
 
-Not ported yet: the original's cross-module alerts (`ActiveNotificationsDialogs`, backed by `/notifications`), which
-pop up pending alerts on each module's pages. Everything else in the original app has a v2 counterpart.
+Also ported: the cross-module alerts (header bell with unread count, and per-module popups for urgent/warning
+reminders, shown one at a time and snoozed for the session), plus the app-wide 404 and dashboard error pages.

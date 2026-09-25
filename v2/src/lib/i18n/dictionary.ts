@@ -2715,6 +2715,12 @@ export const dictionaries = {
       remindLater: "Me le rappeler plus tard",
       viewFile: "Voir le dossier",
     },
+    pages: {
+      notFoundTitle: "Oups ! Cette page n'existe pas.",
+      backToModules: "Retourner à la page des modules",
+      errorMessage: "Une erreur s'est produite",
+      retry: "Réessayer",
+    },
   },
   en: {
     common: {
@@ -5430,6 +5436,12 @@ export const dictionaries = {
       error: "Error while loading",
       remindLater: "Remind me later",
       viewFile: "View the file",
+    },
+    pages: {
+      notFoundTitle: "Oops! This page doesn't exist.",
+      backToModules: "Back to the modules page",
+      errorMessage: "An error occurred",
+      retry: "Try again",
     },
   },
 } as const;
