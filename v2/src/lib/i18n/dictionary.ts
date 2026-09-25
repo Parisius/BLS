@@ -2704,6 +2704,17 @@ export const dictionaries = {
         },
       },
     },
+    alerts: {
+      title: "Notifications",
+      none: "Aucune nouvelle notification",
+      unreadOne: "{count} notification non lue",
+      unreadMany: "{count} notifications non lues",
+      empty: "Aucune notification",
+      loading: "Chargement...",
+      error: "Erreur lors du chargement",
+      remindLater: "Me le rappeler plus tard",
+      viewFile: "Voir le dossier",
+    },
   },
   en: {
     common: {
@@ -5408,6 +5419,17 @@ export const dictionaries = {
           deleteError: "An error occurred while deleting the document.",
         },
       },
+    },
+    alerts: {
+      title: "Notifications",
+      none: "No new notifications",
+      unreadOne: "{count} unread notification",
+      unreadMany: "{count} unread notifications",
+      empty: "No notifications",
+      loading: "Loading...",
+      error: "Error while loading",
+      remindLater: "Remind me later",
+      viewFile: "View the file",
     },
   },
 } as const;

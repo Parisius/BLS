@@ -7,6 +7,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NotificationsBell } from "@/components/alert/notifications-bell";
 import { LogoutButton } from "@/components/dashboard/logout-button";
 import { LocaleSelect } from "@/components/locale-select";
 import { getDictionary } from "@/lib/i18n/locale";
@@ -37,6 +38,8 @@ export default async function DashboardLayout({
         </Link>
 
         <div className="flex items-center">
+          <NotificationsBell />
+
           <Tooltip>
             <TooltipTrigger
               render={

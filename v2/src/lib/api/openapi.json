@@ -898,30 +898,30 @@
       "Notification": {
         "type": "object",
         "properties": {
-          "deadline": {
-            "type": "string",
-            "format": "date-time"
-          },
           "id": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "module_id": {
-            "type": "string"
-          },
-          "priority": {
-            "type": "string"
-          },
-          "read_at": {
             "type": "string"
           },
           "title": {
             "type": "string"
           },
+          "message": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string"
+          },
           "type": {
             "type": "string"
+          },
+          "module_id": {
+            "type": "string"
+          },
+          "deadline": {
+            "type": "string"
+          },
+          "read_at": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -11802,13 +11802,20 @@
         "operationId": "getNotifications",
         "parameters": [
           {
-            "name": "params",
-            "in": "path",
-            "required": true,
+            "name": "type",
+            "in": "query",
+            "required": false,
             "schema": {
-              "type": "integer"
-            },
-            "description": "params"
+              "type": "string"
+            }
+          },
+          {
+            "name": "is_read",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {

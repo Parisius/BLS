@@ -3350,15 +3350,14 @@ export interface components {
             title?: string;
         };
         Notification: {
-            /** Format: date-time */
-            deadline?: string;
             id?: string;
-            message?: string;
-            module_id?: string;
-            priority?: string;
-            read_at?: string;
             title?: string;
+            message?: string;
+            priority?: string;
             type?: string;
+            module_id?: string;
+            deadline?: string;
+            read_at?: string | null;
         };
         LegalWatche: {
             id?: string;
@@ -11118,12 +11117,12 @@ export interface operations {
     };
     getNotifications: {
         parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description params */
-                params: number;
+            query?: {
+                type?: string;
+                is_read?: boolean;
             };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
