@@ -3413,23 +3413,29 @@ export interface components {
             type?: string;
         };
         LegalWatche: {
-            case_number?: string;
-            effective_date?: string;
-            event_date?: string;
             id?: string;
-            innovation?: string;
-            is_archived?: boolean;
-            jurisdiction?: string;
-            jurisdiction_location?: string;
-            mail_addresses?: string;
-            mail_content?: string;
-            mail_object?: string;
-            name?: string;
-            nature?: string;
-            recipient_type?: string;
             reference?: string;
+            name?: string;
+            case_number?: string;
             summary?: string;
+            innovation?: string;
             type?: string;
+            is_archived?: boolean;
+            event_date?: string;
+            effective_date?: string;
+            jurisdiction_location?: string;
+            jurisdiction?: {
+                id?: string;
+                name?: string;
+            };
+            nature?: {
+                id?: string;
+                name?: string;
+            };
+            recipient_type?: string;
+            mail_object?: string;
+            mail_content?: string;
+            mail_addresses?: string[];
         };
         Litigation: {
             added_amount?: number;
@@ -9326,9 +9332,8 @@ export interface operations {
     };
     "getLegal-Watches": {
         parameters: {
-            query?: {
-                /** @description Filter/parameter 'type' */
-                type?: string;
+            query: {
+                type: string;
             };
             header?: never;
             path?: never;
@@ -9387,7 +9392,7 @@ export interface operations {
                     is_archived?: boolean;
                     jurisdiction_id?: string;
                     jurisdiction_location?: string;
-                    mail_addresses?: string;
+                    mail_addresses?: string[];
                     mail_content?: string;
                     mail_object?: string;
                     name?: string;
@@ -9545,7 +9550,7 @@ export interface operations {
                     is_archived?: boolean;
                     jurisdiction_id?: string;
                     jurisdiction_location?: string;
-                    mail_addresses?: string;
+                    mail_addresses?: string[];
                     mail_content?: string;
                     mail_object?: string;
                     name?: string;

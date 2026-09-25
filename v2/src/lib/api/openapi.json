@@ -928,56 +928,75 @@
       "LegalWatche": {
         "type": "object",
         "properties": {
-          "case_number": {
-            "type": "string"
-          },
-          "effective_date": {
-            "type": "string"
-          },
-          "event_date": {
-            "type": "string"
-          },
           "id": {
-            "type": "string"
-          },
-          "innovation": {
-            "type": "string"
-          },
-          "is_archived": {
-            "type": "boolean"
-          },
-          "jurisdiction": {
-            "type": "string"
-          },
-          "jurisdiction_location": {
-            "type": "string"
-          },
-          "mail_addresses": {
-            "type": "string"
-          },
-          "mail_content": {
-            "type": "string"
-          },
-          "mail_object": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "nature": {
-            "type": "string"
-          },
-          "recipient_type": {
             "type": "string"
           },
           "reference": {
             "type": "string"
           },
+          "name": {
+            "type": "string"
+          },
+          "case_number": {
+            "type": "string"
+          },
           "summary": {
+            "type": "string"
+          },
+          "innovation": {
             "type": "string"
           },
           "type": {
             "type": "string"
+          },
+          "is_archived": {
+            "type": "boolean"
+          },
+          "event_date": {
+            "type": "string"
+          },
+          "effective_date": {
+            "type": "string"
+          },
+          "jurisdiction_location": {
+            "type": "string"
+          },
+          "jurisdiction": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "nature": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "recipient_type": {
+            "type": "string"
+          },
+          "mail_object": {
+            "type": "string"
+          },
+          "mail_content": {
+            "type": "string"
+          },
+          "mail_addresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -9518,11 +9537,10 @@
           {
             "name": "type",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Filter/parameter 'type'"
+            }
           }
         ],
         "responses": {
@@ -9628,7 +9646,10 @@
                     "type": "string"
                   },
                   "mail_addresses": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "mail_content": {
                     "type": "string"
@@ -9839,7 +9860,10 @@
                     "type": "string"
                   },
                   "mail_addresses": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "mail_content": {
                     "type": "string"
