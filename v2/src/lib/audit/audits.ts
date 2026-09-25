@@ -2,16 +2,14 @@
 
 import { apiClient, unwrap, throwIfError } from "@/lib/api/client";
 import { toBackendDate } from "@/lib/shared/date-utils";
+import type { Score, ScoreInput } from "@/lib/shared/scores";
 import type { ForwardWorkflowTaskArgs } from "@/lib/shared/workflow-task";
 import type { components } from "@/lib/api/schema";
 
 type AuditResponse = components["schemas"]["AuditNotation"];
 type IndicatorResponse = NonNullable<AuditResponse["original_indicators"]>[number];
 
-export interface AuditScore {
-  score: number;
-  criteria: { id: string; title: string; type: string; maxScore: number };
-}
+export type AuditScore = Score;
 
 export interface AuditPerson {
   id: string;
@@ -104,10 +102,7 @@ export async function getOneAudit(auditId: string) {
   return mapAudit(unwrap(await apiClient.GET("/audit_notations/{auditId}", { params: { path: { auditId } } })));
 }
 
-export interface AuditScoreInput {
-  criteriaId: string;
-  score: number;
-}
+export type AuditScoreInput = ScoreInput;
 
 const toNotes = (scores: AuditScoreInput[]) =>
   scores.map((score) => ({ audit_performance_indicator_id: score.criteriaId, note: score.score }));

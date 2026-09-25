@@ -83,10 +83,11 @@ export const useCreateAuditCriteria = (module: string) => {
   });
 };
 
-export const useUpdateAuditCriteria = (criteriaId: string, module: string) => {
+export const useUpdateAuditCriteria = (module: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (args: AuditCriteriaArgs) => updateAuditCriteria(criteriaId, module, args),
+    mutationFn: ({ criteriaId, args }: { criteriaId: string; args: AuditCriteriaArgs }) =>
+      updateAuditCriteria(criteriaId, module, args),
     onSettled: () => queryClient.invalidateQueries({ queryKey: CRITERIA_KEY }),
   });
 };

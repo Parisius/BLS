@@ -14,8 +14,17 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { AuditScore } from "@/lib/audit/audits";
-import { useDictionary } from "@/lib/i18n/locale-provider";
+import type { Score } from "@/lib/shared/scores";
+
+export interface ScoresSheetLabels {
+  view: string;
+  title: string;
+  globalScore: string;
+  criterion: string;
+  score: string;
+  evaluatedBy: string;
+  close: string;
+}
 
 /** Read-only view of one evaluation's scores. */
 export function ScoresSheet({
@@ -23,28 +32,27 @@ export function ScoresSheet({
   evaluator,
   globalScore,
   scores,
+  labels: ts,
 }: {
+  labels: ScoresSheetLabels;
   moduleTitle: string;
   evaluator: { firstname: string; lastname: string };
   globalScore?: number;
-  scores: AuditScore[];
+  scores: Score[];
 }) {
-  const { t } = useDictionary();
-  const ts = t.audit.scores;
-
   return (
     <Sheet>
       <Tooltip>
         <SheetTrigger
           render={
             <TooltipTrigger
-              render={<Button variant="ghost" size="icon" aria-label={t.audit.detail.viewScores} className="rounded-full" />}
+              render={<Button variant="ghost" size="icon" aria-label={ts.view} className="rounded-full" />}
             />
           }
         >
           <Eye size={30} />
         </SheetTrigger>
-        <TooltipContent>{t.audit.detail.viewScores}</TooltipContent>
+        <TooltipContent>{ts.view}</TooltipContent>
       </Tooltip>
       <SheetContent side="right" className="flex flex-col gap-5 sm:max-w-xl">
         <SheetHeader>

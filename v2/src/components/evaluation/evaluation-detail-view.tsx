@@ -15,13 +15,14 @@ import { ScoresDialog } from "@/components/shared/scores/scores-dialog";
 import { ScoresSheet } from "@/components/shared/scores/scores-sheet";
 import { useCurrentUser } from "@/lib/administration/hooks";
 import {
-  useCompleteAudit,
-  useForwardAudit,
-  useOneAudit,
-  usePrintAudit,
-  useUpdateAudit,
-} from "@/lib/audit/hooks";
-import type { AuditPerson, AuditScore } from "@/lib/audit/audits";
+  useCompleteEvaluation,
+  useForwardEvaluation,
+  useOneEvaluation,
+  usePrintEvaluation,
+  useUpdateEvaluation,
+} from "@/lib/evaluation/hooks";
+import type { EvaluationPerson } from "@/lib/evaluation/evaluations";
+import type { Score } from "@/lib/shared/scores";
 import { downloadBytes } from "@/lib/shared/download";
 import { canComplete, canForward } from "@/lib/shared/transfer-permissions";
 import { cn } from "@/lib/utils";
@@ -29,21 +30,21 @@ import { useDictionary } from "@/lib/i18n/locale-provider";
 
 interface HistoryEntry {
   id: string;
-  evaluator: AuditPerson;
+  evaluator: EvaluationPerson;
   globalScore?: number;
   status: string;
-  scores: AuditScore[];
+  scores: Score[];
 }
 
-export function AuditDetailView({ auditId }: { auditId: string }) {
+export function EvaluationDetailView({ evaluationId }: { evaluationId: string }) {
   const { t } = useDictionary();
-  const td = t.audit.detail;
+  const td = t.evaluation.detail;
   const { data: currentUser } = useCurrentUser();
-  const { data, isLoading, isError } = useOneAudit(auditId);
-  const { mutateAsync: update } = useUpdateAudit(auditId);
-  const { mutateAsync: complete } = useCompleteAudit();
-  const { mutateAsync: forward } = useForwardAudit(auditId);
-  const { mutate: print, isPending: printing } = usePrintAudit();
+  const { data, isLoading, isError } = useOneEvaluation(evaluationId);
+  const { mutateAsync: update } = useUpdateEvaluation(evaluationId);
+  const { mutateAsync: complete } = useCompleteEvaluation();
+  const { mutateAsync: forward } = useForwardEvaluation(evaluationId);
+  const { mutate: print, isPending: printing } = usePrintEvaluation();
   const [forwarding, setForwarding] = useState(false);
   const [completing, setCompleting] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -87,12 +88,12 @@ export function AuditDetailView({ auditId }: { auditId: string }) {
   const mayForward = canForward(data, userId);
   const mayComplete = canComplete(data, userId);
   const pendingTransfer = data.forwards[0];
-  const moduleLabel = (t.audit.modules as Record<string, string>)[data.module] ?? data.module;
+  const { collaborator } = data;
 
   return (
     <>
       <h1 className="text-center text-2xl font-bold sm:text-3xl md:text-4xl">
-        {data.title} - {moduleLabel}
+        {collaborator.lastname} {collaborator.firstname} ({collaborator.profile.title})
       </h1>
 
       <div className="flex items-center justify-end gap-2">
@@ -126,7 +127,7 @@ export function AuditDetailView({ auditId }: { auditId: string }) {
           <Tooltip>
             <ForwardsHistoryDialog
               forwards={data.forwards}
-              labels={t.audit.forwardsHistory}
+              labels={t.evaluation.forwardsHistory}
               trigger={
                 <TooltipTrigger
                   render={<Button variant="ghost" size="icon" aria-label={td.history} className="rounded-full" />}
@@ -192,11 +193,11 @@ export function AuditDetailView({ auditId }: { auditId: string }) {
                   </Tooltip>
                 )}
                 <ScoresSheet
-                  moduleTitle={data.title}
+                  moduleTitle={`${collaborator.lastname} ${collaborator.firstname}`}
                   evaluator={entry.evaluator}
                   globalScore={entry.globalScore}
                   scores={entry.scores}
-                  labels={{ ...t.audit.scores, view: td.viewScores }}
+                  labels={{ ...t.evaluation.scores, view: td.viewScores }}
                 />
               </TableCell>
             </TableRow>
@@ -208,16 +209,16 @@ export function AuditDetailView({ auditId }: { auditId: string }) {
         open={forwarding}
         onOpenChange={setForwarding}
         onSubmit={(args) => forward(args)}
-        labels={t.audit.forward}
-        userSelectLabels={t.audit.userSelect}
+        labels={t.evaluation.forward}
+        userSelectLabels={t.evaluation.userSelect}
       />
-      {/* Remounted per audit state so the score fields start from the latest values. */}
+      {/* Remounted per evaluation state so the score fields start from the latest values. */}
       <ScoresDialog
         key={`edit-${history[0]?.id}-${history[0]?.globalScore}`}
         open={editing}
         onOpenChange={setEditing}
         scores={history[0]?.scores ?? []}
-        labels={t.audit.updateAudit}
+        labels={t.evaluation.updateEvaluation}
         onSubmit={(scores) => update({ scores })}
       />
       {mayComplete && (
@@ -226,7 +227,7 @@ export function AuditDetailView({ auditId }: { auditId: string }) {
           open={completing}
           onOpenChange={setCompleting}
           scores={data.currentScores}
-          labels={t.audit.completeAudit}
+          labels={t.evaluation.completeEvaluation}
           onSubmit={(scores) => complete({ transferId: pendingTransfer.id, scores })}
         />
       )}

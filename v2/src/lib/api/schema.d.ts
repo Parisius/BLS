@@ -3832,31 +3832,88 @@ export interface components {
             title?: string;
         };
         Notation: {
-            collaborator?: string;
-            creator?: string;
-            evaluation_reference?: string;
             id?: string;
-            last_indicators?: string;
-            last_note?: string;
-            last_status?: string;
-            original_indicators?: string;
-            original_note?: string;
+            evaluation_reference?: string;
+            original_note?: number;
             original_status?: string;
-            transfers?: Record<string, never>[];
+            last_note?: number;
+            last_status?: string;
+            creator?: {
+                id?: string;
+                firstname?: string;
+                lastname?: string;
+                email?: string;
+            };
+            collaborator?: components["schemas"]["Collaborator"];
+            original_indicators?: {
+                note?: number;
+                performance_indicator?: {
+                    id?: string;
+                    title?: string;
+                    type?: string;
+                    note?: number;
+                };
+            }[];
+            last_indicators?: {
+                note?: number;
+                performance_indicator?: {
+                    id?: string;
+                    title?: string;
+                    type?: string;
+                    note?: number;
+                };
+            }[];
+            transfers?: {
+                id?: string;
+                title?: string;
+                deadline?: string;
+                description?: string;
+                status?: boolean;
+                notation?: {
+                    note?: number;
+                    indicators?: {
+                        note?: number;
+                        performance_indicator?: {
+                            id?: string;
+                            title?: string;
+                            type?: string;
+                            note?: number;
+                        };
+                    }[];
+                };
+                sender?: {
+                    id?: string;
+                    firstname?: string;
+                    lastname?: string;
+                    email?: string;
+                };
+                collaborators?: {
+                    id?: string;
+                    firstname?: string;
+                    lastname?: string;
+                    email?: string;
+                }[];
+            }[];
         };
         Collaborator: {
-            firstname?: string;
             id?: string;
+            firstname?: string;
             lastname?: string;
-            position?: string;
+            position?: {
+                id?: string;
+                title?: string;
+            };
         };
         PerformanceIndicator: {
-            description?: string;
             id?: string;
-            note?: number;
-            position?: string;
             title?: string;
             type?: string;
+            note?: number;
+            description?: string;
+            position?: {
+                id?: string;
+                title?: string;
+            };
         };
         Role: {
             id?: string;
@@ -7622,7 +7679,7 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    collaborators?: Record<string, never>[];
+                    collaborators?: string[];
                     deadline_transfer?: string;
                     description?: string;
                     forward_title?: string;
@@ -8442,15 +8499,11 @@ export interface operations {
     };
     getGeneratePdfFicheSuiviEvaluation: {
         parameters: {
-            query?: {
-                /** @description Filter/parameter 'notation_id' */
-                notation_id?: string;
+            query: {
+                notation_id: string;
             };
             header?: never;
-            path: {
-                /** @description Evaluation identifier */
-                evaluationId: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -11187,9 +11240,10 @@ export interface operations {
             content: {
                 "application/json": {
                     collaborator_id?: string;
-                    note?: number;
-                    notes?: string;
-                    performance_indicator_id?: string;
+                    notes?: {
+                        performance_indicator_id?: string;
+                        note?: number;
+                    }[];
                     status?: string;
                 };
             };
@@ -11288,9 +11342,10 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    note?: number;
-                    notes?: string;
-                    performance_indicator_id?: string;
+                    notes?: {
+                        performance_indicator_id?: string;
+                        note?: number;
+                    }[];
                 };
             };
         };

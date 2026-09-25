@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { ScoreRows } from "@/components/audit/score-rows";
-import { useScoresForm } from "@/lib/audit/forms";
-import type { AuditScore, AuditScoreInput } from "@/lib/audit/audits";
+import { ScoreRows } from "@/components/shared/scores/score-rows";
+import { useScoresForm } from "@/lib/shared/scores";
+import type { Score, ScoreInput } from "@/lib/shared/scores";
 
 export interface ScoresDialogLabels {
   title: string;
@@ -36,9 +36,9 @@ export function ScoresDialog({
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  scores: AuditScore[];
+  scores: Score[];
   labels: ScoresDialogLabels;
-  onSubmit: (scores: AuditScoreInput[]) => Promise<void>;
+  onSubmit: (scores: ScoreInput[]) => Promise<void>;
 }) {
   const formId = useId();
   const { form, scoresArray } = useScoresForm({

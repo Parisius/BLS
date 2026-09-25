@@ -3,7 +3,7 @@
 import type { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import type { ScoresFormValues } from "@/lib/audit/forms";
+import type { ScoresFormValues } from "@/lib/shared/scores";
 
 /** One row per criterion: its title and a score input out of the criterion's maximum. */
 export function ScoreRows({

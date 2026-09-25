@@ -3,9 +3,10 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Scale } from "lucide-react";
 import type { UseFieldArrayReturn, UseFormReturn } from "react-hook-form";
+import { Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -17,49 +18,55 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ModuleItemSelect } from "@/components/audit/module-item-select";
+import { LinkSelect } from "@/components/shared/link-select";
 import { ScoreRows } from "@/components/shared/scores/score-rows";
-import { AUDIT_MODULES } from "@/lib/audit/constants";
-import { useAddAuditForm } from "@/lib/audit/forms";
+import {
+  useAllCollaborators,
+  useAllEvaluationCriteria,
+  useAllProfiles,
+  useCreateEvaluation,
+} from "@/lib/evaluation/hooks";
+import { useAddEvaluationForm } from "@/lib/evaluation/forms";
 import type { ScoresFormValues } from "@/lib/shared/scores";
-import { useAllAuditCriteria, useCreateAudit } from "@/lib/audit/hooks";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddAuditDialog({ variant = "list" }: { variant?: "list" | "card" }) {
+export function AddEvaluationDialog({ variant = "list" }: { variant?: "list" | "card" }) {
   const { t } = useDictionary();
-  const ta = t.audit.addAudit;
+  const ta = t.evaluation.addEvaluation;
   const router = useRouter();
   const formId = useId();
-  const { form, scoresArray } = useAddAuditForm();
-  const { mutateAsync } = useCreateAudit();
+  const { form, scoresArray } = useAddEvaluationForm();
+  const { mutateAsync } = useCreateEvaluation();
   const [open, setOpen] = useState(false);
-  const auditModule = form.watch("module");
-  const { data: criteria, isLoading } = useAllAuditCriteria(auditModule);
+  const profileId = form.watch("profileId");
+  const { data: profiles, isLoading: profilesLoading } = useAllProfiles();
+  const { data: collaborators, isLoading: collaboratorsLoading } = useAllCollaborators(profileId);
+  const { data: criteria, isLoading: criteriaLoading } = useAllEvaluationCriteria({ profileId });
 
-  const moduleItems = useMemo(() => AUDIT_MODULES.map((value) => ({ value, label: t.audit.modules[value] })), [t]);
+  const collaboratorOptions = useMemo(
+    () => (collaborators ?? []).map((item) => ({ id: item.id, title: `${item.lastname} ${item.firstname}` })),
+    [collaborators],
+  );
   const titles = useMemo(() => Object.fromEntries((criteria ?? []).map((item) => [item.id, item.title])), [criteria]);
 
-  // Whenever the module (and so its criteria) changes, restart the scores at 0 for each of its criteria.
+  // Restart the scores at 0 for each criterion of the newly picked profile.
   useEffect(() => {
-    if (!auditModule) return;
-    scoresArray.replace(
-      (criteria ?? []).map((item) => ({ criteriaId: item.id, score: 0, maxScore: item.maxScore })),
-    );
+    if (!profileId) return;
+    scoresArray.replace((criteria ?? []).map((item) => ({ criteriaId: item.id, score: 0, maxScore: item.maxScore })));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `replace` is stable; re-running on its identity would loop
-  }, [criteria, auditModule]);
+  }, [criteria, profileId]);
 
   const handleSubmit = form.handleSubmit(async (values) => {
     try {
       const created = await mutateAsync({
-        module: values.module,
-        moduleId: values.moduleId,
+        collaboratorId: values.collaboratorId,
+        isArchived: values.isArchived,
         scores: values.scores.map(({ criteriaId, score }) => ({ criteriaId, score })),
       });
       toast.success(ta.success);
       form.reset();
       setOpen(false);
-      router.push(`/dashboard/audit/${created.id}`);
+      router.push(`/dashboard/evaluation/${created.id}`);
     } catch {
       toast.error(ta.error);
     }
@@ -69,7 +76,7 @@ export function AddAuditDialog({ variant = "list" }: { variant?: "list" | "card"
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={<Button className="gap-2" />}>
         <Scale />
-        {variant === "card" ? t.audit.home.cardButton : ta.title}
+        {variant === "card" ? t.evaluation.home.cardButton : ta.title}
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
@@ -85,54 +92,65 @@ export function AddAuditDialog({ variant = "list" }: { variant?: "list" | "card"
           >
             <FormField
               control={form.control}
-              name="module"
+              name="isArchived"
+              render={({ field }) => (
+                <FormItem className="flex items-center gap-2 space-y-0">
+                  <FormControl>
+                    <Checkbox checked={field.value} onCheckedChange={(checked) => field.onChange(!!checked)} />
+                  </FormControl>
+                  <FormLabel className="text-base">{ta.archive}</FormLabel>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="profileId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{ta.module}</FormLabel>
-                  <Select
-                    value={field.value ?? null}
-                    items={moduleItems}
-                    onValueChange={(next) => {
-                      field.onChange(next);
-                      form.setValue("moduleId", "");
-                    }}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="h-12 w-full">
-                        <SelectValue placeholder={ta.selectModule} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {moduleItems.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                          {item.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormLabel>{ta.profile}</FormLabel>
+                  <FormControl>
+                    <LinkSelect
+                      value={field.value}
+                      onValueChange={(next) => {
+                        field.onChange(next);
+                        form.setValue("collaboratorId", "");
+                      }}
+                      options={profiles}
+                      isLoading={profilesLoading}
+                      placeholder={ta.selectProfile}
+                      loadingLabel={ta.loading}
+                      emptyLabel={ta.noCollaborators}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {auditModule && (
+            {profileId && (
               <FormField
                 control={form.control}
-                name="moduleId"
+                name="collaboratorId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t.audit.modules[auditModule]}</FormLabel>
+                    <FormLabel>{ta.collaborator}</FormLabel>
                     <FormControl>
-                      <ModuleItemSelect module={auditModule} value={field.value} onValueChange={field.onChange} />
+                      <LinkSelect
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        options={collaboratorOptions}
+                        isLoading={collaboratorsLoading}
+                        placeholder={ta.selectCollaborator}
+                        loadingLabel={ta.loading}
+                        emptyLabel={ta.noCollaborators}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             )}
-
-            {auditModule && isLoading && <p className="text-center text-muted-foreground">{ta.loadingCriteria}</p>}
-            {auditModule && !isLoading && scoresArray.fields.length === 0 && (
+            {profileId && criteriaLoading && <p className="text-center text-muted-foreground">{ta.loadingCriteria}</p>}
+            {profileId && !criteriaLoading && scoresArray.fields.length === 0 && (
               <p className="text-center text-muted-foreground">{ta.noCriteria}</p>
             )}
             {scoresArray.fields.length > 0 && (

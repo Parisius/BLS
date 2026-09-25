@@ -12,6 +12,3 @@ export const AUDIT_MODULES = [
   "management_committees",
 ] as const;
 export type AuditModule = (typeof AUDIT_MODULES)[number];
-
-export const CRITERIA_TYPES = ["quantitative", "qualitative"] as const;
-export type CriteriaType = (typeof CRITERIA_TYPES)[number];
