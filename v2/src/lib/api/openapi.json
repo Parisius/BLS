@@ -2414,6 +2414,322 @@
             }
           }
         }
+      },
+      "LitigationRef": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "LitigationCase": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "case_number": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "is_archived": {
+            "type": "boolean"
+          },
+          "has_provisions": {
+            "type": "boolean"
+          },
+          "jurisdiction_location": {
+            "type": "string"
+          },
+          "nature": {
+            "$ref": "#/components/schemas/LitigationRef"
+          },
+          "jurisdiction": {
+            "$ref": "#/components/schemas/LitigationRef"
+          },
+          "current_step": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "next_step": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "parties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "lawyers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "phone": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "file_url": {
+                  "type": "string"
+                },
+                "filename": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "estimated_amount": {
+            "type": "number"
+          },
+          "added_amount": {
+            "type": "number"
+          },
+          "remaining_amount": {
+            "type": "number"
+          }
+        }
+      },
+      "LitigationParty": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "party_type": {
+            "type": "string"
+          }
+        }
+      },
+      "LitigationStats": {
+        "type": "object",
+        "properties": {
+          "sum_added_amount": {
+            "type": "number"
+          },
+          "sum_estimated_amount": {
+            "type": "number"
+          },
+          "sum_remaining_amount": {
+            "type": "number"
+          }
+        }
+      },
+      "Lawyer": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      },
+      "LitigationTask": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "model_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "min_deadline": {
+            "type": "string"
+          },
+          "max_deadline": {
+            "type": "string"
+          },
+          "form": {
+            "type": "object",
+            "properties": {
+              "form_title": {
+                "type": "string"
+              },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "transfers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "deadline": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "sender": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "firstname": {
+                      "type": "string"
+                    },
+                    "lastname": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "collaborators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "firstname": {
+                        "type": "string"
+                      },
+                      "lastname": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -9434,7 +9750,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Litigation"
+                        "$ref": "#/components/schemas/LitigationCase"
                       }
                     }
                   }
@@ -9475,7 +9791,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationCase"
                     }
                   }
                 }
@@ -9496,7 +9812,18 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
       }
     },
     "/litigation/archive/{litigationId}": {
@@ -9611,13 +9938,13 @@
                   "lawyers": {
                     "type": "array",
                     "items": {
-                      "type": "object"
+                      "type": "string"
                     }
                   },
                   "users": {
                     "type": "array",
                     "items": {
-                      "type": "object"
+                      "type": "string"
                     }
                   }
                 }
@@ -9699,7 +10026,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Litigation"
+                        "$ref": "#/components/schemas/LitigationRef"
                       }
                     }
                   }
@@ -9740,7 +10067,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationRef"
                     }
                   }
                 }
@@ -9799,7 +10126,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Litigation"
+                        "$ref": "#/components/schemas/Lawyer"
                       }
                     }
                   }
@@ -9852,7 +10179,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationCase"
                     }
                   }
                 }
@@ -9926,7 +10253,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Litigation"
+                        "$ref": "#/components/schemas/LitigationRef"
                       }
                     }
                   }
@@ -9967,7 +10294,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationRef"
                     }
                   }
                 }
@@ -10026,7 +10353,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Litigation"
+                        "$ref": "#/components/schemas/LitigationParty"
                       }
                     }
                   }
@@ -10067,7 +10394,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationParty"
                     }
                   }
                 }
@@ -10136,7 +10463,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationStats"
                     }
                   }
                 }
@@ -10170,22 +10497,13 @@
         "operationId": "getLitigationTasks",
         "parameters": [
           {
-            "name": "litigationId",
-            "in": "path",
+            "name": "id",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
             },
             "description": "Litigation case identifier"
-          },
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter/parameter 'id'"
           }
         ],
         "responses": {
@@ -10199,7 +10517,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Litigation"
+                        "$ref": "#/components/schemas/LitigationTask"
                       }
                     }
                   }
@@ -10240,7 +10558,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationTask"
                     }
                   }
                 }
@@ -10335,7 +10653,18 @@
           {
             "bearerAuth": []
           }
-        ]
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          }
+        }
       }
     },
     "/litigation/tasks/transfer/{taskId}": {
@@ -10398,7 +10727,7 @@
                   "collaborators": {
                     "type": "array",
                     "items": {
-                      "type": "object"
+                      "type": "string"
                     }
                   },
                   "deadline_transfer": {
@@ -10445,7 +10774,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationTask"
                     }
                   }
                 }
@@ -10495,7 +10824,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationTask"
                     }
                   }
                 }
@@ -10616,7 +10945,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationCase"
                     }
                   }
                 }
@@ -10689,7 +11018,7 @@
                   "type": "object",
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Litigation"
+                      "$ref": "#/components/schemas/LitigationCase"
                     }
                   }
                 }

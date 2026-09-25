@@ -25,6 +25,8 @@ interface DocumentsFormProps<T extends FieldValues> {
   fieldArray: UseFieldArrayReturn<T>;
   isSubmitting?: boolean;
   className?: string;
+  /** Overrides the contract module's labels (file input, name input, add button). */
+  labels?: { file: string; name: string; add: string };
 }
 
 export function DocumentsForm<T extends FieldValues>({
@@ -34,6 +36,7 @@ export function DocumentsForm<T extends FieldValues>({
   fieldArray,
   isSubmitting,
   className,
+  labels,
 }: DocumentsFormProps<T>) {
   const { t } = useDictionary();
 
@@ -50,7 +53,7 @@ export function DocumentsForm<T extends FieldValues>({
             // eslint-disable-next-line @typescript-eslint/no-unused-vars -- `value` is deliberately excluded: file inputs can't be value-controlled
             render={({ field: { value, onChange, ...field } }) => (
               <FormItem className="flex-1">
-                <FormLabel>{t.contract.documents}</FormLabel>
+                <FormLabel>{labels?.file ?? t.contract.documents}</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
@@ -73,7 +76,7 @@ export function DocumentsForm<T extends FieldValues>({
             name={`${fieldName}.${index}.filename` as Path<T>}
             render={({ field }) => (
               <FormItem className="flex-1">
-                <FormLabel>{t.contract.detailsTable.title}</FormLabel>
+                <FormLabel>{labels?.name ?? t.contract.detailsTable.title}</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input {...field} disabled={isSubmitting} className="h-12 pl-10" />
@@ -103,7 +106,7 @@ export function DocumentsForm<T extends FieldValues>({
         onClick={() => fieldArray.append({ file: undefined, filename: "" } as never)}
       >
         <Plus />
-        {t.contract.documents}
+        {labels?.add ?? t.contract.documents}
       </Button>
     </div>
   );

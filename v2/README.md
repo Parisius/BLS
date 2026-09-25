@@ -145,10 +145,10 @@ pnpm dev
 
 Administration, Contracts and all four Governance sub-modules (Shareholding,
 General Meeting, Administration Meeting / CA, Management Committee / CODIR),
-Account Incidents, Recovery and Safety (mortgage, movable and personal safeties).
+Account Incidents, Recovery, Safety (mortgage, movable and personal safeties) and Litigation.
 
 ## Not yet ported
 
-Litigation, Audit, Evaluation, Legal Monitoring, Documents Bank. The module
+Audit, Evaluation, Legal Monitoring, Documents Bank. The module
 hub (`/dashboard/modules`) renders tiles for all of them for visual parity,
 but only the ported modules' tiles lead anywhere real yet.

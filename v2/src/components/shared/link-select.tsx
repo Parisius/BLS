@@ -19,7 +19,12 @@ interface LinkSelectProps {
 
 /** Picker for the contract/guarantee a record (recovery, safety) is attached to. */
 export function LinkSelect({ value, onValueChange, options, isLoading, placeholder, loadingLabel, emptyLabel }: LinkSelectProps) {
-  const items = useMemo(() => (options ?? []).map((o) => ({ value: o.id, label: o.title })), [options]);
+  const choices = useMemo(() => (options ?? []).map((o) => ({ value: o.id, label: o.title })), [options]);
+  // Label lookup only: a prefilled value whose option hasn't loaded yet would otherwise render as its raw id.
+  const items = useMemo(
+    () => (value && !choices.some((choice) => choice.value === value) ? [...choices, { value, label: loadingLabel }] : choices),
+    [choices, value, loadingLabel],
+  );
 
   return (
     <Select value={value || null} onValueChange={(next) => onValueChange(next ?? "")} items={items}>
@@ -32,12 +37,12 @@ export function LinkSelect({ value, onValueChange, options, isLoading, placehold
             {loadingLabel}
           </SelectItem>
         )}
-        {!isLoading && items.length === 0 && (
+        {!isLoading && choices.length === 0 && (
           <SelectItem disabled value="__empty__">
             {emptyLabel}
           </SelectItem>
         )}
-        {items.map((item) => (
+        {choices.map((item) => (
           <SelectItem key={item.value} value={item.value}>
             {item.label}
           </SelectItem>

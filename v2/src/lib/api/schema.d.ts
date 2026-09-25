@@ -3901,6 +3901,110 @@ export interface components {
                 }[];
             }[];
         };
+        LitigationRef: {
+            id?: string;
+            name?: string;
+        };
+        LitigationCase: {
+            id?: string;
+            name?: string;
+            case_number?: string;
+            reference?: string;
+            is_archived?: boolean;
+            has_provisions?: boolean;
+            jurisdiction_location?: string;
+            nature?: components["schemas"]["LitigationRef"];
+            jurisdiction?: components["schemas"]["LitigationRef"];
+            current_step?: {
+                id?: string;
+                title?: string;
+            };
+            next_step?: {
+                id?: string;
+                title?: string;
+            };
+            parties?: {
+                id?: string;
+                name?: string;
+                phone?: string;
+                email?: string;
+                category?: string;
+                type?: string;
+            }[];
+            users?: {
+                id?: string;
+                name?: string;
+                email?: string;
+            }[];
+            lawyers?: {
+                id?: string;
+                name?: string;
+                phone?: string;
+                email?: string;
+            }[];
+            documents?: {
+                file_url?: string;
+                filename?: string;
+            }[];
+            estimated_amount?: number;
+            added_amount?: number;
+            remaining_amount?: number;
+        };
+        LitigationParty: {
+            id?: string;
+            name?: string;
+            phone?: string;
+            email?: string;
+            address?: string;
+            party_type?: string;
+        };
+        LitigationStats: {
+            sum_added_amount?: number;
+            sum_estimated_amount?: number;
+            sum_remaining_amount?: number;
+        };
+        Lawyer: {
+            id?: string;
+            name?: string;
+            email?: string;
+            phone?: string;
+        };
+        LitigationTask: {
+            id?: string;
+            title?: string;
+            model_id?: string;
+            status?: boolean;
+            type?: string;
+            created_by?: string;
+            min_deadline?: string;
+            max_deadline?: string;
+            form?: {
+                form_title?: string;
+                fields?: {
+                    type?: string;
+                    name?: string;
+                    label?: string;
+                }[];
+            };
+            transfers?: {
+                id?: string;
+                title?: string;
+                deadline?: string;
+                description?: string;
+                sender?: {
+                    id?: string;
+                    firstname?: string;
+                    lastname?: string;
+                    email?: string;
+                };
+                collaborators?: {
+                    id?: string;
+                    firstname?: string;
+                    lastname?: string;
+                    email?: string;
+                }[];
+            }[];
+        };
     };
     responses: never;
     parameters: never;
@@ -9542,7 +9646,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"][];
+                        data?: components["schemas"]["LitigationCase"][];
                     };
                 };
             };
@@ -9576,7 +9680,13 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    [key: string]: unknown;
+                };
+            };
+        };
         responses: {
             /** @description Successful response */
             200: {
@@ -9585,7 +9695,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationCase"];
                     };
                 };
             };
@@ -9671,8 +9781,8 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    lawyers?: Record<string, never>[];
-                    users?: Record<string, never>[];
+                    lawyers?: string[];
+                    users?: string[];
                 };
             };
         };
@@ -9773,7 +9883,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"][];
+                        data?: components["schemas"]["LitigationRef"][];
                     };
                 };
             };
@@ -9822,7 +9932,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationRef"];
                     };
                 };
             };
@@ -9865,7 +9975,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"][];
+                        data?: components["schemas"]["Lawyer"][];
                     };
                 };
             };
@@ -9922,7 +10032,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationCase"];
                     };
                 };
             };
@@ -9965,7 +10075,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"][];
+                        data?: components["schemas"]["LitigationRef"][];
                     };
                 };
             };
@@ -10014,7 +10124,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationRef"];
                     };
                 };
             };
@@ -10057,7 +10167,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"][];
+                        data?: components["schemas"]["LitigationParty"][];
                     };
                 };
             };
@@ -10110,7 +10220,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationParty"];
                     };
                 };
             };
@@ -10153,7 +10263,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationStats"];
                     };
                 };
             };
@@ -10182,15 +10292,12 @@ export interface operations {
     };
     getLitigationTasks: {
         parameters: {
-            query?: {
-                /** @description Filter/parameter 'id' */
-                id?: string;
+            query: {
+                /** @description Litigation case identifier */
+                id: string;
             };
             header?: never;
-            path: {
-                /** @description Litigation case identifier */
-                litigationId: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -10202,7 +10309,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"][];
+                        data?: components["schemas"]["LitigationTask"][];
                     };
                 };
             };
@@ -10254,7 +10361,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationTask"];
                     };
                 };
             };
@@ -10291,7 +10398,13 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    [key: string]: unknown;
+                };
+            };
+        };
         responses: {
             /** @description Successful response */
             200: {
@@ -10340,7 +10453,7 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    collaborators?: Record<string, never>[];
+                    collaborators?: string[];
                     deadline_transfer?: string;
                     description?: string;
                     forward_title?: string;
@@ -10401,7 +10514,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationTask"];
                     };
                 };
             };
@@ -10455,7 +10568,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationTask"];
                     };
                 };
             };
@@ -10555,7 +10668,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationCase"];
                     };
                 };
             };
@@ -10601,7 +10714,7 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        data?: components["schemas"]["Litigation"];
+                        data?: components["schemas"]["LitigationCase"];
                     };
                 };
             };
