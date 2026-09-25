@@ -3708,19 +3708,70 @@ export interface components {
             title?: string;
         };
         AuditNotation: {
-            audit_reference?: string;
-            creator?: string;
             id?: string;
-            last_indicators?: string;
-            last_note?: string;
-            last_status?: string;
+            audit_reference?: string;
+            title?: string;
             module?: string;
             module_id?: string;
-            original_indicators?: string;
-            original_note?: string;
+            original_note?: number;
             original_status?: string;
-            title?: string;
-            transfers?: Record<string, never>[];
+            last_note?: number;
+            last_status?: string;
+            creator?: {
+                id?: string;
+                firstname?: string;
+                lastname?: string;
+                email?: string;
+            };
+            original_indicators?: {
+                note?: number;
+                audit_performance_indicator?: {
+                    id?: string;
+                    title?: string;
+                    type?: string;
+                    note?: number;
+                };
+            }[];
+            last_indicators?: {
+                note?: number;
+                audit_performance_indicator?: {
+                    id?: string;
+                    title?: string;
+                    type?: string;
+                    note?: number;
+                };
+            }[];
+            transfers?: {
+                id?: string;
+                title?: string;
+                deadline?: string;
+                description?: string;
+                status?: boolean;
+                notation?: {
+                    note?: number;
+                    indicators?: {
+                        note?: number;
+                        audit_performance_indicator?: {
+                            id?: string;
+                            title?: string;
+                            type?: string;
+                            note?: number;
+                        };
+                    }[];
+                };
+                sender?: {
+                    id?: string;
+                    firstname?: string;
+                    lastname?: string;
+                    email?: string;
+                };
+                collaborators?: {
+                    id?: string;
+                    firstname?: string;
+                    lastname?: string;
+                    email?: string;
+                }[];
+            }[];
         };
         AuditPerformanceIndicator: {
             description?: string;
@@ -4275,7 +4326,7 @@ export interface operations {
             content: {
                 "application/json": {
                     audit_notation_id?: string;
-                    collaborators?: Record<string, never>[];
+                    collaborators?: string[];
                     deadline_transfer?: string;
                     description?: string;
                     forward_title?: string;
@@ -4370,11 +4421,12 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    audit_performance_indicator_id?: string;
                     module?: string;
                     module_id?: string;
-                    note?: number;
-                    notes?: string;
+                    notes?: {
+                        audit_performance_indicator_id?: string;
+                        note?: number;
+                    }[];
                 };
             };
         };
@@ -4472,9 +4524,10 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    audit_performance_indicator_id?: string;
-                    note?: number;
-                    notes?: string;
+                    notes?: {
+                        audit_performance_indicator_id?: string;
+                        note?: number;
+                    }[];
                 };
             };
         };
@@ -8200,15 +8253,11 @@ export interface operations {
     };
     getGeneratePdfFicheSuiviAudit: {
         parameters: {
-            query?: {
-                /** @description Filter/parameter 'audit_notation_id' */
-                audit_notation_id?: string;
+            query: {
+                audit_notation_id: string;
             };
             header?: never;
-            path: {
-                /** @description Audit notation identifier */
-                auditId: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;

@@ -1826,22 +1826,13 @@
       "AuditNotation": {
         "type": "object",
         "properties": {
-          "audit_reference": {
-            "type": "string"
-          },
-          "creator": {
-            "type": "string"
-          },
           "id": {
             "type": "string"
           },
-          "last_indicators": {
+          "audit_reference": {
             "type": "string"
           },
-          "last_note": {
-            "type": "string"
-          },
-          "last_status": {
+          "title": {
             "type": "string"
           },
           "module": {
@@ -1850,22 +1841,185 @@
           "module_id": {
             "type": "string"
           },
-          "original_indicators": {
-            "type": "string"
-          },
           "original_note": {
-            "type": "string"
+            "type": "number"
           },
           "original_status": {
             "type": "string"
           },
-          "title": {
+          "last_note": {
+            "type": "number"
+          },
+          "last_status": {
             "type": "string"
+          },
+          "creator": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "firstname": {
+                "type": "string"
+              },
+              "lastname": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              }
+            }
+          },
+          "original_indicators": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "note": {
+                  "type": "number"
+                },
+                "audit_performance_indicator": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "last_indicators": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "note": {
+                  "type": "number"
+                },
+                "audit_performance_indicator": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "note": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
           },
           "transfers": {
             "type": "array",
             "items": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "deadline": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "boolean"
+                },
+                "notation": {
+                  "type": "object",
+                  "properties": {
+                    "note": {
+                      "type": "number"
+                    },
+                    "indicators": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "note": {
+                            "type": "number"
+                          },
+                          "audit_performance_indicator": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "note": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "sender": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "firstname": {
+                      "type": "string"
+                    },
+                    "lastname": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "collaborators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "firstname": {
+                        "type": "string"
+                      },
+                      "lastname": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -3099,7 +3253,7 @@
                   "collaborators": {
                     "type": "array",
                     "items": {
-                      "type": "object"
+                      "type": "string"
                     }
                   },
                   "deadline_transfer": {
@@ -3208,20 +3362,25 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "audit_performance_indicator_id": {
-                    "type": "string"
-                  },
                   "module": {
                     "type": "string"
                   },
                   "module_id": {
                     "type": "string"
                   },
-                  "note": {
-                    "type": "number"
-                  },
                   "notes": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "audit_performance_indicator_id": {
+                          "type": "string"
+                        },
+                        "note": {
+                          "type": "number"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -3337,14 +3496,19 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "audit_performance_indicator_id": {
-                    "type": "string"
-                  },
-                  "note": {
-                    "type": "number"
-                  },
                   "notes": {
-                    "type": "string"
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "audit_performance_indicator_id": {
+                          "type": "string"
+                        },
+                        "note": {
+                          "type": "number"
+                        }
+                      }
+                    }
                   }
                 }
               }
@@ -7934,22 +8098,12 @@
         "operationId": "getGeneratePdfFicheSuiviAudit",
         "parameters": [
           {
-            "name": "auditId",
-            "in": "path",
+            "name": "audit_notation_id",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "description": "Audit notation identifier"
-          },
-          {
-            "name": "audit_notation_id",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Filter/parameter 'audit_notation_id'"
+            }
           }
         ],
         "responses": {
