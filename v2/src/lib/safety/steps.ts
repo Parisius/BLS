@@ -2,7 +2,7 @@
 
 import { apiClient, unwrap, throwIfError } from "@/lib/api/client";
 import { toBackendDate } from "@/lib/shared/date-utils";
-import { mapWorkflowTask, type ForwardWorkflowTaskArgs } from "@/lib/shared/workflow-task";
+import { forwardVerified, mapWorkflowTask, type ForwardWorkflowTaskArgs } from "@/lib/shared/workflow-task";
 
 export async function getAllSafetySteps(guaranteeId: string) {
   const data = unwrap(await apiClient.GET("/guarantees/tasks", { params: { query: { id: guaranteeId } } }));
@@ -51,17 +51,19 @@ export async function completeSafetyStep(guaranteeId: string, stepId: string, fo
   throwIfError(error, "Failed to complete the step");
 }
 
-export async function forwardSafetyStep(stepId: string, args: ForwardWorkflowTaskArgs) {
-  const { error } = await apiClient.PUT("/guarantees/tasks/transfer/{stepId}", {
-    params: { path: { stepId } },
-    body: {
-      forward_title: args.title,
-      deadline_transfer: toBackendDate(args.dueDate),
-      description: args.description,
-      collaborators: [args.receiverId],
-    },
+export async function forwardSafetyStep(guaranteeId: string, stepId: string, args: ForwardWorkflowTaskArgs) {
+  await forwardVerified(() => getAllSafetySteps(guaranteeId), stepId, async () => {
+    const { error } = await apiClient.PUT("/guarantees/tasks/transfer/{stepId}", {
+      params: { path: { stepId } },
+      body: {
+        forward_title: args.title,
+        deadline_transfer: toBackendDate(args.dueDate),
+        description: args.description,
+        collaborators: [args.receiverId],
+      },
+    });
+    throwIfError(error, "Failed to forward the step");
   });
-  throwIfError(error, "Failed to forward the step");
 }
 
 export async function deleteSafetyStep(stepId: string) {

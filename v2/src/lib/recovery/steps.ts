@@ -2,7 +2,7 @@
 
 import { apiClient, unwrap, throwIfError } from "@/lib/api/client";
 import { toBackendDate } from "@/lib/shared/date-utils";
-import { mapWorkflowTask, type ForwardWorkflowTaskArgs, type WorkflowTask } from "@/lib/shared/workflow-task";
+import { forwardVerified, mapWorkflowTask, type ForwardWorkflowTaskArgs, type WorkflowTask } from "@/lib/shared/workflow-task";
 
 export type RecoveryStep = WorkflowTask;
 
@@ -43,17 +43,19 @@ export async function completeRecoveryStep(stepId: string, formData: FormData) {
   throwIfError(error, "Failed to complete the recovery step");
 }
 
-export async function forwardRecoveryStep(stepId: string, args: ForwardWorkflowTaskArgs) {
-  const { error } = await apiClient.PUT("/recovery/tasks/transfer/{stepId}", {
-    params: { path: { stepId } },
-    body: {
-      forward_title: args.title,
-      deadline_transfer: toBackendDate(args.dueDate),
-      description: args.description,
-      collaborators: [args.receiverId],
-    },
+export async function forwardRecoveryStep(recoveryId: string, stepId: string, args: ForwardWorkflowTaskArgs) {
+  await forwardVerified(() => getAllRecoverySteps(recoveryId), stepId, async () => {
+    const { error } = await apiClient.PUT("/recovery/tasks/transfer/{stepId}", {
+      params: { path: { stepId } },
+      body: {
+        forward_title: args.title,
+        deadline_transfer: toBackendDate(args.dueDate),
+        description: args.description,
+        collaborators: [args.receiverId],
+      },
+    });
+    throwIfError(error, "Failed to forward the recovery step");
   });
-  throwIfError(error, "Failed to forward the recovery step");
 }
 
 export async function deleteRecoveryStep(stepId: string) {

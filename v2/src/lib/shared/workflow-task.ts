@@ -113,3 +113,23 @@ export interface ForwardWorkflowTaskArgs {
   description: string;
   receiverId: string;
 }
+
+/**
+ * Backend quirk: forwarding a task can record the transfer and then still answer with a generic error (seen on
+ * safety, recovery and litigation tasks). So a failed forward only counts as failed when the task didn't gain a
+ * transfer in the meantime.
+ */
+export async function forwardVerified(
+  getTasks: () => Promise<WorkflowTask[]>,
+  taskId: string,
+  forward: () => Promise<void>,
+) {
+  const countForwards = async () => (await getTasks()).find((task) => task.id === taskId)?.forwards.length ?? 0;
+  const before = await countForwards();
+  try {
+    await forward();
+  } catch (error) {
+    if ((await countForwards()) > before) return;
+    throw error;
+  }
+}

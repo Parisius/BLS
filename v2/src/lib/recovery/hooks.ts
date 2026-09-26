@@ -80,7 +80,7 @@ export const useForwardRecoveryStep = (recoveryId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ stepId, args }: { stepId: string; args: ForwardWorkflowTaskArgs }) =>
-      forwardRecoveryStep(stepId, args),
+      forwardRecoveryStep(recoveryId, stepId, args),
     onSettled: () => queryClient.invalidateQueries({ queryKey: stepsKey(recoveryId) }),
   });
 };

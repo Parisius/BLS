@@ -151,7 +151,7 @@ export const useForwardLitigationTask = (litigationId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ taskId, args }: { taskId: string; args: ForwardWorkflowTaskArgs }) =>
-      forwardLitigationTask(taskId, args),
+      forwardLitigationTask(litigationId, taskId, args),
     onSettled: () => queryClient.invalidateQueries({ queryKey: tasksKey(litigationId) }),
   });
 };

@@ -2,7 +2,7 @@
 
 import { apiClient, unwrap, throwIfError } from "@/lib/api/client";
 import { toBackendDate } from "@/lib/shared/date-utils";
-import { mapWorkflowTask, type ForwardWorkflowTaskArgs } from "@/lib/shared/workflow-task";
+import { forwardVerified, mapWorkflowTask, type ForwardWorkflowTaskArgs } from "@/lib/shared/workflow-task";
 
 export async function getAllLitigationTasks(litigationId: string) {
   const data = unwrap(await apiClient.GET("/litigation/tasks", { params: { query: { id: litigationId } } }));
@@ -49,17 +49,19 @@ export async function completeLitigationTask(litigationId: string, taskId: strin
   throwIfError(error, "Failed to complete the task");
 }
 
-export async function forwardLitigationTask(taskId: string, args: ForwardWorkflowTaskArgs) {
-  const { error } = await apiClient.PUT("/litigation/tasks/transfer/{taskId}", {
-    params: { path: { taskId } },
-    body: {
-      forward_title: args.title,
-      deadline_transfer: toBackendDate(args.dueDate),
-      description: args.description,
-      collaborators: [args.receiverId],
-    },
+export async function forwardLitigationTask(litigationId: string, taskId: string, args: ForwardWorkflowTaskArgs) {
+  await forwardVerified(() => getAllLitigationTasks(litigationId), taskId, async () => {
+    const { error } = await apiClient.PUT("/litigation/tasks/transfer/{taskId}", {
+      params: { path: { taskId } },
+      body: {
+        forward_title: args.title,
+        deadline_transfer: toBackendDate(args.dueDate),
+        description: args.description,
+        collaborators: [args.receiverId],
+      },
+    });
+    throwIfError(error, "Failed to forward the task");
   });
-  throwIfError(error, "Failed to forward the task");
 }
 
 export async function deleteLitigationTask(taskId: string) {

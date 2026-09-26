@@ -100,7 +100,7 @@ export const useCompleteSafetyStep = (guaranteeId: string) => {
 export const useForwardSafetyStep = (guaranteeId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ stepId, args }: { stepId: string; args: ForwardWorkflowTaskArgs }) => forwardSafetyStep(stepId, args),
+    mutationFn: ({ stepId, args }: { stepId: string; args: ForwardWorkflowTaskArgs }) => forwardSafetyStep(guaranteeId, stepId, args),
     onSettled: () => queryClient.invalidateQueries({ queryKey: stepsKey(guaranteeId) }),
   });
 };
