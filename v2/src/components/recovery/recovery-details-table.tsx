@@ -12,6 +12,7 @@ import type { Recovery } from "@/lib/recovery/recoveries";
 import { downloadBytes } from "@/lib/shared/download";
 import { cn } from "@/lib/utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function RecoveryDetailsTable({ recovery }: { recovery: Recovery }) {
   const { t } = useDictionary();
@@ -73,29 +74,31 @@ export function RecoveryDetailsTable({ recovery }: { recovery: Recovery }) {
             </Badge>
           </TableCell>
           <TableCell>
-            <Tooltip>
-              <TooltipTrigger
-                render={
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    aria-label={tt.print}
-                    className="rounded-full"
-                    disabled={isPending}
-                    onClick={() =>
-                      mutate(recovery.id, {
-                        onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
-                        onError: () => toast.error(tt.printError),
-                      })
-                    }
-                  />
-                }
-              >
-                <Printer className={isPending ? "animate-bounce" : undefined} />
-              </TooltipTrigger>
-              <TooltipContent>{tt.print}</TooltipContent>
-            </Tooltip>
+            <Can permission="recovery.print">
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      aria-label={tt.print}
+                      className="rounded-full"
+                      disabled={isPending}
+                      onClick={() =>
+                        mutate(recovery.id, {
+                          onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
+                          onError: () => toast.error(tt.printError),
+                        })
+                      }
+                    />
+                  }
+                >
+                  <Printer className={isPending ? "animate-bounce" : undefined} />
+                </TooltipTrigger>
+                <TooltipContent>{tt.print}</TooltipContent>
+              </Tooltip>
+            </Can>
           </TableCell>
         </TableRow>
       </TableBody>

@@ -27,6 +27,8 @@ import { downloadBytes } from "@/lib/shared/download";
 import { canComplete, canForward } from "@/lib/shared/transfer-permissions";
 import { cn } from "@/lib/utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
+import { usePermissions } from "@/lib/auth/use-permissions";
 
 interface HistoryEntry {
   id: string;
@@ -38,6 +40,7 @@ interface HistoryEntry {
 
 export function EvaluationDetailView({ evaluationId }: { evaluationId: string }) {
   const { t } = useDictionary();
+  const { can } = usePermissions();
   const td = t.evaluation.detail;
   const { data: currentUser } = useCurrentUser();
   const { data, isLoading, isError } = useOneEvaluation(evaluationId);
@@ -85,8 +88,8 @@ export function EvaluationDetailView({ evaluationId }: { evaluationId: string })
   if (!data) notFound();
 
   const userId = currentUser?.id;
-  const mayForward = canForward(data, userId);
-  const mayComplete = canComplete(data, userId);
+  const mayForward = can("evaluation.forward") && canForward(data, userId);
+  const mayComplete = can("evaluation.update") && canComplete(data, userId);
   const pendingTransfer = data.forwards[0];
   const { collaborator } = data;
 
@@ -109,20 +112,22 @@ export function EvaluationDetailView({ evaluationId }: { evaluationId: string })
             <span className="sr-only sm:not-sr-only">{pendingTransfer.title || td.defaultCompleteTitle}</span>
           </Button>
         )}
-        <Button
-          variant="secondary"
-          className="gap-2"
-          disabled={printing}
-          onClick={() =>
-            print(data.id, {
-              onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
-              onError: () => toast.error(td.printError),
-            })
-          }
-        >
-          <Printer className={printing ? "animate-bounce" : undefined} />
-          <span className="sr-only sm:not-sr-only">{td.print}</span>
-        </Button>
+        <Can permission="evaluation.print">
+          <Button
+            variant="secondary"
+            className="gap-2"
+            disabled={printing}
+            onClick={() =>
+              print(data.id, {
+                onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
+                onError: () => toast.error(td.printError),
+              })
+            }
+          >
+            <Printer className={printing ? "animate-bounce" : undefined} />
+            <span className="sr-only sm:not-sr-only">{td.print}</span>
+          </Button>
+        </Can>
         {data.forwards.length > 0 && (
           <Tooltip>
             <ForwardsHistoryDialog

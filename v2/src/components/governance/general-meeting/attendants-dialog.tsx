@@ -52,6 +52,7 @@ import {
 import { useAttendantForm } from "@/lib/governance/general-meeting/forms";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { Attendant } from "@/lib/governance/general-meeting/attendance";
+import { Can } from "@/components/auth/can";
 
 function AddAttendantDialog({ meetingId }: { meetingId: string }) {
   const form = useAttendantForm();
@@ -245,17 +246,21 @@ function AttendantsTable({ meetingId }: { meetingId: string }) {
               <TableCell className="text-end">
                 {attendant.type === "not_shareholder" && (
                   <>
-                    <Button variant="ghost" size="icon" onClick={() => setUpdating(attendant)}>
-                      <UserPlus />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive"
-                      onClick={() => setDeletingId(attendant.id)}
-                    >
-                      <Trash />
-                    </Button>
+                    <Can permission="governance.manage_attendance">
+                      <Button variant="ghost" size="icon" onClick={() => setUpdating(attendant)}>
+                        <UserPlus />
+                      </Button>
+                    </Can>
+                    <Can permission="governance.manage_attendance">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive"
+                        onClick={() => setDeletingId(attendant.id)}
+                      >
+                        <Trash />
+                      </Button>
+                    </Can>
                   </>
                 )}
               </TableCell>
@@ -313,7 +318,9 @@ export function AttendantsDialog({ meetingId }: { meetingId: string }) {
         </DialogHeader>
 
         <div className="flex justify-end">
-          <AddAttendantDialog meetingId={meetingId} />
+          <Can permission="governance.manage_attendance">
+            <AddAttendantDialog meetingId={meetingId} />
+          </Can>
         </div>
 
         <div className="flex-1 overflow-auto">

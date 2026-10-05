@@ -60,6 +60,7 @@ import type { Control } from "react-hook-form";
 import { formatDisplayDate } from "@/lib/shared/date-utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { Administrator } from "@/lib/governance/administration-meeting/administrators";
+import { Can } from "@/components/auth/can";
 
 function ageFromBirthDate(birthDate?: string) {
   if (!birthDate) return "-";
@@ -268,7 +269,9 @@ export function AdministratorsModal() {
             placeholder={tg.administratorsTable.search}
             className="h-10 max-w-xs"
           />
-          <AddAdministratorDialog />
+          <Can permission="governance.create">
+            <AddAdministratorDialog />
+          </Can>
         </div>
 
         <div className="flex-1 overflow-auto">
@@ -307,10 +310,14 @@ export function AdministratorsModal() {
                     <TableCell>{administrator.address ?? "-"}</TableCell>
                     <TableCell className="text-end">
                       <MandatesHistoryDialog administrator={administrator} />
-                      <Button variant="ghost" size="icon" onClick={() => setEditing(administrator)}>
-                        <Pencil />
-                      </Button>
-                      <DeleteAdministratorButton administratorId={administrator.id} />
+                      <Can permission="governance.update">
+                        <Button variant="ghost" size="icon" onClick={() => setEditing(administrator)}>
+                          <Pencil />
+                        </Button>
+                      </Can>
+                      <Can permission="governance.delete">
+                        <DeleteAdministratorButton administratorId={administrator.id} />
+                      </Can>
                     </TableCell>
                   </TableRow>
                 ))}

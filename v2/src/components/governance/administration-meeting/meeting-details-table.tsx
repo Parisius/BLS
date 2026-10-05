@@ -17,6 +17,7 @@ import { UpdateMeetingDialog } from "@/components/governance/administration-meet
 import { formatDisplayDate } from "@/lib/shared/date-utils";
 import type { Meeting } from "@/lib/governance/administration-meeting/meetings";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function MeetingDetailsTable({ meeting }: { meeting: Meeting }) {
   const { t } = useDictionary();
@@ -54,21 +55,23 @@ export function MeetingDetailsTable({ meeting }: { meeting: Meeting }) {
               </Badge>
             </TableCell>
             <TableCell className="text-center">
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full"
-                      onClick={() => setEditing(true)}
-                    />
-                  }
-                >
-                  <Pencil />
-                </TooltipTrigger>
-                <TooltipContent>{tg.detailsTable.edit}</TooltipContent>
-              </Tooltip>
+              <Can permission="governance.update">
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full"
+                        onClick={() => setEditing(true)}
+                      />
+                    }
+                  >
+                    <Pencil />
+                  </TooltipTrigger>
+                  <TooltipContent>{tg.detailsTable.edit}</TooltipContent>
+                </Tooltip>
+              </Can>
             </TableCell>
           </TableRow>
         </TableBody>

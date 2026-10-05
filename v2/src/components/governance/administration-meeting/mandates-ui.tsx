@@ -38,6 +38,7 @@ import { useUpdateMandate, useRenewMandate } from "@/lib/governance/administrati
 import { formatDisplayDate, toDateInputValue } from "@/lib/shared/date-utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { Administrator, Mandate } from "@/lib/governance/administration-meeting/administrators";
+import { Can } from "@/components/auth/can";
 
 function RenewMandateDialog({
   administratorId,
@@ -188,10 +189,12 @@ export function MandatesHistoryDialog({ administrator }: { administrator: Admini
 
         <div className="flex items-center justify-end gap-3">
           {!canRenew && <p className="text-xs text-muted-foreground">{tg.mandatesDialog.renewNotDue}</p>}
-          <Button size="sm" className="gap-2" disabled={!canRenew} onClick={() => setRenewing(true)}>
-            <RefreshCw />
-            {tg.mandatesDialog.renewTooltip}
-          </Button>
+          <Can permission="governance.update">
+            <Button size="sm" className="gap-2" disabled={!canRenew} onClick={() => setRenewing(true)}>
+              <RefreshCw />
+              {tg.mandatesDialog.renewTooltip}
+            </Button>
+          </Can>
         </div>
 
         <div className="flex-1 overflow-auto">
@@ -217,14 +220,16 @@ export function MandatesHistoryDialog({ administrator }: { administrator: Admini
                     </Badge>
                   </TableCell>
                   <TableCell className="text-end">
-                    <Tooltip>
-                      <TooltipTrigger
-                        render={<Button variant="ghost" size="icon" onClick={() => setEditing(mandate)} />}
-                      >
-                        <Pencil />
-                      </TooltipTrigger>
-                      <TooltipContent>{tg.mandatesDialog.editTooltip}</TooltipContent>
-                    </Tooltip>
+                    <Can permission="governance.update">
+                      <Tooltip>
+                        <TooltipTrigger
+                          render={<Button variant="ghost" size="icon" onClick={() => setEditing(mandate)} />}
+                        >
+                          <Pencil />
+                        </TooltipTrigger>
+                        <TooltipContent>{tg.mandatesDialog.editTooltip}</TooltipContent>
+                      </Tooltip>
+                    </Can>
                   </TableCell>
                 </TableRow>
               ))}

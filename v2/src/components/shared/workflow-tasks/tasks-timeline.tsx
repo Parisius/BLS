@@ -37,6 +37,7 @@ import { toast } from "sonner";
 import { formatDisplayDate } from "@/lib/shared/date-utils";
 import { cn } from "@/lib/utils";
 import type { ForwardWorkflowTaskArgs, WorkflowTask } from "@/lib/shared/workflow-task";
+import { usePermissions } from "@/lib/auth/use-permissions";
 
 // Only the original creator (if never forwarded) or the most recent forward's
 // receiver may forward the task again.
@@ -45,6 +46,13 @@ function canForward(task: WorkflowTask, currentUserId?: string) {
     return task.forwards[task.forwards.length - 1].receiver.id === currentUserId;
   }
   return task.createdBy === currentUserId;
+}
+
+/** Permissions guarding the timeline's actions; an action without one is always offered. */
+export interface WorkflowPermissions {
+  /** Validating a step and adding/editing/deleting custom ones. */
+  update?: string;
+  forward?: string;
 }
 
 export interface WorkflowMenuAction {
@@ -64,6 +72,7 @@ interface WorkflowTasksTimelineProps {
   labels: WorkflowLabels;
   /** Recovery only lets the current step be forwarded; incidents/transfers allow any pending task. */
   restrictForwardToCurrent?: boolean;
+  permissions?: WorkflowPermissions;
   /**
    * Extra dropdown entries for a task (e.g. edit/delete for user-created steps). They are plain actions:
    * the caller owns any dialog state outside the menu, because content rendered inside the menu
@@ -81,12 +90,15 @@ export function WorkflowTasksTimeline({
   currentTaskId,
   labels,
   restrictForwardToCurrent = false,
+  permissions,
   extraMenuActions,
   onComplete,
   onForward,
 }: WorkflowTasksTimelineProps) {
   const tt = labels.timeline;
   const { data: currentUser } = useCurrentUser();
+  const { can } = usePermissions();
+  const allowed = (permission?: string) => !permission || can(permission);
   const [completingTask, setCompletingTask] = useState<WorkflowTask | null>(null);
   const [forwardingTask, setForwardingTask] = useState<WorkflowTask | null>(null);
   const [historyTask, setHistoryTask] = useState<WorkflowTask | null>(null);
@@ -135,7 +147,7 @@ export function WorkflowTasksTimeline({
                     <TooltipContent>{tt.menu}</TooltipContent>
                   </Tooltip>
                   <DropdownMenuContent>
-                    {isCurrent && (
+                    {isCurrent && allowed(permissions?.update) && (
                       <DropdownMenuItem
                         className="gap-2"
                         onClick={() => (task.form.fields.length === 0 ? setConfirmingTask(task) : setCompletingTask(task))}
@@ -145,7 +157,9 @@ export function WorkflowTasksTimeline({
                       </DropdownMenuItem>
                     )}
 
-                    {canForward(task, currentUser?.id) && (!restrictForwardToCurrent || isCurrent) && (
+                    {allowed(permissions?.forward) &&
+                      canForward(task, currentUser?.id) &&
+                      (!restrictForwardToCurrent || isCurrent) && (
                       <DropdownMenuItem className="gap-2" onClick={() => setForwardingTask(task)}>
                         <Forward />
                         {tt.forward}

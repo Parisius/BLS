@@ -18,6 +18,7 @@ import { UpdateContractDialog } from "@/components/contract/update-contract-dial
 import { useAllStakeholders } from "@/lib/contract/hooks";
 import type { Contract, StakeholderGroupItem } from "@/lib/contract/contracts";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 function StakeholdersGroupView({
   label,
@@ -74,16 +75,20 @@ export function StakeholdersModal({ contract }: { contract: Contract }) {
           <SheetHeader>
             <div className="sm:flex sm:items-center sm:justify-between">
               <SheetTitle>{tc.stakeholders.title}</SheetTitle>
-              <Button className="hidden gap-2 sm:inline-flex" onClick={() => setEditing(true)}>
+              <Can permission="contract.update">
+                <Button className="hidden gap-2 sm:inline-flex" onClick={() => setEditing(true)}>
+                  <UserPlus />
+                  {tc.stakeholders.editButton}
+                </Button>
+              </Can>
+            </div>
+            <SheetDescription className="line-clamp-1">{contract.title}</SheetDescription>
+            <Can permission="contract.update">
+              <Button className="gap-2 sm:hidden" onClick={() => setEditing(true)}>
                 <UserPlus />
                 {tc.stakeholders.editButton}
               </Button>
-            </div>
-            <SheetDescription className="line-clamp-1">{contract.title}</SheetDescription>
-            <Button className="gap-2 sm:hidden" onClick={() => setEditing(true)}>
-              <UserPlus />
-              {tc.stakeholders.editButton}
-            </Button>
+            </Can>
           </SheetHeader>
 
           <div className="flex-1 space-y-10 overflow-auto py-2">

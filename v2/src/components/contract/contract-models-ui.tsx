@@ -116,7 +116,9 @@ export function ContractModelsList({
                 </Tooltip>
               )}
 
-              <DeleteContractModelButton modelId={model.id} />
+              <Can permission="contract.manage_models">
+                <DeleteContractModelButton modelId={model.id} />
+              </Can>
             </div>
           </div>
           <Tooltip>

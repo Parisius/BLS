@@ -12,6 +12,7 @@ import { StartRealisationButton } from "@/components/safety/start-realisation-bu
 import { useOneGuarantee } from "@/lib/safety/hooks";
 import { KIND_KEY, type SafetyKind } from "@/lib/safety/kinds";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function SafetyDetailView({ kind, guaranteeId }: { kind: SafetyKind; guaranteeId: string }) {
   const { data, isLoading, isError } = useOneGuarantee(guaranteeId);
@@ -38,7 +39,11 @@ export function SafetyDetailView({ kind, guaranteeId }: { kind: SafetyKind; guar
         <SafetyPlanningModal kind={kind} guaranteeId={data.id} reference={data.reference} nextStepId={data.nextStep?.id} />
         <div className="flex items-center gap-2">
           {/* The original only offered this for mortgages, and checked "formalization" (not yet formalized) for the other two. */}
-          {data.hasRecovery && data.phase === "formalized" && <StartRealisationButton guaranteeId={data.id} />}
+          {data.hasRecovery && data.phase === "formalized" && (
+            <Can permission="guarantee.start_realisation">
+              <StartRealisationButton guaranteeId={data.id} />
+            </Can>
+          )}
           <Tooltip>
             <FilesSheet
               trigger={

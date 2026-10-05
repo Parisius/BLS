@@ -13,6 +13,7 @@ export function TransferTasksTimeline({ transferId, currentTaskId }: { transferI
 
   return (
     <WorkflowTasksTimeline
+      permissions={{ update: "governance.manage_shareholding" }}
       tasks={data}
       isLoading={isLoading}
       isError={isError}

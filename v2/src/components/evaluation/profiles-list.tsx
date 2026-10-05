@@ -28,6 +28,7 @@ import {
 } from "@/lib/evaluation/hooks";
 import type { Profile } from "@/lib/evaluation/profiles";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 function ProfileCriteria({ profileId, label }: { profileId: string; label: string }) {
   const { t } = useDictionary();
@@ -144,21 +145,27 @@ export function ProfilesList() {
             <CardHeader className="h-full items-center justify-center gap-4">
               <CardTitle className="text-center">{profile.title}</CardTitle>
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" aria-label={tp.view} className="bg-accent/50" onClick={() => setManaging(profile.id)}>
-                  <Eye />
-                </Button>
-                <Button variant="ghost" size="icon" aria-label={tp.edit} className="bg-accent/50" onClick={() => setEditing(profile)}>
-                  <Pencil />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  aria-label={tp.delete}
-                  className="bg-accent/50 text-destructive"
-                  onClick={() => setDeleting(profile)}
-                >
-                  <Trash />
-                </Button>
+                <Can permission="evaluation.manage_profiles">
+                  <Button variant="ghost" size="icon" aria-label={tp.view} className="bg-accent/50" onClick={() => setManaging(profile.id)}>
+                    <Eye />
+                  </Button>
+                </Can>
+                <Can permission="evaluation.manage_profiles">
+                  <Button variant="ghost" size="icon" aria-label={tp.edit} className="bg-accent/50" onClick={() => setEditing(profile)}>
+                    <Pencil />
+                  </Button>
+                </Can>
+                <Can permission="evaluation.manage_profiles">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label={tp.delete}
+                    className="bg-accent/50 text-destructive"
+                    onClick={() => setDeleting(profile)}
+                  >
+                    <Trash />
+                  </Button>
+                </Can>
               </div>
             </CardHeader>
           </Card>

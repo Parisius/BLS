@@ -42,6 +42,7 @@ import type { Shareholder } from "@/lib/governance/shareholding/shareholders";
 import { formatNumber } from "@/lib/shared/format";
 import { downloadBytes } from "@/lib/shared/download";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 function AddShareholderDialog() {
   const form = useShareholderForm();
@@ -168,28 +169,30 @@ function PrintCertificateButton({ shareholderId }: { shareholderId: string }) {
   const { t } = useDictionary();
 
   return (
-    <Tooltip>
-      <TooltipTrigger
-        render={
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            disabled={isPending}
-            onClick={() =>
-              mutate(shareholderId, {
-                onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
-                onError: () => toast.error(t.shareholding.table.printError),
-              })
-            }
-          />
-        }
-      >
-        <Printer className={isPending ? "animate-bounce" : undefined} />
-      </TooltipTrigger>
-      <TooltipContent>{t.shareholding.table.printCertificate}</TooltipContent>
-    </Tooltip>
+    <Can permission="governance.print">
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              disabled={isPending}
+              onClick={() =>
+                mutate(shareholderId, {
+                  onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
+                  onError: () => toast.error(t.shareholding.table.printError),
+                })
+              }
+            />
+          }
+        >
+          <Printer className={isPending ? "animate-bounce" : undefined} />
+        </TooltipTrigger>
+        <TooltipContent>{t.shareholding.table.printCertificate}</TooltipContent>
+      </Tooltip>
+    </Can>
   );
 }
 
@@ -266,7 +269,9 @@ export function ShareholdersModal({ trigger, children }: { trigger: React.ReactE
             placeholder={tm.search}
             className="h-10 max-w-xs"
           />
-          <AddShareholderDialog />
+          <Can permission="governance.manage_shareholding">
+            <AddShareholderDialog />
+          </Can>
         </div>
 
         <div className="max-h-80 flex-1 overflow-auto sm:max-h-96">
@@ -306,24 +311,28 @@ export function ShareholdersModal({ trigger, children }: { trigger: React.ReactE
                     <TableCell>{formatNumber(shareholder.unencumberedShares + shareholder.encumberedShares)}</TableCell>
                     <TableCell>{shareholder.sharePercentage}%</TableCell>
                     <TableCell className="text-nowrap text-center">
-                      <Tooltip>
-                        <TooltipTrigger
-                          render={
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              className="rounded-full"
-                              onClick={() => setEditing(shareholder)}
-                            />
-                          }
-                        >
-                          <Pencil size={16} />
-                        </TooltipTrigger>
-                        <TooltipContent>{tt.edit}</TooltipContent>
-                      </Tooltip>
+                      <Can permission="governance.manage_shareholding">
+                        <Tooltip>
+                          <TooltipTrigger
+                            render={
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="rounded-full"
+                                onClick={() => setEditing(shareholder)}
+                              />
+                            }
+                          >
+                            <Pencil size={16} />
+                          </TooltipTrigger>
+                          <TooltipContent>{tt.edit}</TooltipContent>
+                        </Tooltip>
+                      </Can>
                       <PrintCertificateButton shareholderId={shareholder.id} />
-                      <DeleteShareholderButton shareholderId={shareholder.id} />
+                      <Can permission="governance.delete">
+                        <DeleteShareholderButton shareholderId={shareholder.id} />
+                      </Can>
                     </TableCell>
                   </TableRow>
                 ))}

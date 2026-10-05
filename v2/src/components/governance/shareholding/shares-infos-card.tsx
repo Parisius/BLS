@@ -25,6 +25,8 @@ import type { BankInfos } from "@/lib/governance/shareholding/bank";
 import { cn } from "@/lib/utils";
 import { formatAmount, formatNumber } from "@/lib/shared/format";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
+import { usePermissions } from "@/lib/auth/use-permissions";
 
 function AddBankCapitalDialog({ trigger, children }: { trigger: React.ReactElement; children: React.ReactNode }) {
   const form = useBankCapitalForm();
@@ -253,6 +255,8 @@ const LINK_BUTTON = <Button variant="link" className="h-auto p-0 italic underlin
 
 /** Value that opens the capital dialog, or a pencil + dash when no capital was recorded yet. */
 function CapitalValue({ value }: { value?: string }) {
+  const { can } = usePermissions();
+  if (!can("governance.manage_shareholding")) return <span className="italic text-muted-foreground">{value ?? "-"}</span>;
   if (value) {
     return <AddBankCapitalDialog trigger={LINK_BUTTON}>{value}</AddBankCapitalDialog>;
   }
@@ -295,20 +299,22 @@ export function SharesInfosCard({ className }: { className?: string }) {
           height={100}
           className="h-auto max-h-24 w-auto self-center object-contain"
         />
-        <UpdateBankInfosDialog
-          key={`${data.name}|${data.headOffice}`}
-          bank={data}
-          trigger={
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={tc.editBankInfos}
-              className="absolute right-5 top-5 rounded-full text-muted-foreground"
-            />
-          }
-        >
-          <Pencil />
-        </UpdateBankInfosDialog>
+        <Can permission="governance.manage_shareholding">
+          <UpdateBankInfosDialog
+            key={`${data.name}|${data.headOffice}`}
+            bank={data}
+            trigger={
+              <Button
+                variant="ghost"
+                size="icon"
+                aria-label={tc.editBankInfos}
+                className="absolute right-5 top-5 rounded-full text-muted-foreground"
+              />
+            }
+          >
+            <Pencil />
+          </UpdateBankInfosDialog>
+        </Can>
       </CardHeader>
       <CardContent className="space-y-10">
         <InfoRow icon={<Tag />} label={tc.name}>

@@ -15,6 +15,7 @@ import { PartiesSheet } from "@/components/litigation/parties-sheet";
 import { UpdateProvisionsDialog } from "@/components/litigation/provisions-dialogs";
 import { useOneLitigation } from "@/lib/litigation/hooks";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function LitigationDetailView({ litigationId }: { litigationId: string }) {
   const { data, isLoading, isError } = useOneLitigation(litigationId);
@@ -41,10 +42,18 @@ export function LitigationDetailView({ litigationId }: { litigationId: string })
       <div className="flex flex-row items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <LitigationPlanningModal litigationId={data.id} reference={data.reference} nextStepId={data.nextStep?.id} />
-          {data.hasProvisions && <UpdateProvisionsDialog litigation={data} />}
+          {data.hasProvisions && (
+            <Can permission="litigation.update_provisions">
+              <UpdateProvisionsDialog litigation={data} />
+            </Can>
+          )}
         </div>
         <div className="flex items-center gap-2">
-          {!data.isArchived && <ArchiveLitigationButton litigationId={data.id} />}
+          {!data.isArchived && (
+            <Can permission="litigation.archive">
+              <ArchiveLitigationButton litigationId={data.id} />
+            </Can>
+          )}
           <FilesSheet
             trigger={<Button className="gap-2" />}
             description={data.title}

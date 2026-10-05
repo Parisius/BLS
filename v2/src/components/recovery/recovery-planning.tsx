@@ -31,6 +31,7 @@ export function RecoveryPlanningModal({
 
   return (
     <StepsPlanningSheet
+      permissions={{ update: "recovery.update", forward: "recovery.forward" }}
       reference={reference}
       nextStepId={nextStepId}
       tasks={data}

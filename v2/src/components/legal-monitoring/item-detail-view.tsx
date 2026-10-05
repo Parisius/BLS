@@ -16,6 +16,7 @@ import { useOneLegalItem, usePrintLegalItem } from "@/lib/legal-monitoring/hooks
 import { downloadBytes } from "@/lib/shared/download";
 import { formatDisplayDate } from "@/lib/shared/date-utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function ItemDetailView({ kind, itemId }: { kind: "judicial" | "legislative"; itemId: string }) {
   const { t } = useDictionary();
@@ -76,44 +77,48 @@ export function ItemDetailView({ kind, itemId }: { kind: "judicial" | "legislati
               <TableCell key={label}>{value}</TableCell>
             ))}
             <TableCell className="whitespace-nowrap">
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label={td.edit}
-                      className="rounded-full"
-                      onClick={() => setEditing(true)}
-                    />
-                  }
-                >
-                  <Pencil />
-                </TooltipTrigger>
-                <TooltipContent>{td.edit}</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      aria-label={td.print}
-                      className="rounded-full"
-                      disabled={printing}
-                      onClick={() =>
-                        print(data.id, {
-                          onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
-                          onError: () => toast.error(td.printError),
-                        })
-                      }
-                    />
-                  }
-                >
-                  <Printer className={printing ? "animate-bounce" : undefined} />
-                </TooltipTrigger>
-                <TooltipContent>{td.print}</TooltipContent>
-              </Tooltip>
+              <Can permission="legal_watch.update">
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={td.edit}
+                        className="rounded-full"
+                        onClick={() => setEditing(true)}
+                      />
+                    }
+                  >
+                    <Pencil />
+                  </TooltipTrigger>
+                  <TooltipContent>{td.edit}</TooltipContent>
+                </Tooltip>
+              </Can>
+              <Can permission="legal_watch.print">
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        aria-label={td.print}
+                        className="rounded-full"
+                        disabled={printing}
+                        onClick={() =>
+                          print(data.id, {
+                            onSuccess: ({ bytes, filename }) => downloadBytes(bytes, filename),
+                            onError: () => toast.error(td.printError),
+                          })
+                        }
+                      />
+                    }
+                  >
+                    <Printer className={printing ? "animate-bounce" : undefined} />
+                  </TooltipTrigger>
+                  <TooltipContent>{td.print}</TooltipContent>
+                </Tooltip>
+              </Can>
             </TableCell>
           </TableRow>
         </TableBody>

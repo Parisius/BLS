@@ -39,6 +39,8 @@ import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { ContractDateType } from "@/lib/contract/forms";
 import type { ContractEvent } from "@/lib/contract/events";
 import type { Contract } from "@/lib/contract/contracts";
+import { Can } from "@/components/auth/can";
+import { usePermissions } from "@/lib/auth/use-permissions";
 
 // Unified vs. the original app, which applied a stricter "must be completed"
 // rule to forward a *contract* but a looser one (no completed check) to
@@ -68,6 +70,7 @@ export function ContractEventsTimeline({ contract }: { contract: Contract }) {
   const { t } = useDictionary();
   const tc = t.contract;
   const { data: currentUser } = useCurrentUser();
+  const { can, canAny } = usePermissions();
   const { data: events, isLoading, isError } = useAllContractEvents(contract.id);
 
   const [editingDate, setEditingDate] = useState<MilestoneId | null>(null);
@@ -151,7 +154,10 @@ export function ContractEventsTimeline({ contract }: { contract: Contract }) {
                 </div>
               )}
 
-              {!row.completed && !row.isMilestone && row.event && (
+              {!row.completed &&
+                !row.isMilestone &&
+                row.event &&
+                (canAny("contract.update", "contract.forward", "contract.delete") || row.event.forwards.length > 0) && (
                 <DropdownMenu>
                   <Tooltip>
                     <DropdownMenuTrigger
@@ -172,12 +178,14 @@ export function ContractEventsTimeline({ contract }: { contract: Contract }) {
                     <TooltipContent>{tc.timeline.menuTooltip}</TooltipContent>
                   </Tooltip>
                   <DropdownMenuContent>
-                    <DropdownMenuItem className="gap-2" onClick={() => setCompletingEventId(row.event!.id)}>
-                      <SquareCheck />
-                      {tc.timeline.complete}
-                    </DropdownMenuItem>
+                    <Can permission="contract.update">
+                      <DropdownMenuItem className="gap-2" onClick={() => setCompletingEventId(row.event!.id)}>
+                        <SquareCheck />
+                        {tc.timeline.complete}
+                      </DropdownMenuItem>
+                    </Can>
 
-                    {canForward(row.event, currentUser?.id) && (
+                    {can("contract.forward") && canForward(row.event, currentUser?.id) && (
                       <DropdownMenuItem className="gap-2" onClick={() => setForwardingEventId(row.event!.id)}>
                         <Forward />
                         {tc.timeline.forward}
@@ -191,20 +199,24 @@ export function ContractEventsTimeline({ contract }: { contract: Contract }) {
                       </DropdownMenuItem>
                     )}
 
-                    <DropdownMenuItem className="gap-2" onClick={() => setUpdatingEvent(row.event!)}>
-                      <Pencil />
-                      {tc.timeline.update}
-                    </DropdownMenuItem>
+                    <Can permission="contract.update">
+                      <DropdownMenuItem className="gap-2" onClick={() => setUpdatingEvent(row.event!)}>
+                        <Pencil />
+                        {tc.timeline.update}
+                      </DropdownMenuItem>
+                    </Can>
 
-                    <DropdownMenuSeparator />
+                    <Can permission="contract.delete">
+                      <DropdownMenuSeparator />
 
-                    <DropdownMenuItem
-                      className="gap-2 text-destructive"
-                      onClick={() => setDeletingEventId(row.event!.id)}
-                    >
-                      <Trash />
-                      {tc.timeline.delete}
-                    </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="gap-2 text-destructive"
+                        onClick={() => setDeletingEventId(row.event!.id)}
+                      >
+                        <Trash />
+                        {tc.timeline.delete}
+                      </DropdownMenuItem>
+                    </Can>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}
@@ -220,7 +232,7 @@ export function ContractEventsTimeline({ contract }: { contract: Contract }) {
                 <TimelineItemContent variant="title" position={oppositePosition}>
                   {formatDisplayDate(row.dueDate)}
                 </TimelineItemContent>
-              ) : row.isMilestone ? (
+              ) : row.isMilestone && can("contract.update") ? (
                 <Button
                   variant="link"
                   className="text-secondary"

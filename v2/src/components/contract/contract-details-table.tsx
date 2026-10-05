@@ -24,6 +24,7 @@ import { ForwardsHistoryDialog } from "@/components/shared/forwards-history-dial
 import { formatDisplayDate } from "@/lib/shared/date-utils";
 import type { Contract } from "@/lib/contract/contracts";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 function contractCategoryLabel(contract: Contract) {
   const { category, categoryType, categorySubType } = contract;
@@ -74,28 +75,34 @@ export function ContractDetailsTable({ contract }: { contract: Contract }) {
               {contract.renewalDate ? formatDisplayDate(contract.renewalDate) : "-"}
             </TableCell>
             <TableCell className="text-nowrap">
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full"
-                      onClick={() => setEditing(true)}
-                    />
-                  }
-                >
-                  <Pencil />
-                </TooltipTrigger>
-                <TooltipContent>{tc.detailsTable.edit}</TooltipContent>
-              </Tooltip>
+              <Can permission="contract.update">
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="rounded-full"
+                        onClick={() => setEditing(true)}
+                      />
+                    }
+                  >
+                    <Pencil />
+                  </TooltipTrigger>
+                  <TooltipContent>{tc.detailsTable.edit}</TooltipContent>
+                </Tooltip>
+              </Can>
 
-              <DeleteContractDialog contractId={contract.id} />
+              <Can permission="contract.delete">
+                <DeleteContractDialog contractId={contract.id} />
+              </Can>
 
-              <Tooltip>
-                <TooltipTrigger render={<PrintContractButton contractId={contract.id} />} />
-                <TooltipContent>{tc.detailsTable.print}</TooltipContent>
-              </Tooltip>
+              <Can permission="contract.print">
+                <Tooltip>
+                  <TooltipTrigger render={<PrintContractButton contractId={contract.id} />} />
+                  <TooltipContent>{tc.detailsTable.print}</TooltipContent>
+                </Tooltip>
+              </Can>
 
               {contract.forwards.length > 0 && (
                 <Tooltip>

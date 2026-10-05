@@ -16,6 +16,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { PARTY_CATEGORIES, PARTY_TYPES } from "@/lib/litigation/constants";
 import type { Litigation } from "@/lib/litigation/litigations";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function PartiesSheet({ litigation, onEdit }: { litigation: Litigation; onEdit: () => void }) {
   const { t } = useDictionary();
@@ -43,10 +44,12 @@ export function PartiesSheet({ litigation, onEdit }: { litigation: Litigation; o
         <SheetHeader>
           <div className="flex items-center justify-between gap-2">
             <SheetTitle>{tl.parties.title}</SheetTitle>
-            <Button className="gap-2" onClick={onEdit}>
-              <UserPlus />
-              {tl.parties.editParties}
-            </Button>
+            <Can permission="litigation.update">
+              <Button className="gap-2" onClick={onEdit}>
+                <UserPlus />
+                {tl.parties.editParties}
+              </Button>
+            </Can>
           </div>
           <SheetDescription className="line-clamp-1">{litigation.title}</SheetDescription>
         </SheetHeader>

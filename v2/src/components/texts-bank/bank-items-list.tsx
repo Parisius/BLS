@@ -22,6 +22,7 @@ import { useAllBankItems, useDeleteBankItem } from "@/lib/texts-bank/hooks";
 import type { BankItem } from "@/lib/texts-bank/items";
 import { KIND_KEY, type BankKind } from "@/lib/texts-bank/kinds";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function BankItemsList({ kind }: { kind: BankKind }) {
   const { t } = useDictionary();
@@ -98,38 +99,42 @@ export function BankItemsList({ kind }: { kind: BankKind }) {
                   </CardDescription>
                 </CardHeader>
                 <CardFooter className="flex items-center justify-end">
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          aria-label={tc.edit}
-                          className="rounded-full"
-                          onClick={() => setEditing(item)}
-                        />
-                      }
-                    >
-                      <Pencil />
-                    </TooltipTrigger>
-                    <TooltipContent>{tc.edit}</TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      render={
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          aria-label={tc.delete}
-                          className="rounded-full text-destructive"
-                          onClick={() => setDeleting(item)}
-                        />
-                      }
-                    >
-                      <Trash />
-                    </TooltipTrigger>
-                    <TooltipContent>{tc.delete}</TooltipContent>
-                  </Tooltip>
+                  <Can permission="document.update">
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={tc.edit}
+                            className="rounded-full"
+                            onClick={() => setEditing(item)}
+                          />
+                        }
+                      >
+                        <Pencil />
+                      </TooltipTrigger>
+                      <TooltipContent>{tc.edit}</TooltipContent>
+                    </Tooltip>
+                  </Can>
+                  <Can permission="document.delete">
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={tc.delete}
+                            className="rounded-full text-destructive"
+                            onClick={() => setDeleting(item)}
+                          />
+                        }
+                      >
+                        <Trash />
+                      </TooltipTrigger>
+                      <TooltipContent>{tc.delete}</TooltipContent>
+                    </Tooltip>
+                  </Can>
                 </CardFooter>
               </Card>
             );

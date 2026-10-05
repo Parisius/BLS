@@ -38,6 +38,8 @@ import { ForwardsHistoryDialog } from "@/components/shared/forwards-history-dial
 import { AddTaskDialog, UpdateTaskDialog } from "@/components/governance/administration-meeting/task-dialogs";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { MeetingTask } from "@/lib/governance/administration-meeting/tasks";
+import { usePermissions } from "@/lib/auth/use-permissions";
+import { Can } from "@/components/auth/can";
 
 // Only the original creator (if never forwarded) or the most recent forward's
 // receiver may forward the task again — matches the original app's rule.
@@ -52,6 +54,7 @@ export function MeetingTasksTimeline({ meetingId }: { meetingId: string }) {
   const { t } = useDictionary();
   const tg = t.administrationMeeting;
   const { data: currentUser } = useCurrentUser();
+  const { can, canAny } = usePermissions();
   const { data: tasks, isLoading, isError } = useAllMeetingTasks(meetingId, "task");
   const { mutateAsync: markCompleted } = useMarkMeetingTaskAsCompleted(meetingId);
   const { mutateAsync: deleteTask } = useDeleteMeetingTask(meetingId);
@@ -75,11 +78,13 @@ export function MeetingTasksTimeline({ meetingId }: { meetingId: string }) {
 
   return (
     <>
-      <div className="flex justify-end">
-        <Button className="gap-2" onClick={() => setAddingTask(true)}>
-          {tg.timelineModal.addTask}
-        </Button>
-      </div>
+      {can("governance.update") && (
+        <div className="flex justify-end">
+          <Button className="gap-2" onClick={() => setAddingTask(true)}>
+            {tg.timelineModal.addTask}
+          </Button>
+        </div>
+      )}
 
       <Timeline>
         <TimelineSeparator />
@@ -89,7 +94,7 @@ export function MeetingTasksTimeline({ meetingId }: { meetingId: string }) {
 
           return (
             <TimelineItem key={row.id} className={cn("group", { "text-foreground/50": row.completed })}>
-              {!row.completed && (
+              {!row.completed && canAny("governance.update", "governance.delete") && (
                 <DropdownMenu>
                   <Tooltip>
                     <DropdownMenuTrigger
@@ -110,12 +115,14 @@ export function MeetingTasksTimeline({ meetingId }: { meetingId: string }) {
                     <TooltipContent>{tg.timelineModal.title}</TooltipContent>
                   </Tooltip>
                   <DropdownMenuContent>
-                    <DropdownMenuItem className="gap-2" onClick={() => markCompleted(row.id)}>
-                      <SquareCheck />
-                      {tg.timelineModal.validate}
-                    </DropdownMenuItem>
+                    <Can permission="governance.update">
+                      <DropdownMenuItem className="gap-2" onClick={() => markCompleted(row.id)}>
+                        <SquareCheck />
+                        {tg.timelineModal.validate}
+                      </DropdownMenuItem>
+                    </Can>
 
-                    {canForward(row, currentUser?.id) && (
+                    {can("governance.update") && canForward(row, currentUser?.id) && (
                       <DropdownMenuItem className="gap-2" onClick={() => setForwardingTaskId(row.id)}>
                         <Forward />
                         {tg.timelineModal.share}
@@ -129,20 +136,23 @@ export function MeetingTasksTimeline({ meetingId }: { meetingId: string }) {
                       </DropdownMenuItem>
                     )}
 
-                    <DropdownMenuItem className="gap-2" onClick={() => setUpdatingTask(row)}>
-                      <Pencil />
-                      {tg.timelineModal.edit}
-                    </DropdownMenuItem>
+                    <Can permission="governance.update">
+                      <DropdownMenuItem className="gap-2" onClick={() => setUpdatingTask(row)}>
+                        <Pencil />
+                        {tg.timelineModal.edit}
+                      </DropdownMenuItem>
+                    </Can>
 
-                    <DropdownMenuSeparator />
-
-                    <DropdownMenuItem
-                      className="gap-2 text-destructive"
-                      onClick={() => setDeletingTaskId(row.id)}
-                    >
-                      <Trash />
-                      {tg.timelineModal.delete}
-                    </DropdownMenuItem>
+                    <Can permission="governance.delete">
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="gap-2 text-destructive"
+                        onClick={() => setDeletingTaskId(row.id)}
+                      >
+                        <Trash />
+                        {tg.timelineModal.delete}
+                      </DropdownMenuItem>
+                    </Can>
                   </DropdownMenuContent>
                 </DropdownMenu>
               )}

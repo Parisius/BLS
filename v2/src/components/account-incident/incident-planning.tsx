@@ -25,6 +25,7 @@ function IncidentTasksTimeline({ incidentId, currentTaskId }: { incidentId: stri
 
   return (
     <WorkflowTasksTimeline
+      permissions={{ update: "incident.update", forward: "incident.forward" }}
       tasks={data}
       isLoading={isLoading}
       isError={isError}

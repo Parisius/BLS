@@ -11,6 +11,7 @@ import type { Litigation } from "@/lib/litigation/litigations";
 import { downloadBytes } from "@/lib/shared/download";
 import { formatAmount } from "@/lib/shared/format";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { usePermissions } from "@/lib/auth/use-permissions";
 
 export function LitigationDetailsTable({
   litigation,
@@ -23,6 +24,7 @@ export function LitigationDetailsTable({
 }) {
   const { t } = useDictionary();
   const td = t.litigation.details;
+  const { can } = usePermissions();
   const { mutate, isPending } = usePrintLitigation();
   const { hasProvisions, estimatedAmount, addedAmount, remainingAmount } = litigation;
   const money = (value?: number) => (value ? formatAmount(value) : "-");
@@ -73,8 +75,8 @@ export function LitigationDetailsTable({
           <TableCell className="whitespace-nowrap">
             {(
               [
-                [td.assign, <Users key="assign" />, onAssign, false],
-                [td.edit, <Pencil key="edit" />, onEdit, false],
+                [td.assign, <Users key="assign" />, onAssign, false, "litigation.assign"],
+                [td.edit, <Pencil key="edit" />, onEdit, false, "litigation.update"],
                 [
                   td.print,
                   <Printer key="print" className={isPending ? "animate-bounce" : undefined} />,
@@ -84,9 +86,12 @@ export function LitigationDetailsTable({
                       onError: () => toast.error(t.litigation.printError),
                     }),
                   isPending,
+                  "litigation.print",
                 ],
               ] as const
-            ).map(([label, icon, onClick, disabled]) => (
+            )
+              .filter(([, , , , permission]) => can(permission))
+              .map(([label, icon, onClick, disabled]) => (
               <Tooltip key={label}>
                 <TooltipTrigger
                   render={

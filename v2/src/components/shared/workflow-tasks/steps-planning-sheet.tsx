@@ -14,11 +14,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { WorkflowTasksTimeline } from "@/components/shared/workflow-tasks/tasks-timeline";
+import { WorkflowTasksTimeline, type WorkflowPermissions } from "@/components/shared/workflow-tasks/tasks-timeline";
 import { DeleteStepDialog, StepFormDialog } from "@/components/shared/workflow-tasks/step-dialogs";
 import type { StepsPlanningLabels } from "@/components/shared/workflow-tasks/labels";
 import type { StepFormValues } from "@/lib/shared/step-form";
 import type { ForwardWorkflowTaskArgs, WorkflowTask } from "@/lib/shared/workflow-task";
+import { usePermissions } from "@/lib/auth/use-permissions";
 
 export interface StepsPlanningSheetProps {
   reference?: string;
@@ -33,6 +34,7 @@ export interface StepsPlanningSheetProps {
   onDelete: (step: WorkflowTask) => Promise<void>;
   onComplete: (step: WorkflowTask, formData: FormData) => Promise<void>;
   onForward: (step: WorkflowTask, args: ForwardWorkflowTaskArgs) => Promise<void>;
+  permissions?: WorkflowPermissions;
 }
 
 /**
@@ -51,7 +53,10 @@ export function StepsPlanningSheet({
   onDelete,
   onComplete,
   onForward,
+  permissions,
 }: StepsPlanningSheetProps) {
+  const { can } = usePermissions();
+  const canUpdate = !permissions?.update || can(permissions.update);
   const [adding, setAdding] = useState(false);
   const [editingStep, setEditingStep] = useState<WorkflowTask | null>(null);
   const [deletingStep, setDeletingStep] = useState<WorkflowTask | null>(null);
@@ -67,11 +72,13 @@ export function StepsPlanningSheet({
           <SheetTitle>{labels.planning.title}</SheetTitle>
           <SheetDescription className="line-clamp-1">{reference}</SheetDescription>
         </SheetHeader>
-        <div className="flex justify-end">
-          <Button className="gap-2" onClick={() => setAdding(true)}>
-            {labels.planning.addStep}
-          </Button>
-        </div>
+        {canUpdate && (
+          <div className="flex justify-end">
+            <Button className="gap-2" onClick={() => setAdding(true)}>
+              {labels.planning.addStep}
+            </Button>
+          </div>
+        )}
         <div className="flex-1 overflow-auto">
           <WorkflowTasksTimeline
             tasks={tasks}
@@ -79,9 +86,10 @@ export function StepsPlanningSheet({
             isError={isError}
             currentTaskId={nextStepId}
             restrictForwardToCurrent
+            permissions={permissions}
             labels={labels}
             extraMenuActions={(step) =>
-              step.kind === "task"
+              step.kind === "task" && canUpdate
                 ? [
                     { key: "edit", label: labels.deleteStep.edit, icon: <Pencil />, onSelect: () => setEditingStep(step) },
                     {

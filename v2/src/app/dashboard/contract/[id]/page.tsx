@@ -22,6 +22,7 @@ import { CompleteContractDialog } from "@/components/contract/complete-contract-
 import { ContractFilesModal } from "@/components/contract/contract-files-modal";
 import { StakeholdersModal } from "@/components/contract/stakeholders-modal";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 // Same "must be completed before forwarding again" rule as the timeline's
 // event-level check — see contract-events-timeline.tsx.
@@ -100,19 +101,23 @@ export default function ContractDetailsPage({ params }: { params: Promise<{ id: 
 
         <div className="flex items-center gap-2">
           {canForward(contract, currentUserId) && (
-            <Button variant="secondary" className="gap-2" onClick={() => setForwarding(true)}>
-              <Forward />
-              <span className="sr-only sm:not-sr-only">{tc.detailsPage.transfer}</span>
-            </Button>
+            <Can permission="contract.forward">
+              <Button variant="secondary" className="gap-2" onClick={() => setForwarding(true)}>
+                <Forward />
+                <span className="sr-only sm:not-sr-only">{tc.detailsPage.transfer}</span>
+              </Button>
+            </Can>
           )}
 
           {canComplete(contract, currentUserId) && (
-            <Button variant="secondary" className="gap-2" onClick={() => setCompleting(true)}>
-              <CheckCheck />
-              <span className="sr-only sm:not-sr-only">
-                {lastForward?.title || tc.detailsPage.updateStatus}
-              </span>
-            </Button>
+            <Can permission="contract.update">
+              <Button variant="secondary" className="gap-2" onClick={() => setCompleting(true)}>
+                <CheckCheck />
+                <span className="sr-only sm:not-sr-only">
+                  {lastForward?.title || tc.detailsPage.updateStatus}
+                </span>
+              </Button>
+            </Can>
           )}
 
           <ContractFilesModal contract={contract} />

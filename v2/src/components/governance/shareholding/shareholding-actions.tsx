@@ -7,6 +7,7 @@ import { ShareholdersModal } from "@/components/governance/shareholding/sharehol
 import { TransferSharesDialog } from "@/components/governance/shareholding/transfer-shares-dialog";
 import { TransfersHistoryDialog } from "@/components/governance/shareholding/transfers-history-dialog";
 import { useDictionary } from "@/lib/i18n/locale-provider";
+import { Can } from "@/components/auth/can";
 
 export function ShareholdingActions() {
   const { t } = useDictionary();
@@ -19,10 +20,12 @@ export function ShareholdingActions() {
         {th.shareholdersList}
       </ShareholdersModal>
 
-      <TransferSharesDialog trigger={<Button className="gap-2" />}>
-        <ArrowLeftRight />
-        {th.transferShares}
-      </TransferSharesDialog>
+      <Can permission="governance.manage_shareholding">
+        <TransferSharesDialog trigger={<Button className="gap-2" />}>
+          <ArrowLeftRight />
+          {th.transferShares}
+        </TransferSharesDialog>
+      </Can>
 
       <Tooltip>
         <TransfersHistoryDialog

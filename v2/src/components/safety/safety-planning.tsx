@@ -34,6 +34,7 @@ export function SafetyPlanningModal({
 
   return (
     <StepsPlanningSheet
+      permissions={{ update: "guarantee.update", forward: "guarantee.forward" }}
       reference={reference}
       nextStepId={nextStepId}
       tasks={data}

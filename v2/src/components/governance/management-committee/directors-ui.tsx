@@ -60,6 +60,7 @@ import type { Control } from "react-hook-form";
 import { formatDisplayDate } from "@/lib/shared/date-utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { Director } from "@/lib/governance/management-committee/directors";
+import { Can } from "@/components/auth/can";
 
 function ageFromBirthDate(birthDate?: string) {
   if (!birthDate) return "-";
@@ -258,7 +259,9 @@ export function DirectorsModal() {
             placeholder={tg.directorsTable.search}
             className="h-10 max-w-xs"
           />
-          <AddDirectorDialog />
+          <Can permission="governance.create">
+            <AddDirectorDialog />
+          </Can>
         </div>
 
         <div className="flex-1 overflow-auto">
@@ -293,10 +296,14 @@ export function DirectorsModal() {
                     <TableCell>{director.address ?? "-"}</TableCell>
                     <TableCell className="text-end">
                       <MandatesHistoryDialog director={director} />
-                      <Button variant="ghost" size="icon" onClick={() => setEditing(director)}>
-                        <Pencil />
-                      </Button>
-                      <DeleteDirectorButton directorId={director.id} />
+                      <Can permission="governance.update">
+                        <Button variant="ghost" size="icon" onClick={() => setEditing(director)}>
+                          <Pencil />
+                        </Button>
+                      </Can>
+                      <Can permission="governance.delete">
+                        <DeleteDirectorButton directorId={director.id} />
+                      </Can>
                     </TableCell>
                   </TableRow>
                 ))}
