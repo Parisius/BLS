@@ -19,10 +19,11 @@ import { Input } from "@/components/ui/input";
 import { useAddLitigationProvisions, useLitigationProvisionsSummary } from "@/lib/litigation/hooks";
 import { useProvisionsForm } from "@/lib/litigation/forms";
 import type { Litigation } from "@/lib/litigation/litigations";
-import { formatAmount } from "@/lib/shared/format";
+import { useFormatAmount } from "@/lib/tenant-provider";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
 export function UpdateProvisionsDialog({ litigation }: { litigation: Litigation }) {
+  const formatAmount = useFormatAmount();
   const { t } = useDictionary();
   const tp = t.litigation.provisions;
   const formId = useId();
@@ -114,6 +115,7 @@ export function UpdateProvisionsDialog({ litigation }: { litigation: Litigation 
 }
 
 export function ProvisionsSummaryDialog() {
+  const formatAmount = useFormatAmount();
   const { t } = useDictionary();
   const tl = t.litigation;
   const { data, isLoading, isError } = useLitigationProvisionsSummary();

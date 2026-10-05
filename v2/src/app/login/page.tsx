@@ -1,8 +1,9 @@
 import { LoginForm } from "@/components/auth/login-form";
 import { getDictionary } from "@/lib/i18n/locale";
 
-export default async function LoginPage() {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ expired?: string }> }) {
   const { t } = await getDictionary();
+  const { expired } = await searchParams;
 
   return (
     <div className="flex flex-col items-center gap-5">
@@ -12,6 +13,11 @@ export default async function LoginPage() {
           {t.auth.loginDescription}
         </p>
       </div>
+      {expired && (
+        <p role="status" className="text-center text-sm text-destructive">
+          {t.auth.sessionExpired}
+        </p>
+      )}
       <LoginForm />
     </div>
   );

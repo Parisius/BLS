@@ -23,7 +23,8 @@ import { useBankInfos, useCreateBankCapital, useUpdateBankInfos } from "@/lib/go
 import { useBankCapitalForm, useBankInfosForm } from "@/lib/governance/shareholding/forms";
 import type { BankInfos } from "@/lib/governance/shareholding/bank";
 import { cn } from "@/lib/utils";
-import { formatAmount, formatNumber } from "@/lib/shared/format";
+import { formatNumber } from "@/lib/shared/format";
+import { useFormatAmount } from "@/lib/tenant-provider";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import { Can } from "@/components/auth/can";
 import { usePermissions } from "@/lib/auth/use-permissions";
@@ -272,6 +273,7 @@ function CapitalValue({ value }: { value?: string }) {
 
 export function SharesInfosCard({ className }: { className?: string }) {
   const { data, isLoading } = useBankInfos();
+  const formatAmount = useFormatAmount();
   const { t } = useDictionary();
   const tc = t.shareholding.card;
 

@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllIncidents, getOneIncident, createIncident, printIncident } from "./incidents";
 import { getAllIncidentAuthors, createIncidentAuthor } from "./authors";
+import { unwrapResult } from "@/lib/api/result";
 import { getAllIncidentTasks, completeIncidentTask, forwardIncidentTask } from "./tasks";
 import type { ForwardWorkflowTaskArgs, WorkflowTask } from "@/lib/shared/workflow-task";
 
@@ -57,7 +58,7 @@ export const useForwardIncidentTask = (incidentId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ task, args }: { task: WorkflowTask; args: ForwardWorkflowTaskArgs }) =>
-      forwardIncidentTask(task, args),
+      forwardIncidentTask(task, args).then(unwrapResult),
     onSettled: () => queryClient.invalidateQueries({ queryKey: tasksKey(incidentId) }),
   });
 };

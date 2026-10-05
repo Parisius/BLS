@@ -1,6 +1,7 @@
 "use server";
 
-import { apiClient, unwrap, throwIfError } from "@/lib/api/client";
+import { apiClient, unwrap, throwIfError, toResult } from "@/lib/api/client";
+import type { ActionResult } from "@/lib/api/result";
 import { toBackendDate } from "@/lib/shared/date-utils";
 import { mapWorkflowTask, type ForwardWorkflowTaskArgs, type WorkflowTask } from "@/lib/shared/workflow-task";
 
@@ -20,12 +21,12 @@ export async function completeIncidentTask(taskId: string, formData: FormData) {
 }
 
 /**
- * Known backend defect: this endpoint validates every request as a task completion (it requires `type`
- * and `documents`), so forwarding is rejected with the original app's payload.
+ * Forwarding has its own endpoint (`complete_task_incidents` validates every request as a completion and
+ * rejects a forward). The body mirrors the fields the old route took; the guide does not spell them out.
  */
-export async function forwardIncidentTask(task: WorkflowTask, args: ForwardWorkflowTaskArgs) {
-  const { error } = await apiClient.POST("/complete_task_incidents", {
-    params: { query: { task_incident_id: task.id } },
+export async function forwardIncidentTask(task: WorkflowTask, args: ForwardWorkflowTaskArgs): Promise<ActionResult> {
+  const result = await apiClient.POST("/task_incidents/{taskIncident}/transfer", {
+    params: { path: { taskIncident: task.id } },
     body: {
       forward_title: args.title,
       deadline_transfer: toBackendDate(args.dueDate),
@@ -33,5 +34,5 @@ export async function forwardIncidentTask(task: WorkflowTask, args: ForwardWorkf
       collaborators: [args.receiverId],
     },
   });
-  throwIfError(error, "Failed to forward the task");
+  return toResult(result, "Failed to forward the task");
 }

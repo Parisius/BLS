@@ -1,18 +1,22 @@
 import Image from "next/image";
+import { getTenantConfig } from "@/lib/tenant-config";
 import { getDictionary } from "@/lib/i18n/locale";
 import { LocaleSelect } from "@/components/locale-select";
 
 export default async function LoginLayout({ children }: LayoutProps<"/login">) {
   const { locale, t } = await getDictionary();
+  const tenant = await getTenantConfig();
 
   return (
     <main className="grid h-full grid-cols-2">
       <div className="container hidden flex-col items-center justify-center gap-5 bg-primary md:flex">
         <Image
-          src="/global/images/full-logo.webp"
-          alt="BLS's logo"
+          src={tenant?.logoUrl ?? "/global/images/full-logo.webp"}
+          alt={tenant?.name ?? "BLS's logo"}
           width={300}
           height={99}
+          unoptimized={!!tenant?.logoUrl}
+          className="h-auto max-h-24 w-auto object-contain"
         />
         <p className="w-2/3 text-center text-xl text-primary-foreground">
           {t.auth.welcome}
@@ -22,11 +26,12 @@ export default async function LoginLayout({ children }: LayoutProps<"/login">) {
       <div className="relative col-span-2 flex flex-col md:col-span-1">
         <div className="flex items-center justify-between p-5 md:justify-end">
           <Image
-            src="/global/images/full-logo-color.webp"
-            alt="BLS's logo"
+            src={tenant?.logoUrl ?? "/global/images/full-logo-color.webp"}
+            alt={tenant?.name ?? "BLS's logo"}
             width={100}
             height={33}
-            className="md:hidden"
+            unoptimized={!!tenant?.logoUrl}
+            className="h-auto max-h-9 w-auto object-contain md:hidden"
           />
           <div className="flex items-center gap-2">
             <LocaleSelect locale={locale} />

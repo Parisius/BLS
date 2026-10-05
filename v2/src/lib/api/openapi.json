@@ -3207,6 +3207,38 @@
             "type": "string"
           }
         }
+      },
+      "TenantConfig": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "logo_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "locale": {
+            "type": "string",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled_modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "is_active": {
+            "type": "boolean"
+          }
+        }
       }
     }
   },
@@ -17089,6 +17121,118 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/task_incidents/{taskIncident}/transfer": {
+      "post": {
+        "tags": [
+          "Account Incidents"
+        ],
+        "summary": "Transfers an incident task.",
+        "operationId": "postTaskIncidentTransfer",
+        "parameters": [
+          {
+            "name": "taskIncident",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid bearer token"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "409": {
+            "description": "Business rule conflict"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "forward_title": {
+                    "type": "string"
+                  },
+                  "deadline_transfer": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "collaborators": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tenant-config": {
+      "get": {
+        "tags": [
+          "Tenants"
+        ],
+        "summary": "Public configuration of the active tenant.",
+        "operationId": "getTenantConfig",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/TenantConfig"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tenant not found"
           }
         }
       }

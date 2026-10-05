@@ -1,4 +1,5 @@
 import "server-only";
+import { redirect } from "next/navigation";
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./schema";
 import { auth } from "@/auth";
@@ -22,6 +23,10 @@ const authMiddleware: Middleware = {
     if (tenant) request.headers.set("X-Tenant", tenant);
     request.headers.set("Accept", "application/json");
     return request;
+  },
+  onResponse({ request, response }) {
+    // A 401 on a call that carried a token means the session is dead: sign out instead of leaving every screen failing.
+    if (response.status === 401 && request.headers.has("Authorization")) redirect("/session-expired");
   },
 };
 

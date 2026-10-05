@@ -11,12 +11,13 @@ import { usePrintGuarantee } from "@/lib/safety/hooks";
 import type { SafetyKind } from "@/lib/safety/kinds";
 import type { Guarantee } from "@/lib/safety/guarantees";
 import { downloadBytes } from "@/lib/shared/download";
-import { formatAmount } from "@/lib/shared/format";
+import { useFormatAmount } from "@/lib/tenant-provider";
 import { cn } from "@/lib/utils";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
 export function SafetyDetailsTable({ kind, guarantee }: { kind: SafetyKind; guarantee: Guarantee }) {
   const { t } = useDictionary();
+  const formatAmount = useFormatAmount();
   const tt = t.safety.table;
   const { mutate, isPending } = usePrintGuarantee();
   const { nextStep } = guarantee;

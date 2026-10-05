@@ -25,6 +25,7 @@ export const dictionaries = {
       invalidData: "Identifiant ou mot de passe invalide (le mot de passe doit contenir au moins 8 caractères).",
       tenantNotFound: "Espace client introuvable ou désactivé. Vérifiez l'adresse utilisée.",
       unreachable: "Le serveur est injoignable. Réessayez dans un instant.",
+      sessionExpired: "Votre session a expiré. Veuillez vous reconnecter.",
     },
     dashboard: {
       administration: "Administration",
@@ -2803,6 +2804,7 @@ export const dictionaries = {
       invalidData: "Invalid username or password (the password must be at least 8 characters).",
       tenantNotFound: "Workspace not found or disabled. Check the address you used.",
       unreachable: "The server is unreachable. Please try again in a moment.",
+      sessionExpired: "Your session has expired. Please sign in again.",
     },
     dashboard: {
       administration: "Administration",

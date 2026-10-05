@@ -3390,6 +3390,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/task_incidents/{taskIncident}/transfer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Transfers an incident task. */
+        post: operations["postTaskIncidentTransfer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tenant-config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Public configuration of the active tenant. */
+        get: operations["getTenantConfig"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -4430,6 +4464,15 @@ export interface components {
             file_url?: string;
             link?: string;
             type?: string;
+        };
+        TenantConfig: {
+            name?: string;
+            slug?: string;
+            logo_url?: string | null;
+            locale?: string | null;
+            currency?: string | null;
+            enabled_modules?: string[];
+            is_active?: boolean;
         };
     };
     responses: never;
@@ -15408,6 +15451,103 @@ export interface operations {
             };
             /** @description Validation error */
             422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    postTaskIncidentTransfer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                taskIncident: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    forward_title?: string;
+                    deadline_transfer?: string;
+                    description?: string;
+                    collaborators?: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description Successful response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: Record<string, never>;
+                    };
+                };
+            };
+            /** @description Missing or invalid bearer token */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Resource not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Business rule conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getTenantConfig: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        data?: components["schemas"]["TenantConfig"];
+                    };
+                };
+            };
+            /** @description Tenant not found */
+            404: {
                 headers: {
                     [name: string]: unknown;
                 };

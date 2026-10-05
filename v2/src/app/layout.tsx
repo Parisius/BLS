@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "./providers";
+import { getTenantConfig } from "@/lib/tenant-config";
 import { getLocale } from "@/lib/i18n/locale";
 import "./globals.css";
 
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const locale = await getLocale();
+  const [locale, tenant] = await Promise.all([getLocale(), getTenantConfig()]);
 
   return (
     <html
@@ -28,7 +29,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex h-full flex-col">
-        <Providers locale={locale}>{children}</Providers>
+        <Providers locale={locale} tenant={{ name: tenant?.name ?? null, currency: tenant?.currency ?? null }}>{children}</Providers>
       </body>
     </html>
   );

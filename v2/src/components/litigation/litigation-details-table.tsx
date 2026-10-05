@@ -9,7 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { usePrintLitigation } from "@/lib/litigation/hooks";
 import type { Litigation } from "@/lib/litigation/litigations";
 import { downloadBytes } from "@/lib/shared/download";
-import { formatAmount } from "@/lib/shared/format";
+import { useFormatAmount } from "@/lib/tenant-provider";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import { usePermissions } from "@/lib/auth/use-permissions";
 
@@ -23,6 +23,7 @@ export function LitigationDetailsTable({
   onEdit: () => void;
 }) {
   const { t } = useDictionary();
+  const formatAmount = useFormatAmount();
   const td = t.litigation.details;
   const { can } = usePermissions();
   const { mutate, isPending } = usePrintLitigation();

@@ -12,6 +12,7 @@ import { LogoutButton } from "@/components/dashboard/logout-button";
 import { LocaleSelect } from "@/components/locale-select";
 import { ADMIN_READ, makePermissionChecker } from "@/lib/auth/permissions";
 import { getSessionUser } from "@/lib/auth/server";
+import { getTenantConfig } from "@/lib/tenant-config";
 import { getDictionary } from "@/lib/i18n/locale";
 
 export default async function DashboardLayout({
@@ -19,6 +20,8 @@ export default async function DashboardLayout({
 }: LayoutProps<"/dashboard">) {
   const { locale, t } = await getDictionary();
   const user = await getSessionUser();
+  const tenant = await getTenantConfig();
+  const logo = tenant?.logoUrl ?? "/global/images/full-logo-color.webp";
   const showAdministration = !user || makePermissionChecker(user.permissions).canAny(...Object.values(ADMIN_READ));
 
   return (
@@ -26,18 +29,20 @@ export default async function DashboardLayout({
       <header className="flex items-center justify-between gap-2">
         <Link href="/dashboard/modules">
           <Image
-            src="/global/images/full-logo-color.webp"
-            alt="BLS's logo"
+            src={logo}
+            alt={tenant?.name ?? "BLS's logo"}
             width={200}
             height={67}
-            className="hidden md:block"
+            unoptimized={!!tenant?.logoUrl}
+            className="hidden h-auto max-h-16 w-auto object-contain md:block"
           />
           <Image
-            src="/global/images/full-logo-color.webp"
-            alt="BLS's logo"
+            src={logo}
+            alt={tenant?.name ?? "BLS's logo"}
             width={100}
             height={33}
-            className="md:hidden"
+            unoptimized={!!tenant?.logoUrl}
+            className="h-auto max-h-9 w-auto object-contain md:hidden"
           />
         </Link>
 

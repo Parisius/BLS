@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { UserSelect, type UserSelectLabels } from "@/components/shared/user-select";
+import { failureMessage } from "@/lib/api/error-message";
+import { useDictionary } from "@/lib/i18n/locale-provider";
 import { useForwardTaskForm } from "@/lib/shared/forward-task-form";
 import type { ForwardWorkflowTaskArgs } from "@/lib/shared/workflow-task";
 import type { ForwardTaskLabels } from "@/components/shared/workflow-tasks/labels";
@@ -33,6 +35,7 @@ export function ForwardWorkflowTaskDialog({
   labels: ForwardTaskLabels;
   userSelectLabels: UserSelectLabels;
 }) {
+  const { t } = useDictionary();
   const form = useForwardTaskForm();
 
   const handleSubmit = form.handleSubmit(async (values) => {
@@ -41,8 +44,8 @@ export function ForwardWorkflowTaskDialog({
       toast.success(td.success);
       form.reset();
       onOpenChange(false);
-    } catch {
-      toast.error(td.error);
+    } catch (error) {
+      toast.error(failureMessage(error, td.error, t.permissions.forbidden));
     }
   });
 
