@@ -13,10 +13,10 @@ const userSchema = z.object({
 
 export type UserFormValues = z.infer<typeof userSchema>;
 
-export const useUserForm = () =>
+export const useUserForm = (defaultValues?: UserFormValues) =>
   useForm<UserFormValues>({
     resolver: zodResolver(userSchema),
-    defaultValues: {
+    defaultValues: defaultValues ?? {
       username: "",
       lastname: "",
       firstname: "",
@@ -35,10 +35,10 @@ const roleSchema = z.object({
 
 export type RoleFormValues = z.infer<typeof roleSchema>;
 
-export const useRoleForm = () =>
+export const useRoleForm = (defaultValues?: RoleFormValues) =>
   useForm<RoleFormValues>({
     resolver: zodResolver(roleSchema),
-    defaultValues: { title: "", permissionIds: [] },
+    defaultValues: defaultValues ?? { title: "", permissionIds: [] },
   });
 
 const subsidiarySchema = z.object({
@@ -49,8 +49,8 @@ const subsidiarySchema = z.object({
 
 export type SubsidiaryFormValues = z.infer<typeof subsidiarySchema>;
 
-export const useSubsidiaryForm = () =>
+export const useSubsidiaryForm = (defaultValues?: SubsidiaryFormValues) =>
   useForm<SubsidiaryFormValues>({
     resolver: zodResolver(subsidiarySchema),
-    defaultValues: { title: "", country: "", address: "" },
+    defaultValues: defaultValues ?? { title: "", country: "", address: "" },
   });

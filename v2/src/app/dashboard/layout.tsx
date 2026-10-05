@@ -10,12 +10,16 @@ import {
 import { NotificationsBell } from "@/components/alert/notifications-bell";
 import { LogoutButton } from "@/components/dashboard/logout-button";
 import { LocaleSelect } from "@/components/locale-select";
+import { ADMIN_READ, makePermissionChecker } from "@/lib/auth/permissions";
+import { getSessionUser } from "@/lib/auth/server";
 import { getDictionary } from "@/lib/i18n/locale";
 
 export default async function DashboardLayout({
   children,
 }: LayoutProps<"/dashboard">) {
   const { locale, t } = await getDictionary();
+  const user = await getSessionUser();
+  const showAdministration = !user || makePermissionChecker(user.permissions).canAny(...Object.values(ADMIN_READ));
 
   return (
     <main className="container flex flex-col gap-10 py-5">
@@ -40,20 +44,22 @@ export default async function DashboardLayout({
         <div className="flex items-center">
           <NotificationsBell />
 
-          <Tooltip>
-            <TooltipTrigger
-              render={
-                <Button
-                  variant="ghost"
-                  nativeButton={false}
-                  render={<Link href="/dashboard/administration" />}
-                />
-              }
-            >
-              <UserCog />
-            </TooltipTrigger>
-            <TooltipContent>{t.dashboard.administration}</TooltipContent>
-          </Tooltip>
+          {showAdministration && (
+            <Tooltip>
+              <TooltipTrigger
+                render={
+                  <Button
+                    variant="ghost"
+                    nativeButton={false}
+                    render={<Link href="/dashboard/administration" />}
+                  />
+                }
+              >
+                <UserCog />
+              </TooltipTrigger>
+              <TooltipContent>{t.dashboard.administration}</TooltipContent>
+            </Tooltip>
+          )}
 
           <LocaleSelect locale={locale} />
 

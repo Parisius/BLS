@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -33,7 +34,7 @@ import { useCreateIncident } from "@/lib/account-incident/hooks";
 import { INCIDENT_CATEGORIES, useIncidentForm } from "@/lib/account-incident/forms";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddIncidentDialog() {
+function AddIncidentDialogInner() {
   const form = useIncidentForm();
   const { mutateAsync } = useCreateIncident();
   const router = useRouter();
@@ -190,5 +191,13 @@ export function AddIncidentDialog() {
         </AlertDialog>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddIncidentDialog() {
+  return (
+    <Can permission="incident.create">
+      <AddIncidentDialogInner />
+    </Can>
   );
 }

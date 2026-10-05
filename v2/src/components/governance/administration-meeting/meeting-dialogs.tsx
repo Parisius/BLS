@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -118,7 +119,7 @@ function MeetingFormFields({
   );
 }
 
-export function AddMeetingDialog() {
+function AddMeetingDialogInner() {
   const form = useMeetingForm();
   const { mutateAsync } = useCreateMeeting();
   const router = useRouter();
@@ -213,5 +214,13 @@ export function UpdateMeetingDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddMeetingDialog() {
+  return (
+    <Can permission="governance.create">
+      <AddMeetingDialogInner />
+    </Can>
   );
 }

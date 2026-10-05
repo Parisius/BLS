@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Group } from "lucide-react";
@@ -86,7 +87,7 @@ function ProfileFormBody({
   );
 }
 
-export function AddProfileDialog() {
+function AddProfileDialogInner() {
   const { t } = useDictionary();
   const tp = t.evaluation.profiles;
   const formId = useId();
@@ -176,5 +177,13 @@ export function DeleteProfileDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+export function AddProfileDialog() {
+  return (
+    <Can permission="evaluation.manage_profiles">
+      <AddProfileDialogInner />
+    </Can>
   );
 }

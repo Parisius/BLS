@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useId, useState } from "react";
 import { toast } from "sonner";
 import { Link as LinkIcon, Newspaper, Tag } from "lucide-react";
@@ -187,7 +188,7 @@ function BankFormDialog({
   );
 }
 
-export function AddBankItemDialog({ kind, iconOnlyOnMobile = true }: { kind: BankKind; iconOnlyOnMobile?: boolean }) {
+function AddBankItemDialogInner({ kind, iconOnlyOnMobile = true }: { kind: BankKind; iconOnlyOnMobile?: boolean }) {
   const { t } = useDictionary();
   const tk = t.textsBank.kinds[KIND_KEY[kind]];
   const [open, setOpen] = useState(false);
@@ -226,5 +227,13 @@ export function EditBankItemDialog({
       open={!!item}
       onOpenChange={onOpenChange}
     />
+  );
+}
+
+export function AddBankItemDialog(props: React.ComponentProps<typeof AddBankItemDialogInner>) {
+  return (
+    <Can permission="document.create">
+      <AddBankItemDialogInner {...props} />
+    </Can>
   );
 }

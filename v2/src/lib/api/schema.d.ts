@@ -3056,13 +3056,335 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
+        /** Updates a user */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        username?: string;
+                        firstname?: string;
+                        lastname?: string;
+                        email?: string;
+                        role_id?: string;
+                        subsidiary_id?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: components["schemas"]["User"];
+                        };
+                    };
+                };
+            };
+        };
         post?: never;
         /**
          * Deletes a user
          * @description Frontend SDK function(s): deleteUser
          */
         delete: operations["deleteUsersUserid"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{userId}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** deactivate a user */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: components["schemas"]["User"];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{userId}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** reactivate a user */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: components["schemas"]["User"];
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/{userId}/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Sends a password reset */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: Record<string, never>;
+                        };
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/roles/{roleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Role */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    roleId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: components["schemas"]["Role"];
+                        };
+                    };
+                };
+            };
+        };
+        /** Updates a role */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    roleId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name?: string;
+                        permissions?: string[];
+                    };
+                };
+            };
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: components["schemas"]["Role"];
+                        };
+                    };
+                };
+            };
+        };
+        post?: never;
+        /** Deletes a role */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    roleId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: Record<string, never>;
+                        };
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/subsidiaries/{subsidiaryId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Updates a subsidiary */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    subsidiaryId: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": {
+                        name?: string;
+                        country?: string;
+                        address?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: components["schemas"]["Subsidiary"];
+                        };
+                    };
+                };
+            };
+        };
+        post?: never;
+        /** Deletes a subsidiary */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    subsidiaryId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description ok */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data?: Record<string, never>;
+                        };
+                    };
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -3548,10 +3870,14 @@ export interface components {
             type?: string;
         };
         User: {
-            email?: string;
-            firstname?: string;
             id?: string;
+            firstname?: string;
             lastname?: string;
+            fullname?: string;
+            email?: string;
+            username?: string;
+            is_active?: boolean;
+            subsidiary_id?: string;
             roles?: {
                 id?: string;
                 name?: string;
@@ -3560,14 +3886,42 @@ export interface components {
                 id?: string;
                 name?: string;
             };
-            username?: string;
         };
         CurrentUser: {
-            email?: string;
-            firstname?: string;
             id?: string;
+            firstname?: string;
             lastname?: string;
+            fullname?: string;
+            email?: string;
             username?: string;
+            is_active?: boolean;
+            subsidiary_id?: string;
+            subsidiary?: {
+                id?: string;
+                name?: string;
+                country?: string;
+                address?: string;
+            };
+            tenant?: {
+                id?: string;
+                name?: string;
+                slug?: string;
+                logo_url?: string | null;
+                locale?: string;
+                currency?: string;
+                enabled_modules?: string[];
+                is_active?: boolean;
+            };
+            roles?: {
+                id?: string;
+                name?: string;
+            }[];
+            role?: {
+                id?: string;
+                name?: string;
+            };
+            permissions?: string[];
+            can_see_all_subsidiaries?: boolean;
         };
         Login: {
             access_token?: string;
@@ -3876,6 +4230,8 @@ export interface components {
                 name?: string;
                 label?: string;
                 description?: string;
+                module?: string;
+                action?: string;
             }[];
         };
         Permission: {
@@ -3883,6 +4239,8 @@ export interface components {
             name?: string;
             label?: string;
             description?: string;
+            module?: string;
+            action?: string;
         };
         Subsidiary: {
             address?: string;

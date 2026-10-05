@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useEffect, useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -30,7 +31,7 @@ import { useAddEvaluationForm } from "@/lib/evaluation/forms";
 import type { ScoresFormValues } from "@/lib/shared/scores";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddEvaluationDialog({ variant = "list" }: { variant?: "list" | "card" }) {
+function AddEvaluationDialogInner({ variant = "list" }: { variant?: "list" | "card" }) {
   const { t } = useDictionary();
   const ta = t.evaluation.addEvaluation;
   const router = useRouter();
@@ -179,5 +180,13 @@ export function AddEvaluationDialog({ variant = "list" }: { variant?: "list" | "
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddEvaluationDialog(props: React.ComponentProps<typeof AddEvaluationDialogInner>) {
+  return (
+    <Can permission="evaluation.create">
+      <AddEvaluationDialogInner {...props} />
+    </Can>
   );
 }

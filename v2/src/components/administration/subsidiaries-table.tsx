@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { Pencil, Trash } from "lucide-react";
 import {
   flexRender,
   getCoreRowModel,
@@ -16,6 +17,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { Can } from "@/components/auth/can";
+import { DeleteSubsidiaryDialog, EditSubsidiaryDialog } from "@/components/administration/subsidiary-dialogs";
 import { useAllSubsidiaries } from "@/lib/administration/hooks";
 import type { Subsidiary } from "@/lib/administration/subsidiaries";
 import { useDictionary } from "@/lib/i18n/locale-provider";
@@ -24,13 +28,33 @@ export function SubsidiariesTable() {
   const { data, isLoading, isError } = useAllSubsidiaries();
   const { t } = useDictionary();
   const ts = t.administration.subsidiaries;
+  const ta = t.adminActions;
+  const [editing, setEditing] = useState<Subsidiary | null>(null);
+  const [deleting, setDeleting] = useState<Subsidiary | null>(null);
   const columns = useMemo<ColumnDef<Subsidiary>[]>(
     () => [
       { accessorKey: "name", header: ts.columnName },
       { accessorKey: "country", header: ts.columnCountry },
       { accessorKey: "address", header: ts.columnAddress },
+      {
+        id: "actions",
+        cell: ({ row }) => (
+          <div className="flex justify-end">
+            <Can permission="subsidiary.update">
+              <Button variant="ghost" size="icon" aria-label={ta.edit} className="rounded-full" onClick={() => setEditing(row.original)}>
+                <Pencil />
+              </Button>
+            </Can>
+            <Can permission="subsidiary.delete">
+              <Button variant="ghost" size="icon" aria-label={ta.delete} className="rounded-full text-destructive" onClick={() => setDeleting(row.original)}>
+                <Trash />
+              </Button>
+            </Can>
+          </div>
+        ),
+      },
     ],
-    [ts],
+    [ts, ta],
   );
 
   const table = useReactTable({
@@ -94,6 +118,8 @@ export function SubsidiariesTable() {
           )}
         </TableBody>
       </Table>
+      <EditSubsidiaryDialog subsidiary={editing} onOpenChange={(open) => !open && setEditing(null)} />
+      <DeleteSubsidiaryDialog subsidiary={deleting} onOpenChange={(open) => !open && setDeleting(null)} />
     </div>
   );
 }

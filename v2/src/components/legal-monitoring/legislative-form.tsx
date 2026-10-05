@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -172,7 +173,7 @@ const toArgs = (values: LegislativeFormValues): LegislativeArgs => ({
   mail: values.actionType === "transfer_mail" ? values.mail : undefined,
 });
 
-export function AddLegislativeDialog({ variant = "list" }: { variant?: "list" | "card" }) {
+function AddLegislativeDialogInner({ variant = "list" }: { variant?: "list" | "card" }) {
   const { t } = useDictionary();
   const tf = t.legalMonitoring.legislativeForm;
   const router = useRouter();
@@ -292,5 +293,13 @@ export function UpdateLegislativeDialog({
         {data && <UpdateLegislativeBody item={data} onClose={() => onOpenChange(false)} />}
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddLegislativeDialog(props: React.ComponentProps<typeof AddLegislativeDialogInner>) {
+  return (
+    <Can permission="legal_watch.create">
+      <AddLegislativeDialogInner {...props} />
+    </Can>
   );
 }

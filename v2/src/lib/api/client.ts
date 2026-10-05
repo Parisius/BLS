@@ -3,6 +3,7 @@ import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./schema";
 import { auth } from "@/auth";
 import { getTenantSlug } from "@/lib/tenant";
+import type { ActionResult } from "./result";
 
 /**
  * Every route this client can call, its methods, params, request bodies and
@@ -35,7 +36,7 @@ apiClient.use(authMiddleware);
  * any non-2xx response, so callers can just `await` a resource instead of
  * checking `error`/`data` on every call.
  */
-function errorMessage(error: unknown): string | undefined {
+export function errorMessage(error: unknown): string | undefined {
   return typeof error === "string" ? error : (error as { message?: string } | undefined)?.message;
 }
 
@@ -55,4 +56,16 @@ export function unwrap<T>({
     throw new Error(errorMessage(error) ?? "Request to the API failed");
   }
   return data.data;
+}
+
+/** Turns an openapi-fetch response into a serialisable result carrying the backend's status, message and field errors. */
+export function toResult<T = void>(
+  { data, error, response }: { data?: { data?: unknown }; error?: unknown; response: Response },
+  fallback: string,
+): ActionResult<T> {
+  if (error || !response.ok) {
+    const body = (typeof error === "object" && error ? error : {}) as { errors?: Record<string, string[]> };
+    return { ok: false, status: response.status, message: errorMessage(error) ?? fallback, errors: body.errors };
+  }
+  return { ok: true, data: (data?.data ?? undefined) as T };
 }

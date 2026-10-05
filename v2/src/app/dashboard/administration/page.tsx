@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { ADMINISTRATION_MODULES } from "@/config/modules";
+import { ADMIN_READ, makePermissionChecker } from "@/lib/auth/permissions";
+import { getSessionUser } from "@/lib/auth/server";
 import { getDictionary } from "@/lib/i18n/locale";
 
 export default async function AdministrationPage() {
   const { t } = await getDictionary();
+  const user = await getSessionUser();
+  const { can } = makePermissionChecker(user?.permissions);
+  const visible = ADMINISTRATION_MODULES.filter(({ slug }) => !user || can(ADMIN_READ[slug as keyof typeof ADMIN_READ]));
 
   return (
     <div className="flex h-full flex-col gap-10">
@@ -12,7 +17,7 @@ export default async function AdministrationPage() {
         {t.administration.title}
       </h1>
       <div className="grid auto-rows-fr gap-10 sm:grid-cols-2 md:grid-cols-3">
-        {ADMINISTRATION_MODULES.map(({ slug, href, nameKey, Icon }) => (
+        {visible.map(({ slug, href, nameKey, Icon }) => (
           <Link href={href} key={slug}>
             <Card className="h-full bg-primary text-primary-foreground">
               <CardHeader className="h-full flex-row items-center justify-center gap-2">

@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useState } from "react";
 import { UserPlus, Tag } from "lucide-react";
 import { toast } from "sonner";
@@ -28,7 +29,7 @@ import { useUserForm } from "@/lib/administration/forms";
 import { useCreateUser } from "@/lib/administration/hooks";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddUserDialog() {
+function AddUserDialogInner() {
   const [open, setOpen] = useState(false);
   const form = useUserForm();
   const { mutateAsync } = useCreateUser();
@@ -200,5 +201,13 @@ export function AddUserDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddUserDialog() {
+  return (
+    <Can permission="user.create">
+      <AddUserDialogInner />
+    </Can>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -27,7 +28,7 @@ import {
 import { RECOVERY_TYPES, useRecoveryForm } from "@/lib/recovery/forms";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddRecoveryDialog() {
+function AddRecoveryDialogInner() {
   const form = useRecoveryForm();
   const { mutateAsync } = useCreateRecovery();
   const router = useRouter();
@@ -168,5 +169,13 @@ export function AddRecoveryDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddRecoveryDialog() {
+  return (
+    <Can permission="recovery.create">
+      <AddRecoveryDialogInner />
+    </Can>
   );
 }

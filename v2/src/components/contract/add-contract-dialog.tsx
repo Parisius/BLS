@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FolderPlus, Tag } from "lucide-react";
@@ -30,7 +31,7 @@ import { useAddContractForm } from "@/lib/contract/forms";
 import { useCreateContract } from "@/lib/contract/hooks";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddContractDialog() {
+function AddContractDialogInner() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const { form, firstStakeholdersGroup, secondStakeholdersGroup, filesArray } = useAddContractForm();
@@ -195,5 +196,13 @@ export function AddContractDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddContractDialog() {
+  return (
+    <Can permission="contract.create">
+      <AddContractDialogInner />
+    </Can>
   );
 }

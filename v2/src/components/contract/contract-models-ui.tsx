@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import Link from "next/link";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -176,7 +177,7 @@ function DeleteContractModelButton({ modelId }: { modelId: string }) {
   );
 }
 
-export function AddContractModelCategoryDialog({ parentId }: { parentId?: string }) {
+function AddContractModelCategoryDialogInner({ parentId }: { parentId?: string }) {
   const form = useContractModelCategoryForm();
   const { mutateAsync } = useCreateContractModel(parentId);
   const { t } = useDictionary();
@@ -236,7 +237,7 @@ export function AddContractModelCategoryDialog({ parentId }: { parentId?: string
   );
 }
 
-export function AddContractModelDialog({ parentId }: { parentId?: string }) {
+function AddContractModelDialogInner({ parentId }: { parentId?: string }) {
   const form = useContractModelForm();
   const { mutateAsync } = useCreateContractModel(parentId);
   const { t } = useDictionary();
@@ -312,5 +313,21 @@ export function AddContractModelDialog({ parentId }: { parentId?: string }) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddContractModelCategoryDialog(props: React.ComponentProps<typeof AddContractModelCategoryDialogInner>) {
+  return (
+    <Can permission="contract.manage_models">
+      <AddContractModelCategoryDialogInner {...props} />
+    </Can>
+  );
+}
+
+export function AddContractModelDialog(props: React.ComponentProps<typeof AddContractModelDialogInner>) {
+  return (
+    <Can permission="contract.manage_models">
+      <AddContractModelDialogInner {...props} />
+    </Can>
   );
 }

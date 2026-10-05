@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useEffect, useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -26,7 +27,7 @@ import type { ScoresFormValues } from "@/lib/shared/scores";
 import { useAllAuditCriteria, useCreateAudit } from "@/lib/audit/hooks";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddAuditDialog({ variant = "list" }: { variant?: "list" | "card" }) {
+function AddAuditDialogInner({ variant = "list" }: { variant?: "list" | "card" }) {
   const { t } = useDictionary();
   const ta = t.audit.addAudit;
   const router = useRouter();
@@ -161,5 +162,13 @@ export function AddAuditDialog({ variant = "list" }: { variant?: "list" | "card"
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddAuditDialog(props: React.ComponentProps<typeof AddAuditDialogInner>) {
+  return (
+    <Can permission="audit.create">
+      <AddAuditDialogInner {...props} />
+    </Can>
   );
 }

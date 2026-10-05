@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -18,14 +18,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Trash } from "lucide-react";
+import { Ellipsis, KeyRound, Pencil, Power, PowerOff, Trash } from "lucide-react";
 import { useAllUsers } from "@/lib/administration/hooks";
 import type { User } from "@/lib/administration/users";
-import { DeleteUserDialog } from "@/components/administration/delete-user-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { EditUserDialog, UserActionDialog, type UserAction } from "@/components/administration/user-dialogs";
+import { usePermissions } from "@/lib/auth/use-permissions";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { Dictionary } from "@/lib/i18n/dictionary";
 
-function getColumns(t: Dictionary): ColumnDef<User>[] {
+type Pick = (user: User, action: UserAction | "edit") => void;
+
+function getColumns(t: Dictionary, pick: Pick): ColumnDef<User>[] {
   return [
     { accessorKey: "username", header: t.administration.users.columnUsername },
     { accessorKey: "lastname", header: t.administration.users.columnLastname },
@@ -69,24 +79,69 @@ function getColumns(t: Dictionary): ColumnDef<User>[] {
       cell: ({ row }) => row.original.subsidiary?.name,
     },
     {
+      id: "status",
+      cell: ({ row }) =>
+        row.original.is_active === false ? <Badge variant="outline">{t.adminActions.inactive}</Badge> : null,
+    },
+    {
       id: "actions",
-      cell: ({ row }) => (
-        <div className="text-end">
-          <DeleteUserDialog userId={row.original.id!}>
-            <Button variant="ghost" size="icon" className="rounded-full text-destructive">
-              <Trash />
-            </Button>
-          </DeleteUserDialog>
-        </div>
-      ),
+      cell: ({ row }) => <UserRowMenu user={row.original} pick={pick} label={t.adminActions.actions} />,
     },
   ];
+}
+
+function UserRowMenu({ user, pick, label }: { user: User; pick: Pick; label: string }) {
+  const { t } = useDictionary();
+  const ta = t.adminActions;
+  const { can } = usePermissions();
+  const items = [
+    can("user.update") && { key: "edit", icon: Pencil, text: ta.edit, run: () => pick(user, "edit") },
+    can("user.deactivate") &&
+      (user.is_active === false
+        ? { key: "reactivate", icon: Power, text: ta.userReactivate, run: () => pick(user, "reactivate") }
+        : { key: "deactivate", icon: PowerOff, text: ta.userDeactivate, run: () => pick(user, "deactivate") }),
+    can("user.reset_password") && { key: "reset", icon: KeyRound, text: ta.userResetPassword, run: () => pick(user, "reset") },
+  ].filter(Boolean) as { key: string; icon: typeof Pencil; text: string; run: () => void }[];
+  const canDelete = can("user.delete");
+  if (items.length === 0 && !canDelete) return null;
+
+  return (
+    <div className="text-end">
+      <DropdownMenu>
+        <DropdownMenuTrigger render={<Button variant="ghost" size="icon" aria-label={label} className="rounded-full" />}>
+          <Ellipsis />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {items.map(({ key, icon: Icon, text, run }) => (
+            <DropdownMenuItem key={key} className="gap-2" onClick={run}>
+              <Icon /> {text}
+            </DropdownMenuItem>
+          ))}
+          {canDelete && (
+            <>
+              {items.length > 0 && <DropdownMenuSeparator />}
+              <DropdownMenuItem className="gap-2 text-destructive" onClick={() => pick(user, "delete")}>
+                <Trash /> {ta.delete}
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
 }
 
 export function UsersTable() {
   const { data, isLoading, isError } = useAllUsers();
   const { t } = useDictionary();
-  const columns = useMemo(() => getColumns(t), [t]);
+  // The dialogs live outside the row menu: dialogs inside dropdown content unmount when the menu closes.
+  const [editing, setEditing] = useState<User | null>(null);
+  const [acting, setActing] = useState<{ user: User; action: UserAction } | null>(null);
+  const columns = useMemo(
+    () =>
+      getColumns(t, (user, action) => (action === "edit" ? setEditing(user) : setActing({ user, action }))),
+    [t],
+  );
 
   const table = useReactTable({
     data: data ?? [],
@@ -149,6 +204,8 @@ export function UsersTable() {
           )}
         </TableBody>
       </Table>
+      <EditUserDialog user={editing} onOpenChange={(open) => !open && setEditing(null)} />
+      <UserActionDialog user={acting?.user ?? null} action={acting?.action ?? null} onClose={() => setActing(null)} />
     </div>
   );
 }

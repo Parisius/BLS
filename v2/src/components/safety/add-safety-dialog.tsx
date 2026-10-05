@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -21,7 +22,7 @@ import { KIND_KEY, type SafetyKind } from "@/lib/safety/kinds";
 import type { CreateGuaranteeArgs } from "@/lib/safety/guarantees";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddSafetyDialog({ kind }: { kind: SafetyKind }) {
+function AddSafetyDialogInner({ kind }: { kind: SafetyKind }) {
   const { t } = useDictionary();
   const tk = t.safety.kinds[KIND_KEY[kind]];
   const tf = t.safety.form;
@@ -67,5 +68,13 @@ export function AddSafetyDialog({ kind }: { kind: SafetyKind }) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddSafetyDialog(props: React.ComponentProps<typeof AddSafetyDialogInner>) {
+  return (
+    <Can permission="guarantee.create">
+      <AddSafetyDialogInner {...props} />
+    </Can>
   );
 }

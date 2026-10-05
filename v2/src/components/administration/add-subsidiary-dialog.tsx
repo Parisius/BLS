@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useState } from "react";
 import { Landmark, Tag } from "lucide-react";
 import { toast } from "sonner";
@@ -26,7 +27,7 @@ import { useSubsidiaryForm } from "@/lib/administration/forms";
 import { useCreateSubsidiary } from "@/lib/administration/hooks";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddSubsidiaryDialog() {
+function AddSubsidiaryDialogInner() {
   const [open, setOpen] = useState(false);
   const form = useSubsidiaryForm();
   const { mutateAsync } = useCreateSubsidiary();
@@ -126,5 +127,13 @@ export function AddSubsidiaryDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddSubsidiaryDialog() {
+  return (
+    <Can permission="subsidiary.create">
+      <AddSubsidiaryDialogInner />
+    </Can>
   );
 }

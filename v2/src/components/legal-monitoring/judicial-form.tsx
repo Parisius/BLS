@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -149,7 +150,7 @@ const toArgs = (values: JudicialFormValues): JudicialArgs => ({
   mail: values.actionType === "transfer_mail" ? values.mail : undefined,
 });
 
-export function AddJudicialDialog({ variant = "list" }: { variant?: "list" | "card" }) {
+function AddJudicialDialogInner({ variant = "list" }: { variant?: "list" | "card" }) {
   const { t } = useDictionary();
   const tf = t.legalMonitoring.judicialForm;
   const router = useRouter();
@@ -268,5 +269,13 @@ export function UpdateJudicialDialog({
         {data && <UpdateJudicialBody item={data} onClose={() => onOpenChange(false)} />}
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddJudicialDialog(props: React.ComponentProps<typeof AddJudicialDialogInner>) {
+  return (
+    <Can permission="legal_watch.create">
+      <AddJudicialDialogInner {...props} />
+    </Can>
   );
 }

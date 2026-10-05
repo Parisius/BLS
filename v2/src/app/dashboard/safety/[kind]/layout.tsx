@@ -1,3 +1,4 @@
+import { RequirePermission } from "@/components/auth/require-permission";
 import { ModuleAlerts } from "@/components/alert/module-alerts";
 import { isSafetyKind, type SafetyKind } from "@/lib/safety/kinds";
 
@@ -12,9 +13,9 @@ export default async function Layout({ children, params }: { children: React.Rea
   const { kind } = await params;
 
   return (
-    <>
+    <RequirePermission permission="guarantee.read">
       {children}
       {isSafetyKind(kind) && <ModuleAlerts module={ALERT_MODULE[kind]} />}
-    </>
+    </RequirePermission>
   );
 }

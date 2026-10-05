@@ -1,5 +1,6 @@
 "use client";
 
+import { Can } from "@/components/auth/can";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -21,7 +22,7 @@ import { useLitigationForm, type LitigationFormValues } from "@/lib/litigation/f
 import type { Litigation } from "@/lib/litigation/litigations";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
-export function AddLitigationDialog({ variant = "list" }: { variant?: "list" | "card" }) {
+function AddLitigationDialogInner({ variant = "list" }: { variant?: "list" | "card" }) {
   const { t } = useDictionary();
   const tl = t.litigation;
   const router = useRouter();
@@ -158,5 +159,13 @@ export function UpdateLitigationDialog({
         {data && <UpdateLitigationBody litigation={data} onClose={() => onOpenChange(false)} />}
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AddLitigationDialog(props: React.ComponentProps<typeof AddLitigationDialogInner>) {
+  return (
+    <Can permission="litigation.create">
+      <AddLitigationDialogInner {...props} />
+    </Can>
   );
 }
