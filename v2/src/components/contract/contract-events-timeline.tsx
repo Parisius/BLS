@@ -134,7 +134,7 @@ export function ContractEventsTimeline({ contract }: { contract: Contract }) {
 
           return (
             <TimelineItem key={row.id} className={cn("group", { "text-foreground/50": row.completed })}>
-              {!row.completed && row.isMilestone && (
+              {!row.completed && row.isMilestone && can("contract.update") && (
                 <div className="absolute right-0 top-0 z-10 flex items-center opacity-0 transition duration-500 group-hover:opacity-100">
                   <Tooltip>
                     <TooltipTrigger
