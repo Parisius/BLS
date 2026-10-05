@@ -295,6 +295,7 @@ export const dictionaries = {
         edit: "Modifier",
         print: "Imprimer",
         transferHistory: "Historique des transferts",
+        printError: "Une erreur s'est produite lors de l'impression de la fiche du contrat.",
       },
       updateDialog: {
         title: "Modifier contrat",
@@ -3073,6 +3074,7 @@ export const dictionaries = {
         edit: "Edit",
         print: "Print",
         transferHistory: "Transfer History",
+        printError: "Something went wrong while printing the contract sheet.",
       },
       updateDialog: {
         title: "Edit Contract",

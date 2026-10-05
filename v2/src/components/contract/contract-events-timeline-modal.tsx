@@ -17,6 +17,7 @@ import { ContractEventsTimeline } from "@/components/contract/contract-events-ti
 import { AddContractEventDialog } from "@/components/contract/event-dialogs";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 import type { Contract } from "@/lib/contract/contracts";
+import { Can } from "@/components/auth/can";
 
 export function ContractEventsTimelineModal({ contract }: { contract: Contract }) {
   const [addingEvent, setAddingEvent] = useState(false);
@@ -34,10 +35,12 @@ export function ContractEventsTimelineModal({ contract }: { contract: Contract }
           <SheetHeader>
             <div className="flex items-center justify-between">
               <SheetTitle>{tc.events.title}</SheetTitle>
-              <Button size="sm" className="gap-2" onClick={() => setAddingEvent(true)}>
-                <Plus />
-                <span className="sr-only sm:not-sr-only">{tc.events.addEventButton}</span>
-              </Button>
+              <Can permission="contract.update">
+                <Button size="sm" className="gap-2" onClick={() => setAddingEvent(true)}>
+                  <Plus />
+                  <span className="sr-only sm:not-sr-only">{tc.events.addEventButton}</span>
+                </Button>
+              </Can>
             </div>
             <SheetDescription className="line-clamp-1">{contract.title}</SheetDescription>
           </SheetHeader>
