@@ -26,7 +26,7 @@ export function ModuleAlerts({ module }: { module: string }) {
   const [dismissed, setDismissed] = useState<string[]>(readDismissed);
 
   if (!data) return null;
-  const next = data.find((alert) => ["urgent", "warning"].includes(alert.priority) && !dismissed.includes(alert.id));
+  const next = data.alerts.find((alert) => ["urgent", "warning"].includes(alert.priority) && !dismissed.includes(alert.id));
 
   return (
     <AlertDetailsDialog

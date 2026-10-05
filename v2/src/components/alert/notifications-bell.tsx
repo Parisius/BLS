@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useState } from "react";
 import { Bell, TriangleAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,8 @@ export function NotificationsBell() {
   // The dialog lives outside the menu: dialogs inside dropdown content unmount when the menu closes.
   const [selected, setSelected] = useState<Alert | null>(null);
 
-  const unread = useMemo(() => (data ?? []).filter((alert) => !alert.isRead).length, [data]);
+  const alerts = data?.alerts;
+  const unread = data?.unreadCount ?? 0;
   const unreadLabel =
     unread === 0 ? ta.none : (unread === 1 ? ta.unreadOne : ta.unreadMany).replace("{count}", String(unread));
 
@@ -73,12 +74,12 @@ export function NotificationsBell() {
               <TriangleAlert /> {ta.error}
             </DropdownMenuItem>
           )}
-          {!isLoading && !isError && data?.length === 0 && (
+          {!isLoading && !isError && alerts?.length === 0 && (
             <DropdownMenuItem disabled className="justify-center italic text-muted-foreground">
               {ta.empty}
             </DropdownMenuItem>
           )}
-          {data?.map((alert, index) => (
+          {alerts?.map((alert, index) => (
             <Fragment key={alert.id}>
               <DropdownMenuItem
                 className={cn("relative cursor-pointer items-start gap-2 pr-5", alert.isRead && "text-muted-foreground")}
@@ -91,7 +92,7 @@ export function NotificationsBell() {
                   <span className="absolute right-1 top-1/2 size-2.5 -translate-y-1/2 rounded-full bg-primary" />
                 )}
               </DropdownMenuItem>
-              {index < data.length - 1 && <DropdownMenuSeparator />}
+              {index < alerts.length - 1 && <DropdownMenuSeparator />}
             </Fragment>
           ))}
         </DropdownMenuContent>
