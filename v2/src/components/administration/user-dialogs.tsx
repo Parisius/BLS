@@ -34,7 +34,7 @@ import {
   useUpdateUser,
 } from "@/lib/administration/hooks";
 import type { User } from "@/lib/administration/users";
-import { failureMessage } from "@/lib/api/error-message";
+import { detailedFailureMessage, failureMessage } from "@/lib/api/error-message";
 import { useDictionary } from "@/lib/i18n/locale-provider";
 
 function EditUserBody({ user, onClose }: { user: User; onClose: () => void }) {
@@ -182,7 +182,7 @@ export function UserActionDialog({
       toast.success(current.success);
       onClose();
     } catch (error) {
-      toast.error(failureMessage(error, current.error, t.permissions.forbidden));
+      toast.error(detailedFailureMessage(error, current.error, t.permissions.forbidden));
     } finally {
       setPending(false);
     }

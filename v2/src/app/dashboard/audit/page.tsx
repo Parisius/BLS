@@ -9,6 +9,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
+import { Can } from "@/components/auth/can";
 import { CreateAuditCard } from "@/components/audit/create-audit-card";
 import { getDictionary } from "@/lib/i18n/locale";
 
@@ -33,10 +34,12 @@ export default async function AuditPage() {
           </BreadcrumbList>
         </Breadcrumb>
         <div className="flex items-center justify-end gap-2">
-          <Button variant="secondary" className="gap-2" render={<Link href="/dashboard/audit/modules" />}>
-            <Scale />
-            <span className="sr-only sm:not-sr-only">{ta.home.insertCriteria}</span>
-          </Button>
+          <Can permission="audit.manage_criteria">
+            <Button variant="secondary" className="gap-2" render={<Link href="/dashboard/audit/modules" />}>
+              <Scale />
+              <span className="sr-only sm:not-sr-only">{ta.home.insertCriteria}</span>
+            </Button>
+          </Can>
           <Button className="gap-2" render={<Link href="/dashboard/audit/list" />}>
             <Newspaper />
             <span className="sr-only sm:not-sr-only">{ta.home.viewAudits}</span>

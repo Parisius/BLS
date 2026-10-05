@@ -117,6 +117,14 @@ export function WorkflowTasksTimeline({
           const position = index % 2 === 0 ? "left" : "right";
           const oppositePosition = index % 2 === 0 ? "right" : "left";
           const isCurrent = currentTaskId === task.id;
+          const extraActions = extraMenuActions?.(task) ?? [];
+          // A read-only user would otherwise get a menu with nothing in it.
+          const hasMenu =
+            !task.completed &&
+            ((isCurrent && allowed(permissions?.update)) ||
+              (allowed(permissions?.forward) && canForward(task, currentUser?.id) && (!restrictForwardToCurrent || isCurrent)) ||
+              task.forwards.length > 0 ||
+              extraActions.length > 0);
 
           return (
             <TimelineItem
@@ -126,7 +134,7 @@ export function WorkflowTasksTimeline({
                 "text-foreground/50": task.completed,
               })}
             >
-              {!task.completed && (
+              {hasMenu && (
                 <DropdownMenu>
                   <Tooltip>
                     <DropdownMenuTrigger
@@ -173,7 +181,7 @@ export function WorkflowTasksTimeline({
                       </DropdownMenuItem>
                     )}
 
-                    {extraMenuActions?.(task).map((action, actionIndex) => (
+                    {extraActions.map((action, actionIndex) => (
                       <Fragment key={action.key}>
                         {action.destructive && actionIndex > 0 && <DropdownMenuSeparator />}
                         <DropdownMenuItem

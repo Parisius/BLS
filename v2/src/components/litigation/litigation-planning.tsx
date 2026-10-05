@@ -31,7 +31,7 @@ export function LitigationPlanningModal({
 
   return (
     <StepsPlanningSheet
-      permissions={{ update: "litigation.update" }}
+      permissions={{ update: "litigation.update", forward: "litigation.update" }}
       reference={reference}
       nextStepId={nextStepId}
       tasks={data}

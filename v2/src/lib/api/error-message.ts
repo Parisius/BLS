@@ -11,3 +11,15 @@ export function failureMessage(error: unknown, fallback: string, forbidden: stri
   }
   return fallback;
 }
+
+/**
+ * For administrator screens, where the real reason matters more than polish (e.g. a 500 because the server could not
+ * send the reset e-mail): the generic text, followed by the backend's status and message when it sent one.
+ */
+export function detailedFailureMessage(error: unknown, fallback: string, forbidden: string) {
+  if (error instanceof ApiFailure && error.status !== 403 && error.status !== 409 && error.status !== 422) {
+    const detail = error.message && error.message !== fallback ? ` ${error.message}` : "";
+    return `${fallback} (${error.status})${detail}`;
+  }
+  return failureMessage(error, fallback, forbidden);
+}
