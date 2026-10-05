@@ -2,6 +2,7 @@ import "server-only";
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./schema";
 import { auth } from "@/auth";
+import { getTenantSlug } from "@/lib/tenant";
 
 /**
  * Every route this client can call, its methods, params, request bodies and
@@ -15,6 +16,10 @@ const authMiddleware: Middleware = {
     if (session?.accessToken) {
       request.headers.set("Authorization", `Bearer ${session.accessToken}`);
     }
+    // Every tenant route needs its tenant; the slug comes from the deployment, never from user input.
+    const tenant = await getTenantSlug();
+    if (tenant) request.headers.set("X-Tenant", tenant);
+    request.headers.set("Accept", "application/json");
     return request;
   },
 };

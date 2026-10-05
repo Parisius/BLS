@@ -1,31 +1,48 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { getTenantSlug } from "@/lib/tenant";
 
 /**
  * Credentials login hits the backend's `POST /login` directly (see
  * openapi.json) rather than going through `apiClient`, since `apiClient`'s
  * auth middleware calls `auth()` itself — that would be circular here.
  */
+/** Carries the reason a sign-in failed to the login form (`result.code` on the client). */
+class LoginError extends CredentialsSignin {
+  constructor(code: "invalid_credentials" | "invalid_data" | "tenant_not_found" | "unreachable") {
+    super();
+    this.code = code;
+  }
+}
+
 async function login(username: string, password: string) {
   try {
+    const tenant = await getTenantSlug();
     const response = await fetch(`${process.env.API_URL}/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        ...(tenant && { "X-Tenant": tenant }),
+      },
+      body: JSON.stringify({ username, password, ...(tenant && { tenant }) }),
       cache: "no-store",
     });
 
     if (!response.ok) {
-      return null;
+      if (response.status === 422) throw new LoginError("invalid_data");
+      const body = (await response.json().catch(() => null)) as { code?: string } | null;
+      if (response.status === 404 || body?.code === "tenant_not_found") throw new LoginError("tenant_not_found");
+      throw new LoginError("invalid_credentials");
     }
 
     const { data } = await response.json();
     return data?.access_token as string | undefined;
-  } catch {
-    // Backend unreachable (network error, DNS failure, etc.) — treat the
-    // same as invalid credentials rather than letting Auth.js surface an
-    // opaque "Configuration" error to the user.
-    return null;
+  } catch (error) {
+    if (error instanceof LoginError) throw error;
+    // Backend unreachable (network error, DNS failure, etc.): say so, rather than letting Auth.js surface an
+    // opaque "Configuration" error or pretending the credentials were wrong.
+    throw new LoginError("unreachable");
   }
 }
 
@@ -48,7 +65,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const accessToken = await login(username, password);
         if (!accessToken) {
-          return null;
+          throw new LoginError("invalid_credentials");
         }
 
         return { id: username, name: username, accessToken };

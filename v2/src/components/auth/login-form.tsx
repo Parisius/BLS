@@ -32,7 +32,12 @@ export function LoginForm() {
       });
 
       if (result?.error) {
-        toast.error(t.auth.invalidCredentials);
+        const reasons: Record<string, string> = {
+          invalid_data: t.auth.invalidData,
+          tenant_not_found: t.auth.tenantNotFound,
+          unreachable: t.auth.unreachable,
+        };
+        toast.error((result.code && reasons[result.code]) || t.auth.invalidCredentials);
         return;
       }
 
